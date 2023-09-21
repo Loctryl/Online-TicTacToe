@@ -1,0 +1,2 @@
+D:\DEV\Projets\checkers\x64\Debug\checkers.exe
+D:\DEV\G.Tech\GTech 3\projX-checkers\x64\Debug\checkers.exe
