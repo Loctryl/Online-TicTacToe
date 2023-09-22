@@ -1,11 +1,11 @@
 ﻿#pragma once
 #include "Structures.h"
 
-struct Piece {
+struct Tile {
     int player, x, y;
-    PIECESTATE state;
+    TILESTATE state;
 
-    Piece(int nplayer, int nx, int ny, PIECESTATE nstate) {
+    Tile(int nplayer, int nx, int ny, TILESTATE nstate) {
         player = nplayer;
         x = nx;
         y = ny;
