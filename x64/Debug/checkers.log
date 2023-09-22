@@ -1,2 +1,7 @@
 ﻿  main.cpp
-  checkers.vcxproj -> D:\DEV\Projets\checkers\x64\Debug\checkers.exe
+  GameManager.cpp
+C:\Users\loctr\Documents\Projets\gtech3-checkers\Sources\GameManager.cpp(49,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\loctr\Documents\Projets\gtech3-checkers\Sources\GameManager.cpp(50,25): warning C4018: '<': signed/unsigned mismatch
+  SFMLWindow.cpp
+  Generating Code...
+  checkers.vcxproj -> C:\Users\loctr\Documents\Projets\gtech3-checkers\x64\Debug\checkers.exe
