@@ -20,6 +20,7 @@ void GameManager::InitGame() {
 
 void GameManager::RunGame() {
    Event event{};
+   RenderGame();
    while (mainWindow->getWindow()->isOpen()){
       while (mainWindow->getWindow()->pollEvent(event)) {
          if (event.type == Event::Closed || event.key.code == Keyboard::Escape) mainWindow->getWindow()->close();
@@ -27,7 +28,6 @@ void GameManager::RunGame() {
             OnClick();
          }
       }
-      RenderGame();
    }
 }
 
@@ -48,9 +48,9 @@ void GameManager::OnClick() {
          pieceSelected = nullptr;
       }
    }
-}
-void GameManager::UpdateGame() const {
+
    
+   RenderGame();
 }
 
 void GameManager::RenderGame() const {

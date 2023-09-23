@@ -27,7 +27,5 @@ public:
 
    void OnClick();
 
-   void UpdateGame() const;
-
    void RenderGame() const;
 };
