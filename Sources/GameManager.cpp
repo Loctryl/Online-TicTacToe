@@ -1,10 +1,13 @@
 ﻿#include "../Headers/GameManager.h"
+#include <iostream>
 
 GameManager::GameManager() {
    mainWindow = new SFMLWindow();
    mainGrid = new Grid();
 
-   playerTurn = 1;
+   pieceSelected = nullptr;
+   playerTurn = 0;
+   forceEat = false;
 }
 
 GameManager::~GameManager() {
@@ -13,8 +16,8 @@ GameManager::~GameManager() {
 
 void GameManager::InitGame() {
    mainWindow->InitWindow();
-   int tileSize = mainWindow->getVideoMode()->height / 12;
-   int marginLeft = mainWindow->getVideoMode()->width / 2 - tileSize * 5;
+   const int tileSize = mainWindow->getVideoMode()->height / 12;
+   const int marginLeft = mainWindow->getVideoMode()->width / 2 - tileSize * 5;
    mainGrid->InitGrid(tileSize, marginLeft);
 }
 
@@ -28,6 +31,7 @@ void GameManager::RunGame() {
             OnClick();
          }
       }
+      RenderGame();
    }
 }
 
@@ -39,18 +43,36 @@ void GameManager::OnClick() {
          if(mainGrid->IsClickOnPiece(playerTurn, tile)){
             pieceSelected = tile;
             mainGrid->ClearHighlights();
-            mainGrid->ShowPossibilities(tile);
+            mainGrid->ShowFirstPossibilities(playerTurn, tile);
          }
       }
-      if (mainGrid->IsClickOnHighLight(tile)) {
-         mainGrid->MovePiece(pieceSelected, tile);
-         mainGrid->ClearHighlights();
-         pieceSelected = nullptr;
+      else {
+         if(mainGrid->IsClickOnHighLight(tile)) {
+            bool eat = mainGrid->MovePiece(pieceSelected, tile);
+            mainGrid->ClearHighlights();
+            
+            if(eat and mainGrid->ShowNextPossibilities(playerTurn, tile)) {
+               pieceSelected = tile;
+               forceEat = true;
+            }
+            else {
+               pieceSelected = nullptr;
+               playerTurn = !playerTurn;
+               forceEat = false;
+            }
+         }
+         else if(!forceEat) {
+            mainGrid->ClearHighlights();
+            pieceSelected = nullptr;
+
+            if(mainGrid->IsClickOnPiece(playerTurn, tile)) {
+               pieceSelected = tile;
+               mainGrid->ClearHighlights();
+               mainGrid->ShowFirstPossibilities(playerTurn, tile);
+            }
+         }
       }
    }
-
-   
-   RenderGame();
 }
 
 void GameManager::RenderGame() const {

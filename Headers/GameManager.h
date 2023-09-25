@@ -1,12 +1,12 @@
 ﻿#pragma once
 #include "SFMLWindow.h"
-#include <iostream>
 
 #include "Grid.h"
 
 class GameManager {
    int playerTurn;
    Tile* pieceSelected;
+   bool forceEat;
    
 public:
    static GameManager& getInstance() {

@@ -12,8 +12,8 @@ void SFMLWindow::InitWindow() {
    _v_mode = VideoMode::getDesktopMode();
    _window = new RenderWindow(
            _v_mode,
-           "Battle Ship",
-           Style::Fullscreen
+           "Classic Checkers",
+           Style::Resize
    );
    _window->setPosition(Vector2i(0, 0));
    _window->setFramerateLimit(60);

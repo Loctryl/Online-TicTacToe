@@ -4,7 +4,7 @@
 
 class Grid {
 public:
-    Tile* mainGrid[10][10];
+    Tile mainGrid[10][10];
 
     int tileSize;
     int marginLeft;
@@ -22,9 +22,19 @@ public:
 
     Tile* GetTile(Vector2i);
 
-    void ShowPossibilities(Tile*);
+    bool IsPlayableTile(int, Tile*, int);
+    
+    bool IsEatableTile(int, Tile*, int);
 
-    void MovePiece(Tile*, Tile*);
+    void ShowHighLight(Vector2i, int);
+
+    void ShowFirstPossibilities(int, Tile*);
+
+    bool ShowNextPossibilities(int, Tile*);
+
+    bool MovePiece(Tile*, Tile*);
+
+    void SetPieceColor(CircleShape*, Vector2i);
 
     void DrawGrid(SFMLWindow*);
 
