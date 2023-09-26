@@ -27,7 +27,7 @@ void GameManager::RunGame() {
    while (mainWindow->getWindow()->isOpen()){
       while (mainWindow->getWindow()->pollEvent(event)) {
          if (event.type == Event::Closed || event.key.code == Keyboard::Escape) mainWindow->getWindow()->close();
-         if(event.type == Event::MouseButtonPressed and event.mouseButton.button == Mouse::Left) {
+         if(event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
             OnClick();
          }
       }
@@ -51,7 +51,7 @@ void GameManager::OnClick() {
             bool eat = mainGrid->MovePiece(pieceSelected, tile);
             mainGrid->ClearHighlights();
             
-            if(eat and mainGrid->ShowNextPossibilities(playerTurn, tile)) {
+            if(eat && mainGrid->ShowNextPossibilities(playerTurn, tile)) {
                pieceSelected = tile;
                forceEat = true;
             }

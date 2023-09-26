@@ -23,8 +23,10 @@ public:
     Tile* GetTile(Vector2i);
 
     bool IsPlayableTile(int, Tile*, int);
+
+    bool IsQueenPlayableTile(int, Tile*, int, int);
     
-    bool IsEatableTile(int, Tile*, int);
+    bool IsEatableTile(int, Tile*, int, int);
 
     void ShowHighLight(Vector2i, int);
 
