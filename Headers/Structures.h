@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <string>
 
-const std::string FONT_ASSET_PATH = "../Assets/pixelFont.ttf";
+const std::string FONT_ASSET_PATH = "Assets/arial.ttf";
 
 enum TILESTATE { EMPTY, SIMPLE, QUEEN, HIGHLIGHT };
 

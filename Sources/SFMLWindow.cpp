@@ -13,11 +13,12 @@ void SFMLWindow::InitWindow() {
    _window = new RenderWindow(
            _v_mode,
            "Classic Checkers",
-           Style::Resize
+           Style::Fullscreen
    );
    _window->setPosition(Vector2i(0, 0));
    _window->setFramerateLimit(60);
-   //if (!font.loadFromFile(FONT_ASSET_PATH)) throw("ERROR::FONT_LOADING");
+   // Issue on loading font
+   //if (!_font.loadFromFile(FONT_ASSET_PATH)) throw;
 }
 
 RenderWindow* SFMLWindow::getWindow() { return _window; }

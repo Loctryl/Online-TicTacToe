@@ -72,13 +72,42 @@ void GameManager::OnClick() {
             }
          }
       }
+      if(mainGrid->nbPieces[0] == 0 || mainGrid->nbPieces[1] == 0) {
+         std::cout << "Game over" << std::endl;
+         mainWindow->getWindow()->close();
+      }
    }
 }
 
-void GameManager::RenderGame() const {
+void GameManager::DrawPlayerTurn() {
+   Text text;
+
+   // select the font
+   text.setFont(mainWindow->getFont()); // font is a sf::Font
+
+   // set the string to display
+   text.setString("Player turn : ");
+
+   // set the character size
+   text.setCharacterSize(30); // in pixels, not points!
+
+   // set the color
+   text.setFillColor(Color::White);
+   
+   text.setStyle(Text::Bold);
+
+   text.setPosition(99,99);
+   
+   //mainWindow->getWindow()->draw(text);
+}
+
+
+void GameManager::RenderGame() {
    mainWindow->getWindow()->clear();
    
    mainGrid->DrawGrid(mainWindow);
+
+   DrawPlayerTurn();
    
    mainWindow->getWindow()->display();
 }

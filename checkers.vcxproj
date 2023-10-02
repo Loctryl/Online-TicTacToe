@@ -369,14 +369,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Headers\GameManager.h" />
     <ClInclude Include="Headers\Grid.h" />
     <ClInclude Include="Headers\Tile.h" />
     <ClInclude Include="Headers\SFMLWindow.h" />
     <ClInclude Include="Headers\Structures.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\pixelFont.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

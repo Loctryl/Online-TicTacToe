@@ -1,9 +1,11 @@
 ﻿#include "../Headers/Grid.h"
 #include <iostream>
-#include <stdlib.h>
 
 Grid::Grid() {
-    
+    tileSize = 0;
+    marginLeft = 0;
+    nbPieces[0] = 0;
+    nbPieces[1] = 0;
 }
 
 Grid::~Grid() { }
@@ -18,8 +20,10 @@ void Grid::InitGrid(int size, int margin) {
             if (x % 2 == 0 && y % 2 != 0 || x % 2 != 0 && y % 2 == 0) {
                 if (count <= 40) {
                     mainGrid[x][y] = Tile(1,x,y,SIMPLE);
+                    nbPieces[1]++;
                 } else if (count >= 60) {
                     mainGrid[x][y] = Tile(0,x,y,SIMPLE);
+                    nbPieces[0]++;
                 } else {
                     mainGrid[x][y] = Tile(-1,x,y,EMPTY);
                 }
@@ -31,7 +35,7 @@ void Grid::InitGrid(int size, int margin) {
     }
 }
 
-bool Grid::IsMouseInGrid(Vector2i mousePos) {
+bool Grid::IsMouseInGrid(Vector2i mousePos) const {
     if(mousePos.x >= marginLeft
         && mousePos.x <= marginLeft+tileSize*10
         && mousePos.y >= tileSize
@@ -41,7 +45,7 @@ bool Grid::IsMouseInGrid(Vector2i mousePos) {
     return false;
 }
 
-bool Grid::IsClickOnPiece(int player, Tile* tile) {
+bool Grid::IsClickOnPiece(int player, Tile* tile) const {
     if ((mainGrid[tile->x][tile->y].state == SIMPLE
         || mainGrid[tile->x][tile->y].state == QUEEN)
         && mainGrid[tile->x][tile->y].player == player)
@@ -49,7 +53,7 @@ bool Grid::IsClickOnPiece(int player, Tile* tile) {
     return false;
 }
 
-bool Grid::IsClickOnHighLight(Tile* tile) {
+bool Grid::IsClickOnHighLight(Tile* tile) const  {
     if (mainGrid[tile->x][tile->y].state == HIGHLIGHT) return true;
     return false;
 }
@@ -61,18 +65,18 @@ Tile* Grid::GetTile(Vector2i mousePos) {
     return &mainGrid[x][y];
 }
 
-bool Grid::IsPlayableTile(int dir, Tile* tile, int player) {
+bool Grid::IsPlayableTile(int dir, Tile* tile, int player) const {
     if(dir % 2 == player % 2
         && mainGrid[tile->x + all_directions[dir][0]][tile->y + all_directions[dir][1]].state == EMPTY) return true;
     return false;
 }
 
-bool Grid::IsQueenPlayableTile(int dir, Tile* tile, int player, int n) {
+bool Grid::IsQueenPlayableTile(int dir, Tile* tile, int player, int n) const {
     if(mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].state == EMPTY) return true;
     return false;
 }
 
-bool Grid::IsEatableTile(int dir, Tile* tile, int player, int n) {
+bool Grid::IsEatableTile(int dir, Tile* tile, int player, int n) const {
     if((mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].state == SIMPLE
         || mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].state == QUEEN)
         && mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].player != player
@@ -167,7 +171,10 @@ bool Grid::MovePiece(Tile* selected, Tile* hl) {
     if(abs(hl->x - selected->x)>=2) {
         Vector2i dir = {selected->x - hl->x < 0 ? 1 : -1, selected->y - hl->y < 0 ? 1 : -1};
         for (int i = 1; i < abs(hl->x - selected->x); i++) {
-            if(mainGrid[selected->x + dir.x*i][selected->y + dir.y*i].player == SIMPLE || mainGrid[selected->x + dir.x*i][selected->y + dir.y*i].player == QUEEN) eating = true;
+            if(mainGrid[selected->x + dir.x*i][selected->y + dir.y*i].state == SIMPLE || mainGrid[selected->x + dir.x*i][selected->y + dir.y*i].state == QUEEN) {
+                eating = true;
+                nbPieces[mainGrid[selected->x + dir.x*i][selected->y + dir.y*i].player]--;
+            }
             mainGrid[selected->x + dir.x*i][selected->y + dir.y*i].state = EMPTY;
             mainGrid[selected->x + dir.x*i][selected->y + dir.y*i].player = -1;
         }
@@ -175,7 +182,7 @@ bool Grid::MovePiece(Tile* selected, Tile* hl) {
     return eating;
 }
 
-void Grid::SetPieceColor(CircleShape* _circ, Vector2i xy) {
+void Grid::SetPieceColor(CircleShape* _circ, Vector2i xy) const {
     if (mainGrid[xy.x][xy.y].player == 0) 
         _circ->setFillColor(Color(240, 245, 185,255));
     else

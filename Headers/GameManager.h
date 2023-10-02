@@ -27,5 +27,7 @@ public:
 
    void OnClick();
 
-   void RenderGame() const;
+   void DrawPlayerTurn();
+
+   void RenderGame();
 };
