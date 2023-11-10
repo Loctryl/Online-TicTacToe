@@ -23,4 +23,7 @@
 /CheckersGame/SFML-2.6.0
 /CheckersGame/x64/Debug
 
+/Client/x64/
+/Server/x64/
+
 /x64
