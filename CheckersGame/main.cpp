@@ -1,13 +1,11 @@
-#include "SFML/Graphics.hpp"
-#include "Headers/GameManager.h"
-using namespace std;
+#include "GameManager.h"
 
 
 int main() {
-   GameManager game = GameManager::getInstance();
+   GameManager* game = GameManager::GetInstance();
 
-   game.InitGame();
-   game.RunGame();
+   game->InitGame();
+   game->RunGame();
    return 0;
    
 }

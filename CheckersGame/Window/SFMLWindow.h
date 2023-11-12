@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "SFML/Graphics.hpp"
-#include "Structures.h"
 using namespace sf;
 
 class SFMLWindow {

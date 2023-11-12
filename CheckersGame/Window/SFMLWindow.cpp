@@ -1,4 +1,4 @@
-﻿#include "../Headers/SFMLWindow.h"
+﻿#include "SFMLWindow.h"
 
 SFMLWindow::SFMLWindow() {
    _window = nullptr;

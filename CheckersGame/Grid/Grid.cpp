@@ -1,4 +1,4 @@
-﻿#include "../Headers/Grid.h"
+﻿#include "Grid.h"
 #include <iostream>
 
 Grid::Grid() {
@@ -67,20 +67,20 @@ Tile* Grid::GetTile(Vector2i mousePos) {
 
 bool Grid::IsPlayableTile(int dir, Tile* tile, int player) const {
     if(dir % 2 == player % 2
-        && mainGrid[tile->x + all_directions[dir][0]][tile->y + all_directions[dir][1]].state == EMPTY) return true;
+        && mainGrid[tile->x + ALL_DIRECTIONS[dir][0]][tile->y + ALL_DIRECTIONS[dir][1]].state == EMPTY) return true;
     return false;
 }
 
 bool Grid::IsQueenPlayableTile(int dir, Tile* tile, int player, int n) const {
-    if(mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].state == EMPTY) return true;
+    if(mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*n][tile->y + ALL_DIRECTIONS[dir][1]*n].state == EMPTY) return true;
     return false;
 }
 
 bool Grid::IsEatableTile(int dir, Tile* tile, int player, int n) const {
-    if((mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].state == SIMPLE
-        || mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].state == QUEEN)
-        && mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].player != player
-        && mainGrid[tile->x + all_directions[dir][0]*(n+1)][tile->y + all_directions[dir][1]*(n+1)].state == EMPTY) return true;
+    if((mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*n][tile->y + ALL_DIRECTIONS[dir][1]*n].state == SIMPLE
+        || mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*n][tile->y + ALL_DIRECTIONS[dir][1]*n].state == QUEEN)
+        && mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*n][tile->y + ALL_DIRECTIONS[dir][1]*n].player != player
+        && mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*(n+1)][tile->y + ALL_DIRECTIONS[dir][1]*(n+1)].state == EMPTY) return true;
     return false;
 }
 
@@ -88,10 +88,10 @@ void Grid::ShowFirstPossibilities(int player, Tile* tile) {
     if(tile->state == SIMPLE) {
         for (int dir = 0; dir < 4; dir ++) {
             if(IsPlayableTile(dir, tile, player)) 
-                ShowHighLight({tile->x + all_directions[dir][0],tile->y + all_directions[dir][1]}, player);
+                ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0],tile->y + ALL_DIRECTIONS[dir][1]}, player);
             
             if(IsEatableTile(dir, tile, player, 1)) 
-                ShowHighLight({tile->x + all_directions[dir][0]*2,tile->y + all_directions[dir][1]*2}, player);
+                ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0]*2,tile->y + ALL_DIRECTIONS[dir][1]*2}, player);
         }
     }
     else if (tile->state == QUEEN) {
@@ -99,12 +99,12 @@ void Grid::ShowFirstPossibilities(int player, Tile* tile) {
             int n = 1;
             bool eat = false;
             
-            while(tile->x + all_directions[dir][0]*n >= 0
-                && tile->x + all_directions[dir][0]*n < 10
-                && tile->y + all_directions[dir][1]*n >= 0
-                && tile->y + all_directions[dir][1]*n < 10) {
+            while(tile->x + ALL_DIRECTIONS[dir][0]*n >= 0
+                && tile->x + ALL_DIRECTIONS[dir][0]*n < 10
+                && tile->y + ALL_DIRECTIONS[dir][1]*n >= 0
+                && tile->y + ALL_DIRECTIONS[dir][1]*n < 10) {
                 if(IsQueenPlayableTile(dir, tile, player, n)) {
-                    ShowHighLight({tile->x + all_directions[dir][0]*n,tile->y + all_directions[dir][1]*n}, player);
+                    ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0]*n,tile->y + ALL_DIRECTIONS[dir][1]*n}, player);
                 }
                 else if(!IsEatableTile(dir, tile, player, n) || eat) break;
                 else eat = true;
@@ -121,7 +121,7 @@ bool Grid::ShowNextPossibilities(int player, Tile* tile) {
     if(tile->state == SIMPLE) {
         for (int dir = 0; dir < 4; dir ++) {
             if(IsEatableTile(dir, tile, player, 1)) {
-                ShowHighLight({tile->x + all_directions[dir][0]*2,tile->y + all_directions[dir][1]*2}, player);
+                ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0]*2,tile->y + ALL_DIRECTIONS[dir][1]*2}, player);
                 ret = true;
             }
         }
@@ -131,15 +131,15 @@ bool Grid::ShowNextPossibilities(int player, Tile* tile) {
             int n = 1;
             bool eat = false;
 
-            while(tile->x + all_directions[dir][0]*n >= 0
-                && tile->x + all_directions[dir][0]*n < 10
-                && tile->y + all_directions[dir][1]*n >= 0
-                && tile->y + all_directions[dir][1]*n < 10) {
+            while(tile->x + ALL_DIRECTIONS[dir][0]*n >= 0
+                && tile->x + ALL_DIRECTIONS[dir][0]*n < 10
+                && tile->y + ALL_DIRECTIONS[dir][1]*n >= 0
+                && tile->y + ALL_DIRECTIONS[dir][1]*n < 10) {
                 
                 if(IsEatableTile(dir, tile, player, n)) eat = true;
                 if(eat && IsQueenPlayableTile(dir, tile, player, n)) {
                     if(!IsEatableTile(dir, tile, player, n)) {
-                        ShowHighLight({tile->x + all_directions[dir][0]*n,tile->y + all_directions[dir][1]*n}, player);
+                        ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0]*n,tile->y + ALL_DIRECTIONS[dir][1]*n}, player);
                         ret = true;
                     } else break;
                 }

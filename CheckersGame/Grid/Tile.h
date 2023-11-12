@@ -1,9 +1,9 @@
 ﻿#pragma once
-#include "Structures.h"
+#include "Resources/framework.h"
 
 struct Tile {
     int player, x, y;
-    TILESTATE state;
+    TILE_STATE state;
 
     Tile() {
         player = 0;
@@ -12,10 +12,10 @@ struct Tile {
         state = EMPTY;
     }
 
-    Tile(int nplayer, int nx, int ny, TILESTATE nstate) {
-        player = nplayer;
+    Tile(int nPlayer, int nx, int ny, TILE_STATE nState) {
+        player = nPlayer;
         x = nx;
         y = ny;
-        state = nstate;
+        state = nState;
     }
 };
