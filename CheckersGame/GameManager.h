@@ -21,15 +21,15 @@ public:
     static GameManager* GetInstance();
 
     GameManager();
-    ~GameManager();
+    ~GameManager() = default;
 
-    void InitGame();
+    void InitGame() const;
 
     void RunGame();
 
     void OnClick();
 
-    void DrawPlayerTurn();
+    void DrawPlayerTurn() const;
 
-    void RenderGame();
+    void RenderGame() const;
 };

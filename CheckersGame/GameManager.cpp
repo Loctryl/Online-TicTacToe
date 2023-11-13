@@ -14,10 +14,6 @@ GameManager::GameManager() {
    mForceEat = false;
 }
 
-GameManager::~GameManager() {
-   //delete mainWindow;
-}
-
 GameManager* GameManager::GetInstance()
 {
    if (mInstance != nullptr) return mInstance;
@@ -26,7 +22,7 @@ GameManager* GameManager::GetInstance()
 }
 
 
-void GameManager::InitGame() {
+void GameManager::InitGame() const {
    mMainWindow->InitWindow();
    const int tileSize = mMainWindow->GetVideoMode()->height / 12;
    const int marginLeft = mMainWindow->GetVideoMode()->width / 2 - tileSize * 5;
@@ -91,7 +87,7 @@ void GameManager::OnClick() {
    }
 }
 
-void GameManager::DrawPlayerTurn() {
+void GameManager::DrawPlayerTurn() const {
    Text text;
 
    // select the font
@@ -114,7 +110,7 @@ void GameManager::DrawPlayerTurn() {
 }
 
 
-void GameManager::RenderGame() {
+void GameManager::RenderGame() const {
    mMainWindow->GetWindow()->clear();
    
    mMainGrid->DrawGrid(mMainWindow);
