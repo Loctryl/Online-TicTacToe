@@ -5,10 +5,20 @@ class Grid;
 struct Tile;
 
 
+enum GAME_STATE
+{
+    IDLE,
+    SELECTING,
+    PLAYING,
+};
+
+
 class GameManager
 {
     int mPlayerTurn;
     bool mForceEat;
+
+    GAME_STATE mCurrentState;
     
     SFMLWindow* mMainWindow;
     Grid* mMainGrid;

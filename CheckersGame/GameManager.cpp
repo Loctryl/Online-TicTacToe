@@ -1,5 +1,7 @@
 ﻿#include "GameManager.h"
 #include <iostream>
+#include <WS2tcpip.h>
+
 #include "Grid/Grid.h"
 #include "Window/SFMLWindow.h"
 
@@ -12,6 +14,7 @@ GameManager::GameManager() {
    mPieceSelected = nullptr;
    mPlayerTurn = 0;
    mForceEat = false;
+   mCurrentState = IDLE;
 }
 
 GameManager* GameManager::GetInstance()
@@ -44,43 +47,60 @@ void GameManager::RunGame() {
 }
 
 void GameManager::OnClick() {
+   //POINT pos = {Mouse::getPosition().x, Mouse::getPosition().y};
+   //ScreenToClient(mMainWindow->GetWindow()->getSystemHandle(), &pos);
+   
    if (mMainGrid->IsMouseInGrid(Mouse::getPosition())) {
       Tile* tile = mMainGrid->GetTile(Mouse::getPosition());
 
-      if(!mPieceSelected) {
-         if(mMainGrid->IsClickOnPiece(mPlayerTurn, tile)){
-            mPieceSelected = tile;
-            mMainGrid->ClearHighlights();
-            mMainGrid->ShowFirstPossibilities(mPlayerTurn, tile);
-         }
-      }
-      else {
-         if(mMainGrid->IsClickOnHighLight(tile)) {
-            bool eat = mMainGrid->MovePiece(mPieceSelected, tile);
-            mMainGrid->ClearHighlights();
-            
-            if(eat && mMainGrid->ShowNextPossibilities(mPlayerTurn, tile)) {
+      bool eat = false;
+      
+      switch (mCurrentState) {
+         case IDLE:
+            if(mMainGrid->IsClickOnPiece(mPlayerTurn, tile))
+            {
                mPieceSelected = tile;
-               mForceEat = true;
-            }
-            else {
-               mPieceSelected = nullptr;
-               mPlayerTurn = !mPlayerTurn;
-               mForceEat = false;
-            }
-         }
-         else if(!mForceEat) {
-            mMainGrid->ClearHighlights();
-            mPieceSelected = nullptr;
-
-            if(mMainGrid->IsClickOnPiece(mPlayerTurn, tile)) {
-               mPieceSelected = tile;
+               mCurrentState = SELECTING;
                mMainGrid->ClearHighlights();
                mMainGrid->ShowFirstPossibilities(mPlayerTurn, tile);
             }
-         }
+            break;
+         
+         case SELECTING:
+            if(mMainGrid->IsClickOnHighLight(tile))
+            {
+               eat = mMainGrid->MovePiece(mPieceSelected, tile);
+               mMainGrid->ClearHighlights();
+               mCurrentState = PLAYING;
+            }
+            else if(!mForceEat)
+            {
+               mMainGrid->ClearHighlights();
+               mPieceSelected = nullptr;
+               mCurrentState = IDLE;
+            }
+            break;
+         
+         case PLAYING:
+            if(eat && mMainGrid->ShowNextPossibilities(mPlayerTurn, tile))
+            {
+               mPieceSelected = tile;
+               mForceEat = true;
+               mCurrentState = SELECTING;
+            }
+            else
+            {
+               mPieceSelected = nullptr;
+               mPlayerTurn = !mPlayerTurn;
+               mForceEat = false;
+               mCurrentState = IDLE;
+            }
+            break;
       }
-      if(mMainGrid->nbPieces[0] == 0 || mMainGrid->nbPieces[1] == 0) {
+      std::cout << mCurrentState << std::endl;
+
+      if(mMainGrid->nbPieces[0] == 0 || mMainGrid->nbPieces[1] == 0)
+      {
          std::cout << "Game over" << std::endl;
          mMainWindow->GetWindow()->close();
       }

@@ -12,10 +12,12 @@ SFMLWindow::~SFMLWindow() {
 
 void SFMLWindow::InitWindow() {
    _v_mode = VideoMode::getDesktopMode();
+   _v_mode.width = 1280;
+   _v_mode.height = 720;
    _window = new RenderWindow(
            _v_mode,
            "Classic Checkers",
-           Style::Fullscreen
+           Style::Default
    );
    _window->setPosition(Vector2i(0, 0));
    _window->setFramerateLimit(60);
