@@ -1,13 +1,9 @@
 ﻿#pragma once
-#include <vector>
-
 
 class BaseState;
 
-
 class StateMachine
 {
-
     BaseState* mCurrentState;
 public:
 
@@ -16,5 +12,4 @@ public:
 
     void SwitchState(BaseState* newState);
     void Update() const;
-    
 };

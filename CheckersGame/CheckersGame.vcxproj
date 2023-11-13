@@ -297,6 +297,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="States\BaseState.cpp" />
+    <ClCompile Include="States\GameState.cpp" />
     <ClCompile Include="States\StateMachine.cpp" />
     <ClCompile Include="Window\SFMLWindow.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
@@ -381,6 +382,7 @@
     <ClInclude Include="Grid\Tile.h" />
     <ClInclude Include="Resources\framework.h" />
     <ClInclude Include="States\BaseState.h" />
+    <ClInclude Include="States\GameState.h" />
     <ClInclude Include="States\StateMachine.h" />
     <ClInclude Include="Window\SFMLWindow.h" />
   </ItemGroup>

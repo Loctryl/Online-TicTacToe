@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 using namespace sf;
 
 class SFMLWindow {
@@ -13,13 +13,13 @@ public:
    ~SFMLWindow();
 
    /// Returns the window
-   RenderWindow* getWindow();
+   RenderWindow* GetWindow() const;
 
    /// Return the used font
-   Font &getFont();
+   Font* GetFont();
 
    /// Returns the window's video mode
-   VideoMode* getVideoMode();
+   VideoMode* GetVideoMode();
 
    /// Initiates the windows and its parameters
    void InitWindow();

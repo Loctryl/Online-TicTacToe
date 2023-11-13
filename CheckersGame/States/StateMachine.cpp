@@ -2,7 +2,6 @@
 #include "BaseState.h"
 #include "Resources/framework.h"
 
-
 StateMachine::StateMachine() { mCurrentState = nullptr; }
 
 StateMachine::~StateMachine() { REL_PTR(mCurrentState) }

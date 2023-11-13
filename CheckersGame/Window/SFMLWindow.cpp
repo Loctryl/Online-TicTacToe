@@ -1,4 +1,6 @@
 ﻿#include "SFMLWindow.h"
+#include "SFML/Graphics.hpp"
+using namespace sf;
 
 SFMLWindow::SFMLWindow() {
    _window = nullptr;
@@ -21,6 +23,6 @@ void SFMLWindow::InitWindow() {
    //if (!_font.loadFromFile(FONT_ASSET_PATH)) throw;
 }
 
-RenderWindow* SFMLWindow::getWindow() { return _window; }
-Font &SFMLWindow::getFont() { return _font; }
-VideoMode* SFMLWindow::getVideoMode() { return &_v_mode; }
+RenderWindow* SFMLWindow::GetWindow() const { return _window; }
+Font* SFMLWindow::GetFont() { return &_font; }
+VideoMode* SFMLWindow::GetVideoMode() { return &_v_mode; }

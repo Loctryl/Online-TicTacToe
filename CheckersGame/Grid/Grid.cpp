@@ -207,7 +207,7 @@ void Grid::DrawGrid(SFMLWindow* mainWindow) {
             else
                 _rect->setFillColor(Color(70, 70, 70, 255));
 
-            mainWindow->getWindow()->draw(*_rect);
+            mainWindow->GetWindow()->draw(*_rect);
          
             if (mainGrid[x][y].state != EMPTY) {
                 switch (mainGrid[x][y].state) {
@@ -234,7 +234,7 @@ void Grid::DrawGrid(SFMLWindow* mainWindow) {
                    static_cast<float>(y * tileSize + tileSize + (tileSize/10))
                 });
                 
-                mainWindow->getWindow()->draw(*_circ);
+                mainWindow->GetWindow()->draw(*_circ);
             }
         }
     }

@@ -28,17 +28,17 @@ GameManager* GameManager::GetInstance()
 
 void GameManager::InitGame() {
    mMainWindow->InitWindow();
-   const int tileSize = mMainWindow->getVideoMode()->height / 12;
-   const int marginLeft = mMainWindow->getVideoMode()->width / 2 - tileSize * 5;
+   const int tileSize = mMainWindow->GetVideoMode()->height / 12;
+   const int marginLeft = mMainWindow->GetVideoMode()->width / 2 - tileSize * 5;
    mMainGrid->InitGrid(tileSize, marginLeft);
 }
 
 void GameManager::RunGame() {
    Event event{};
    RenderGame();
-   while (mMainWindow->getWindow()->isOpen()){
-      while (mMainWindow->getWindow()->pollEvent(event)) {
-         if (event.type == Event::Closed || event.key.code == Keyboard::Escape) mMainWindow->getWindow()->close();
+   while (mMainWindow->GetWindow()->isOpen()){
+      while (mMainWindow->GetWindow()->pollEvent(event)) {
+         if (event.type == Event::Closed || event.key.code == Keyboard::Escape) mMainWindow->GetWindow()->close();
          if(event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
             OnClick();
          }
@@ -86,7 +86,7 @@ void GameManager::OnClick() {
       }
       if(mMainGrid->nbPieces[0] == 0 || mMainGrid->nbPieces[1] == 0) {
          std::cout << "Game over" << std::endl;
-         mMainWindow->getWindow()->close();
+         mMainWindow->GetWindow()->close();
       }
    }
 }
@@ -95,7 +95,7 @@ void GameManager::DrawPlayerTurn() {
    Text text;
 
    // select the font
-   text.setFont(mMainWindow->getFont()); // font is a sf::Font
+   text.setFont(*mMainWindow->GetFont()); // font is a sf::Font
 
    // set the string to display
    text.setString("Player turn : ");
@@ -115,11 +115,11 @@ void GameManager::DrawPlayerTurn() {
 
 
 void GameManager::RenderGame() {
-   mMainWindow->getWindow()->clear();
+   mMainWindow->GetWindow()->clear();
    
    mMainGrid->DrawGrid(mMainWindow);
 
    DrawPlayerTurn();
    
-   mMainWindow->getWindow()->display();
+   mMainWindow->GetWindow()->display();
 }
