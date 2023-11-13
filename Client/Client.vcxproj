@@ -133,6 +133,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="client.cpp" />
+    <ClCompile Include="Source\NetWork.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\NetWork.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
