@@ -30,10 +30,10 @@ int main() {
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 
-#define DEFAULT_PORT "80"
+#define DEFAULT_PORT "6666"
 
 	// Resolve the server address and port
-	char addr[100] = "google.com";
+	char addr[100] = "127.0.0.1";
 	iResult = getaddrinfo(addr, DEFAULT_PORT, &hints, &result);
 	if (iResult != 0) {
 		printf("getaddrinfo failed: %d\n", iResult);
@@ -76,7 +76,7 @@ int main() {
 
 	int recvbuflen = DEFAULT_BUFLEN;
 
-	const char* sendbuf = "GET / HTTP/1.1\r\nHost: www.google.com\r\nConnection: close\r\n\r\n";
+	const char* sendbuf = "ping\n";
 	char recvbuf[DEFAULT_BUFLEN];
 
 	// Send an initial buffer
