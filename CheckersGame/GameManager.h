@@ -35,7 +35,9 @@ public:
 
     void InitGame() const;
 
-    void RunGame();
+    void RunPlayGame();
+
+    void RunSpecGame();
 
     void OnClick();
 

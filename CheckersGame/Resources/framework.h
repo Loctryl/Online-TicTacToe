@@ -16,7 +16,6 @@ using namespace sf;
 #include <iostream>
 using namespace std;
 
-
 const std::string FONT_ASSET_PATH = "Assets/arial.ttf";
 
 enum TILE_STATE { EMPTY, SIMPLE, QUEEN, HIGHLIGHT };

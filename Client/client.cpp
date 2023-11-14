@@ -2,6 +2,7 @@
 #pragma comment(lib, "sfml-system.lib")
 #pragma comment(lib, "sfml-window.lib")
 #pragma comment(lib, "Ws2_32.lib");
+
 #pragma comment(lib, "CheckersGame.lib");
 
 #include <iostream>
@@ -63,12 +64,12 @@ int main()
     do
     {
         iResult = recv(socks, buffer, 16*1024,0);
-        if(iResult > 0)
+        /*if(iResult > 0)
             cout<< buffer << endl;
         else if ( iResult == 0)
             cout<< "\n Connection close" << endl;
         else
-            cout<< "Failed" << endl;
+            cout<< "Failed" << endl;*/
     } while (iResult > 0);
     
     closesocket(socks);
@@ -77,6 +78,8 @@ int main()
     GameManager* game = GameManager::GetInstance();
 
     game->InitGame();
-    game->RunGame();
+    game->RunPlayGame();
+    //game->RunSpecGame();
+
     return 0;
 }

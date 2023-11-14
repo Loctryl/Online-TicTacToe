@@ -29,7 +29,7 @@ void GameManager::InitGame() const {
    mMainGrid->InitGrid(tileSize, marginLeft);
 }
 
-void GameManager::RunGame() {
+void GameManager::RunPlayGame() {
    Event event{};
    RenderGame();
    while (mMainWindow->GetWindow()->isOpen()){
@@ -43,9 +43,17 @@ void GameManager::RunGame() {
    }
 }
 
+void GameManager::RunSpecGame() {
+    Event event{};
+    while (mMainWindow->GetWindow()->isOpen()) {
+        while (mMainWindow->GetWindow()->pollEvent(event)) {
+            if (event.type == Event::Closed || event.key.code == Keyboard::Escape) mMainWindow->GetWindow()->close();
+        }
+        RenderGame();
+    }
+}
+
 void GameManager::OnClick() {
-   //POINT pos = {Mouse::getPosition().x, Mouse::getPosition().y};
-   //ScreenToClient(mMainWindow->GetWindow()->getSystemHandle(), &pos);
    
    if (mMainGrid->IsMouseInGrid(Mouse::getPosition())) {
       Tile* tile = mMainGrid->GetTile(Mouse::getPosition());
@@ -94,7 +102,6 @@ void GameManager::OnClick() {
             }
             break;
       }
-      cout << mCurrentState << endl;
 
       if(mMainGrid->nbPieces[0] == 0 || mMainGrid->nbPieces[1] == 0)
       {
