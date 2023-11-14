@@ -3,28 +3,28 @@
 using namespace sf;
 
 SFMLWindow::SFMLWindow() {
-   _window = nullptr;
+   mWindow = nullptr;
 }
 
 SFMLWindow::~SFMLWindow() {
-   delete this->_window;
+   delete this->mWindow;
 }
 
 void SFMLWindow::InitWindow() {
-   _v_mode = VideoMode::getDesktopMode();
-   _v_mode.width = 1280;
-   _v_mode.height = 720;
-   _window = new RenderWindow(
-           _v_mode,
+   mVMode = VideoMode::getDesktopMode();
+   mVMode.width = 1280;
+   mVMode.height = 720;
+   mWindow = new RenderWindow(
+           mVMode,
            "Classic Checkers",
            Style::Default
    );
-   _window->setPosition(Vector2i(0, 0));
-   _window->setFramerateLimit(60);
+   mWindow->setPosition(Vector2i(0, 0));
+   mWindow->setFramerateLimit(60);
    // Issue on loading font
    //if (!_font.loadFromFile(FONT_ASSET_PATH)) throw;
 }
 
-RenderWindow* SFMLWindow::GetWindow() const { return _window; }
-Font* SFMLWindow::GetFont() { return &_font; }
-VideoMode* SFMLWindow::GetVideoMode() { return &_v_mode; }
+RenderWindow* SFMLWindow::GetWindow() const { return mWindow; }
+Font* SFMLWindow::GetFont() { return &mFont; }
+VideoMode* SFMLWindow::GetVideoMode() { return &mVMode; }

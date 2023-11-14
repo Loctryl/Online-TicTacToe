@@ -8,8 +8,6 @@ Grid::Grid() {
     nbPieces[1] = 0;
 }
 
-Grid::~Grid() { }
-
 void Grid::InitGrid(int size, int margin) {
     tileSize = size;
     marginLeft = margin;
@@ -189,7 +187,7 @@ void Grid::SetPieceColor(CircleShape* _circ, Vector2i xy) const {
         _circ->setFillColor(Color(145, 50, 1,255));
 }
 
-void Grid::DrawGrid(SFMLWindow* mainWindow) {
+void Grid::DrawGrid(SFMLWindow* mainWindow) const {
     for(int x = 0; x < 10 ; x++) {
         for (int y = 0; y < 10; y ++) {
             auto* _rect = new RectangleShape();
@@ -241,13 +239,11 @@ void Grid::DrawGrid(SFMLWindow* mainWindow) {
 }
 
 void Grid::ClearHighlights() {
-    for(int x = 0;x < 10;x++) {
-        for (int y = 0; y< 10;y++) {
+    for(int x = 0;x < 10;x++)
+        for (int y = 0; y< 10;y++) 
             if(mainGrid[x][y].state == HIGHLIGHT) {
                 mainGrid[x][y].state = EMPTY;
                 mainGrid[x][y].player = -1;
             }
-        }
-    }
 }
 

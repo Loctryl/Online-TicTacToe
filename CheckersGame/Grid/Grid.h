@@ -11,7 +11,7 @@ public:
     int nbPieces[2];
 
     Grid();
-    ~Grid();
+    ~Grid() = default;
 
     void InitGrid(int, int);
 
@@ -39,7 +39,7 @@ public:
 
     void SetPieceColor(CircleShape*, Vector2i) const;
 
-    void DrawGrid(SFMLWindow*);
+    void DrawGrid(SFMLWindow*) const;
 
     void ClearHighlights();
 };

@@ -4,9 +4,9 @@ using namespace sf;
 
 class SFMLWindow {
 private:
-   RenderWindow* _window;
-   VideoMode _v_mode;
-   Font _font;
+   RenderWindow* mWindow;
+   VideoMode mVMode;
+   Font mFont;
    
 public:
    SFMLWindow();

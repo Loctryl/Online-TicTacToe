@@ -12,7 +12,7 @@ using namespace std;
 
 int main()
 {
-    string request = "GET / HTTP/1.1\r\nHost: www.google.com\r\nConnection: close\r\n\r\n";
+    const string request = "GET / HTTP/1.1\r\nHost: www.google.com\r\nConnection: close\r\n\r\n";
     
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -51,7 +51,7 @@ int main()
     }
     
     if(send(socks, request.c_str(), strlen(request.c_str())+1, 0) < 0){
-        std::cout<<"\n request is not good"<<std::endl;
+        cout<<"\n request is not good"<<endl;
         return -1;
     }
 
