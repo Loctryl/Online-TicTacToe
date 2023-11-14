@@ -157,6 +157,25 @@ void Grid::ShowHighLight(Vector2i coord, int playnum) {
     }
 }
 
+
+bool Grid::CheckMove(Tile* origin, Tile* moved)
+{
+    if (origin->state == SIMPLE) 
+    {
+        for (int dir = 0; dir < 4; dir++) {
+            if (IsPlayableTile(dir, moved, origin->player))
+                return true;
+
+            if (IsEatableTile(dir, moved, origin->player, 1))
+                return true;
+        }
+    }
+    else if (origin->state == QUEEN) 
+    {
+
+    }
+}
+
 bool Grid::MovePiece(Tile* selected, Tile* hl) {
     hl->player = selected->player;
     hl->state = selected->state;

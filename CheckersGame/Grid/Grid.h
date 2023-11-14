@@ -35,6 +35,8 @@ public:
 
     bool ShowNextPossibilities(int, Tile*);
 
+    bool CheckMove(Tile*, Tile*);
+
     bool MovePiece(Tile*, Tile*);
 
     void SetPieceColor(CircleShape*, Vector2i) const;
