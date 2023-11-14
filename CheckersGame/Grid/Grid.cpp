@@ -189,54 +189,56 @@ void Grid::SetPieceColor(CircleShape* _circ, Vector2i xy) const {
 }
 
 void Grid::DrawGrid(SFMLWindow* mainWindow) const {
+    auto* rect = new RectangleShape();
+    auto* circ = new CircleShape();
     for(int x = 0; x < 10 ; x++) {
         for (int y = 0; y < 10; y ++) {
-            auto* _rect = new RectangleShape();
-            auto* _circ = new CircleShape();
          
-            _rect->setSize({static_cast<float>(tileSize), static_cast<float>(tileSize)});
-            _rect->setPosition({
+            rect->setSize({static_cast<float>(tileSize), static_cast<float>(tileSize)});
+            rect->setPosition({
                static_cast<float>(x * tileSize + marginLeft),
                static_cast<float>(y * tileSize + tileSize)
             });
-            _rect->setOutlineThickness(1);
-            _rect->setOutlineColor(Color(12,80,138,255));
+            rect->setOutlineThickness(1);
+            rect->setOutlineColor(Color(12,80,138,255));
             if (x % 2 == 0 && y % 2 != 0 || x % 2 != 0 && y % 2 == 0)
-                _rect->setFillColor(Color(20, 20, 20, 255));
+                rect->setFillColor(Color(20, 20, 20, 255));
             else
-                _rect->setFillColor(Color(70, 70, 70, 255));
+                rect->setFillColor(Color(70, 70, 70, 255));
 
-            mainWindow->GetWindow()->draw(*_rect);
+            mainWindow->GetWindow()->draw(*rect);
          
             if (mainGrid[x][y].state != EMPTY) {
                 switch (mainGrid[x][y].state) {
                 case SIMPLE:
-                    SetPieceColor(_circ, {x,y});
+                    SetPieceColor(circ, {x,y});
                     break;
                 case QUEEN:
-                    SetPieceColor(_circ, {x,y});
-                    _circ->setOutlineColor(Color(255,0,0));
-                    _circ->setOutlineThickness(2);
+                    SetPieceColor(circ, {x,y});
+                    circ->setOutlineColor(Color(255,0,0));
+                    circ->setOutlineThickness(2);
                     break;
                 case HIGHLIGHT:
                     if (mainGrid[x][y].player == 0) 
-                        _circ->setFillColor(Color(240, 245, 185,150));
+                        circ->setFillColor(Color(240, 245, 185,150));
                     else
-                        _circ->setFillColor(Color(145, 50, 1,150));
+                        circ->setFillColor(Color(145, 50, 1,150));
                     break;
                 case EMPTY: break;
                 }
             
-                _circ->setRadius(tileSize/2.5);
-                _circ->setPosition({
+                circ->setRadius(tileSize/2.5);
+                circ->setPosition({
                    static_cast<float>(x * tileSize + marginLeft + (tileSize/10)),
                    static_cast<float>(y * tileSize + tileSize + (tileSize/10))
                 });
                 
-                mainWindow->GetWindow()->draw(*_circ);
+                mainWindow->GetWindow()->draw(*circ);
             }
         }
     }
+    REL_PTR(rect);
+    REL_PTR(circ);
 }
 
 void Grid::ClearHighlights() {
