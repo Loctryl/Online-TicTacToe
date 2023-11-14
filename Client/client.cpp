@@ -11,36 +11,38 @@ void Close(SOCKET& connectSocket)
 	if (close == SOCKET_ERROR)
 		printf("Erreur fermeture socket : %d\n", close);
 	else
-		printf("Socket ferme\n", close);
+		printf("Socket ferme\n");
 
 	WSACleanup();
 }
 
 
-const int nbData = 4;
-const size_t bufferSize = sizeof(int) * nbData;
+const int nbData = 43;
+const size_t bufferSizeData = sizeof(int) * nbData;
+bool validation = true;
+const size_t bufferSizeValidation = sizeof(bool);
 
 // Sérialisation d'un tableau d'entier
-void SerializeIntArray(int array[nbData], char buffer[bufferSize])
+void SerializeIntArray(int array[nbData], char buffer[bufferSizeData])
 {
-	memcpy(buffer, array, bufferSize);
+	memcpy(buffer, array, bufferSizeData);
 }
 
 // Désérialisation d'un tableau d'entier
-void DeserializeIntArray(int array[nbData], char buffer[bufferSize])
+void DeserializeIntArray(int array[nbData], char buffer[bufferSizeData])
 {
-	memcpy(array, buffer, bufferSize);
+	memcpy(array, buffer, bufferSizeData);
 }
 
 int main()
 {
 	// TABLEAUX POUR L'ENVOI
 	int sendData[nbData];
-	char sendBuf[bufferSize];
+	char sendBuf[bufferSizeData];
 
 	// TABLEAUX POUR LA RECEPTION
 	int recvData[nbData];
-	char recvBuf[bufferSize];
+	char recvBuf[bufferSizeData];
 
 
 	// PARAMETRAGE DU SOCKET
@@ -88,7 +90,7 @@ int main()
 	sendData[2] = 4;
 	sendData[3] = 0;
 	SerializeIntArray(sendData, sendBuf);
-	if (send(connectSocket, sendBuf, bufferSize, 0) == SOCKET_ERROR)
+	if (send(connectSocket, sendBuf, bufferSizeData, 0) == SOCKET_ERROR)
 	{
 		printf("Erreur send() %d\n", WSAGetLastError());
 		Close(connectSocket);
@@ -111,7 +113,7 @@ int main()
 	int iResult = -1;
 	do
 	{
-		iResult = recv(connectSocket, recvBuf, bufferSize, 0);
+		iResult = recv(connectSocket, recvBuf, bufferSizeData, 0);
 		if (iResult > 0)
 		{
 			DeserializeIntArray(recvData, recvBuf);

@@ -15,7 +15,7 @@ void Close(SOCKET& socket)
 }
 
 
-const int nbData = 4;
+const int nbData = 43;
 const size_t bufferSize = sizeof(int) * nbData;
 
 // Sérialisation d'un tableau d'entier
