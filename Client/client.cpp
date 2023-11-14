@@ -17,7 +17,7 @@ void Close(SOCKET& connectSocket)
 }
 
 
-const int nbData = 43;
+const int nbData = 4;
 const size_t bufferSizeData = sizeof(int) * nbData;
 bool validation = true;
 const size_t bufferSizeValidation = sizeof(bool);
@@ -84,51 +84,71 @@ int main()
 	printf("connexion au serveur reussite\n");
 
 
-	// ENVOI D'UN MESSAGE
-	sendData[0] = 1;
-	sendData[1] = 12;
-	sendData[2] = 4;
-	sendData[3] = 0;
-	SerializeIntArray(sendData, sendBuf);
-	if (send(connectSocket, sendBuf, bufferSizeData, 0) == SOCKET_ERROR)
-	{
-		printf("Erreur send() %d\n", WSAGetLastError());
-		Close(connectSocket);
-		return 1;
-	}
-	printf("Message envoye\n");
-
-
-	// FERMETURE DE LA CONNEXION D'ENVOI (la réception est toujours possible)
-	if (shutdown(connectSocket, SD_SEND) == SOCKET_ERROR)
-	{
-		std::cout << "Erreur shutdown() : " << WSAGetLastError() << "\n";
-		Close(connectSocket);
-		return 1;
-	}
-	printf("connexion d'envoi fermee\n");
-
-
-	// RECEPTION DES MESSAGES
 	int iResult = -1;
-	do
+	bool endGame = false;
+	while (!endGame)
 	{
+		validation = false;
+		while (!validation)
+		{
+			// ENVOI D'UN DEPLACEMENT
+			sendData[0] = 1;
+			sendData[1] = 12;
+			sendData[2] = 4;
+			sendData[3] = 0;
+			SerializeIntArray(sendData, sendBuf);
+			if (send(connectSocket, sendBuf, bufferSizeData, 0) == SOCKET_ERROR)
+			{
+				printf("Erreur send() %d\n", WSAGetLastError());
+				Close(connectSocket);
+				return 1;
+			}
+			printf("Message envoye\n");
+
+
+			// RECEPTION DE LA VALIDATION
+			iResult = recv(connectSocket, recvBuf, bufferSizeData, 0);
+			if (iResult > 0)
+			{
+				// validation = récup d'un bool
+			}
+			else
+			{
+				if (iResult == 0)
+					printf("connexion fermee\n");
+				else
+					printf("Erreur recv() : %d\n", WSAGetLastError());
+
+				Close(connectSocket);
+				return 1;
+			}
+		}
+
+		// faire le déplacement
+		// MAj endGame
+		if (endGame)
+			break;
+
+		// RECEPTION DU COUP DE L'AUTRE JOUEUR
 		iResult = recv(connectSocket, recvBuf, bufferSizeData, 0);
 		if (iResult > 0)
 		{
-			DeserializeIntArray(recvData, recvBuf);
-			printf("Message recu : %d %d %d %d\n", recvData[0], recvData[1], recvData[2], recvData[3]);
+			// réception de son déplacement
 		}
-		else if (iResult == 0)
-			printf("connexion fermee\n");
 		else
 		{
-			printf("Erreur recv() : %d\n", WSAGetLastError());
+			if (iResult == 0)
+				printf("connexion fermee\n");
+			else
+				printf("Erreur recv() : %d\n", WSAGetLastError());
+
 			Close(connectSocket);
 			return 1;
 		}
 
-	} while (iResult > 0);// Tant que la connexion n'est pas fermée ou qu'il n'y a pas eu d'erreurs
+		// faire le déplacement
+		// MAj endGame
+	}
 
 
 	// FERMETURE DU CLIENT

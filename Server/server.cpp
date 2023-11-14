@@ -15,30 +15,32 @@ void Close(SOCKET& socket)
 }
 
 
-const int nbData = 43;
-const size_t bufferSize = sizeof(int) * nbData;
+const int nbData = 4;
+const size_t bufferSizeData = sizeof(int) * nbData;
+bool validation = true;
+const size_t bufferSizeValidation = sizeof(bool);
 
 // Sérialisation d'un tableau d'entier
-void SerializeIntArray(int array[nbData], char buffer[bufferSize])
+void SerializeIntArray(int array[nbData], char buffer[bufferSizeData])
 {
-	memcpy(buffer, array, bufferSize);
+	memcpy(buffer, array, bufferSizeData);
 }
 
 // Désérialisation d'un tableau d'entier
-void DeserializeIntArray(int array[nbData], char buffer[bufferSize])
+void DeserializeIntArray(int array[nbData], char buffer[bufferSizeData])
 {
-	memcpy(array, buffer, bufferSize);
+	memcpy(array, buffer, bufferSizeData);
 }
 
 int main()
 {
 	// TABLEAUX POUR L'ENVOI
 	int sendData[nbData];
-	char sendBuf[bufferSize];
+	char sendBuf[bufferSizeData];
 
 	// TABLEAUX POUR LA RECEPTION
 	int recvData[nbData];
-	char recvBuf[bufferSize];
+	char recvBuf[bufferSizeData];
 
 
 	// PARAMETRAGE DU SOCKET
@@ -77,20 +79,20 @@ int main()
 	}
 
 
-	// RECHERCHE D'UN CLIENT
-	if (listen(listenSocket, 1) == SOCKET_ERROR)
+	// RECHERCHE DE 2 CLIENTs
+	if (listen(listenSocket, 2) == SOCKET_ERROR)
 	{
 		printf("Erreur lors de l'écoute : %d\n", WSAGetLastError());
 		Close(listenSocket);
 		WSACleanup();
 		return 1;
 	}
-	printf("Attente de la connexion d'un client...\n");
+	printf("Attente de la connexion de 2 clients...\n");
 
 
 	// RECUPERATION DU SOCKET CLIENT EN ACCEPTANT LA CONNEXION
-	SOCKET acceptSocket = accept(listenSocket, NULL, NULL);
-	if (acceptSocket == INVALID_SOCKET)
+	SOCKET acceptSocket1 = accept(listenSocket, NULL, NULL);
+	if (acceptSocket1 == INVALID_SOCKET)
 	{
 		printf("Erreur accept() : %d\n", WSAGetLastError());
 		Close(listenSocket);
@@ -100,52 +102,92 @@ int main()
 	else
 		printf("Client connecte\n");
 
+	// RECUPERATION DU SOCKET CLIENT EN ACCEPTANT LA CONNEXION
+	SOCKET acceptSocket2 = accept(listenSocket, NULL, NULL);
+	if (acceptSocket2 == INVALID_SOCKET)
+	{
+		printf("Erreur accept() : %d\n", WSAGetLastError());
+		Close(acceptSocket1);
+		Close(listenSocket);
+		WSACleanup();
+		return 1;
+	}
+	else
+		printf("Client connecte\n");
 
-	// RECEPTION DES MESSAGES
+	// STOCKAGE DES 2 CLIENTS
+	SOCKET acceptSocket[2] = { acceptSocket1, acceptSocket2 };
+	int clientActu = 0;
+
+
 	int iResult = -1;
+	bool endGame = false;
 	do
 	{
-		iResult = recv(acceptSocket, recvBuf, bufferSize, 0);
+		// RECEPTION  D'UN DEPLACEMENT
+		iResult = recv(acceptSocket[clientActu], recvBuf, bufferSizeData, 0);
 		if (iResult > 0)
 		{
-			DeserializeIntArray(recvData, recvBuf);
-			printf("Message recu : %d %d %d %d\n", recvData[0], recvData[1], recvData[2], recvData[3]);
+			// reception deplacement
+			// test du deplacement
+			// validation = true/false
 		}
-		else if (iResult == 0)
-			printf("connexion fermee\n");
 		else
 		{
-			printf("Erreur recv() : %d\n", WSAGetLastError());
-			Close(acceptSocket);
+			if (iResult == 0)
+				printf("connexion fermee\n");
+			else
+				printf("Erreur recv() : %d\n", WSAGetLastError());
+
+			Close(acceptSocket[0]);
+			Close(acceptSocket[1]);
 			Close(listenSocket);
 			WSACleanup();
 			return 1;
 		}
 
-	} while (iResult > 0);// Tant que la connexion n'est pas fermée ou qu'il n'y a pas eu d'erreurs
+		// ENVOI DE LA VALIDATION
+		if (send(acceptSocket[clientActu], sendBuf, bufferSizeData, 0) == SOCKET_ERROR)
+		{
+			printf("Erreur send() %d\n", WSAGetLastError());
+			Close(acceptSocket[0]);
+			Close(acceptSocket[1]);
+			Close(listenSocket);
+			WSACleanup();
+			return 1;
+		}
+		printf("Message envoye\n");
+
+		if (validation)
+		{
+			// faire le déplacement
+			// MAj endGame
+			// changer le acceptSocket
+			// envoie du déplcement à l'autre joueur
+		}
 
 
-	// ENVOI D'UN MESSAGE
-	sendData[0] = 2;
-	sendData[1] = 2;
-	sendData[2] = 3;
-	sendData[3] = -1;
-	SerializeIntArray(sendData, sendBuf);
-	if (send(acceptSocket, sendBuf, bufferSize, 0) == SOCKET_ERROR)
+	} while (false);// Tant que la connexion n'est pas fermée ou qu'il n'y a pas eu d'erreurs
+
+
+	// FERMETURE DE LA CONNEXION
+	if (shutdown(acceptSocket[0], SD_BOTH) == SOCKET_ERROR)
 	{
-		printf("Erreur send() %d\n", WSAGetLastError());
-		Close(acceptSocket);
+		std::cout << "Erreur shutdown() : " << WSAGetLastError() << "\n";
+		Close(acceptSocket[0]);
+		Close(acceptSocket[1]);
 		Close(listenSocket);
 		WSACleanup();
 		return 1;
 	}
-	printf("Message envoye\n");
+	printf("connexion fermee\n");
 
 	// FERMETURE DE LA CONNEXION
-	if (shutdown(acceptSocket, SD_SEND) == SOCKET_ERROR)
+	if (shutdown(acceptSocket[1], SD_BOTH) == SOCKET_ERROR)
 	{
 		std::cout << "Erreur shutdown() : " << WSAGetLastError() << "\n";
-		Close(acceptSocket);
+		Close(acceptSocket[0]);
+		Close(acceptSocket[1]);
 		Close(listenSocket);
 		WSACleanup();
 		return 1;
@@ -154,7 +196,8 @@ int main()
 
 
 	// FERMETURE DU SERVER
-	Close(acceptSocket);
+	Close(acceptSocket[0]);
+	Close(acceptSocket[1]);
 	Close(listenSocket);
 	WSACleanup();
 	return 0;
