@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "Tile.h"
 #include "Window/SFMLWindow.h"
+#include "Grid/Tile.h"
 
 class Grid {
 public:

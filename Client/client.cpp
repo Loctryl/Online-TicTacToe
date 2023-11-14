@@ -1,10 +1,15 @@
+#pragma comment(lib, "sfml-graphics.lib")
+#pragma comment(lib, "sfml-system.lib")
+#pragma comment(lib, "sfml-window.lib")
+#pragma comment(lib, "Ws2_32.lib");
+#pragma comment(lib, "CheckersGame.lib");
 
 #include <iostream>
 #include <ostream>
 #include <winsock2.h>
 #include <WS2tcpip.h>
 
-#pragma comment(lib, "Ws2_32.lib");
+#include "GameManager.h"
 
 #define PORT "80"
 
@@ -67,4 +72,11 @@ int main()
     } while (iResult > 0);
     
     closesocket(socks);
+
+
+    GameManager* game = GameManager::GetInstance();
+
+    game->InitGame();
+    game->RunGame();
+    return 0;
 }

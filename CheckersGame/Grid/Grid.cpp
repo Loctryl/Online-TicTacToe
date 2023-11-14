@@ -1,4 +1,5 @@
 ﻿#include "Grid.h"
+#include "Tile.h"
 #include <iostream>
 
 Grid::Grid() {

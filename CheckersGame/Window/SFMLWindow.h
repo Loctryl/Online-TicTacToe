@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include <SFML\Graphics.hpp>
-using namespace sf;
+#include "Resources/framework.h"
 
 class SFMLWindow {
 private:

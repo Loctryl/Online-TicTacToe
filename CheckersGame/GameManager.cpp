@@ -1,7 +1,4 @@
 ﻿#include "GameManager.h"
-#include <iostream>
-#include <WS2tcpip.h>
-
 #include "Grid/Grid.h"
 #include "Window/SFMLWindow.h"
 
@@ -97,11 +94,11 @@ void GameManager::OnClick() {
             }
             break;
       }
-      std::cout << mCurrentState << std::endl;
+      cout << mCurrentState << endl;
 
       if(mMainGrid->nbPieces[0] == 0 || mMainGrid->nbPieces[1] == 0)
       {
-         std::cout << "Game over" << std::endl;
+         cout << "Game over" << endl;
          mMainWindow->GetWindow()->close();
       }
    }
