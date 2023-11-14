@@ -1,6 +1,8 @@
 #include <iostream>
 #include <winsock2.h>
 #include <WS2tcpip.h>
+#include "Headers/json.hpp"
+using json = nlohmann::json;
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -15,30 +17,32 @@ void Close(SOCKET& socket)
 }
 
 
-const int nbData = 43;
-const size_t bufferSize = sizeof(int) * nbData;
+//const int nbData = 43;
+//const size_t bufferSize = sizeof(int) * nbData;
+//
+//// Sérialisation d'un tableau d'entier
+//void SerializeIntArray(int array[nbData], char buffer[bufferSize])
+//{
+//	memcpy(buffer, array, bufferSize);
+//}
+//
+//// Désérialisation d'un tableau d'entier
+//void DeserializeIntArray(int array[nbData], char buffer[bufferSize])
+//{
+//	memcpy(array, buffer, bufferSize);
+//}
 
-// Sérialisation d'un tableau d'entier
-void SerializeIntArray(int array[nbData], char buffer[bufferSize])
-{
-	memcpy(buffer, array, bufferSize);
-}
-
-// Désérialisation d'un tableau d'entier
-void DeserializeIntArray(int array[nbData], char buffer[bufferSize])
-{
-	memcpy(array, buffer, bufferSize);
-}
+#define PACKET_SIZE 2048
 
 int main()
 {
-	// TABLEAUX POUR L'ENVOI
-	int sendData[nbData];
-	char sendBuf[bufferSize];
+	//// TABLEAUX POUR L'ENVOI
+	//int sendData[nbData];
+	//char sendBuf[bufferSize];
 
-	// TABLEAUX POUR LA RECEPTION
-	int recvData[nbData];
-	char recvBuf[bufferSize];
+	//// TABLEAUX POUR LA RECEPTION
+	//int recvData[nbData];
+	//char recvBuf[bufferSize];
 
 
 	// PARAMETRAGE DU SOCKET
@@ -102,17 +106,21 @@ int main()
 
 
 	// RECEPTION DES MESSAGES
+
+	char recvBuf[PACKET_SIZE];
+
 	int iResult = -1;
+	std::string ACKString = "";
 	do
 	{
-		iResult = recv(acceptSocket, recvBuf, bufferSize, 0);
+		iResult = recv(acceptSocket, recvBuf, PACKET_SIZE, 0);
 		if (iResult > 0)
 		{
-			DeserializeIntArray(recvData, recvBuf);
-			printf("Message recu : %d %d %d %d\n", recvData[0], recvData[1], recvData[2], recvData[3]);
+			recvBuf[iResult - 1] = '\0';
+			ACKString.append(recvBuf);
 		}
 		else if (iResult == 0)
-			printf("connexion fermee\n");
+			std::cout << "Recieved Message : " << ACKString << "\nClosing Connection\n";
 		else
 		{
 			printf("Erreur recv() : %d\n", WSAGetLastError());
@@ -126,12 +134,19 @@ int main()
 
 
 	// ENVOI D'UN MESSAGE
-	sendData[0] = 2;
-	sendData[1] = 2;
-	sendData[2] = 3;
-	sendData[3] = -1;
-	SerializeIntArray(sendData, sendBuf);
-	if (send(acceptSocket, sendBuf, bufferSize, 0) == SOCKET_ERROR)
+	//sendData[0] = 2;
+	//sendData[1] = 2;
+	//sendData[2] = 3;
+	//sendData[3] = -1;
+	//SerializeIntArray(sendData, sendBuf);
+
+	std::string connectAnswer = R"(
+        {
+            "start": 1
+        }
+    )";
+
+	if (send(acceptSocket, connectAnswer.c_str(), connectAnswer.size(), 0) == SOCKET_ERROR)
 	{
 		printf("Erreur send() %d\n", WSAGetLastError());
 		Close(acceptSocket);

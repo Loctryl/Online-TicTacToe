@@ -1,6 +1,9 @@
 #include <iostream>
 #include <winsock2.h>
 #include <WS2tcpip.h>
+#include "Headers/json.hpp"
+
+using json = nlohmann::json;
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -17,34 +20,27 @@ void Close(SOCKET& connectSocket)
 }
 
 
-const int nbData = 43;
-const size_t bufferSizeData = sizeof(int) * nbData;
-bool validation = true;
-const size_t bufferSizeValidation = sizeof(bool);
+//const int nbData = 43;
+//const size_t bufferSizeData = sizeof(int) * nbData;
+//bool validation = true;
+//const size_t bufferSizeValidation = sizeof(bool);
+//
+//// Sérialisation d'un tableau d'entier
+//void SerializeIntArray(int array[nbData], char buffer[bufferSizeData])
+//{
+//	memcpy(buffer, array, bufferSizeData);
+//}
+//
+//// Désérialisation d'un tableau d'entier
+//void DeserializeIntArray(int array[nbData], char buffer[bufferSizeData])
+//{
+//	memcpy(array, buffer, bufferSizeData);
+//}
 
-// Sérialisation d'un tableau d'entier
-void SerializeIntArray(int array[nbData], char buffer[bufferSizeData])
-{
-	memcpy(buffer, array, bufferSizeData);
-}
-
-// Désérialisation d'un tableau d'entier
-void DeserializeIntArray(int array[nbData], char buffer[bufferSizeData])
-{
-	memcpy(array, buffer, bufferSizeData);
-}
+#define PACKET_SIZE 2048
 
 int main()
 {
-	// TABLEAUX POUR L'ENVOI
-	int sendData[nbData];
-	char sendBuf[bufferSizeData];
-
-	// TABLEAUX POUR LA RECEPTION
-	int recvData[nbData];
-	char recvBuf[bufferSizeData];
-
-
 	// PARAMETRAGE DU SOCKET
 	WORD wVersionRequested = MAKEWORD(2, 2);	// Version min et max de la spécification Windows Sockets
 	WSADATA wsaData;							// Informations sur l’implémentation de Windows Sockets
@@ -81,16 +77,18 @@ int main()
 		Close(connectSocket);
 		return 1;
 	}
-	printf("connexion au serveur reussite\n");
+	printf("connexion au serveur reussie\n");
 
 
 	// ENVOI D'UN MESSAGE
-	sendData[0] = 1;
-	sendData[1] = 12;
-	sendData[2] = 4;
-	sendData[3] = 0;
-	SerializeIntArray(sendData, sendBuf);
-	if (send(connectSocket, sendBuf, bufferSizeData, 0) == SOCKET_ERROR)
+
+	std::string connectString = R"(
+        {
+            "connection": "Username"
+        }
+    )";
+
+	if (send(connectSocket, connectString.c_str(), connectString.size(), 0) == SOCKET_ERROR)
 	{
 		printf("Erreur send() %d\n", WSAGetLastError());
 		Close(connectSocket);
@@ -111,16 +109,21 @@ int main()
 
 	// RECEPTION DES MESSAGES
 	int iResult = -1;
+	char recvBuf[PACKET_SIZE];
+	std::string ACKString = "";
+
 	do
 	{
-		iResult = recv(connectSocket, recvBuf, bufferSizeData, 0);
+		iResult = recv(connectSocket, recvBuf, PACKET_SIZE, 0);
 		if (iResult > 0)
 		{
-			DeserializeIntArray(recvData, recvBuf);
-			printf("Message recu : %d %d %d %d\n", recvData[0], recvData[1], recvData[2], recvData[3]);
+			recvBuf[iResult - 1] = '\0';
+			ACKString.append(recvBuf);
 		}
 		else if (iResult == 0)
-			printf("connexion fermee\n");
+		{
+			std::cout << "Recieved Message : " << ACKString << "\nClosed Connection\n";
+		}
 		else
 		{
 			printf("Erreur recv() : %d\n", WSAGetLastError());
