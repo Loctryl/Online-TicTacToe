@@ -4,7 +4,8 @@ int main()
 {
 	Application app = Application();
 
-	app.Init();
+	if (!app.Init())
+		return 1;
 
 	return app.Run();
 }
