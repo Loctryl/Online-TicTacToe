@@ -32,7 +32,7 @@ int main()
 				return 1;
 		}
 
-		// faire le d�placement
+		// faire le déplacement
 		// endGame = IsEnd()
 		if (endGame)
 			break;

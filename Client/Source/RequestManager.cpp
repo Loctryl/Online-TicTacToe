@@ -53,5 +53,5 @@ bool RequestManager::RecievePlay(int coord[2])
 
 bool RequestManager::Close()
 {
-	mNetWork.Close();
+	return mNetWork.Close();
 }

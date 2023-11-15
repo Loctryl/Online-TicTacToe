@@ -143,7 +143,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="client.cpp" />
+    <ClCompile Include="Source\client.cpp" />
+    <ClCompile Include="Source\NetWork.cpp" />
+    <ClCompile Include="Source\RequestManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Headers\json.hpp" />
+    <ClInclude Include="Headers\NetWork.h" />
+    <ClInclude Include="Headers\RequestManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
