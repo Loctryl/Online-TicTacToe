@@ -132,14 +132,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="client.cpp" />
+    <ClCompile Include="Source\client.cpp" />
     <ClCompile Include="Source\NetWork.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\NetWork.h" />
+    <ClInclude Include="Headers\NetWork.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Include\json.hpp" />
     <ClInclude Include="Headers\json.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

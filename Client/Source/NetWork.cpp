@@ -1,4 +1,4 @@
-#include "NetWork.h"
+#include "Headers/NetWork.h"
 
 NetWork::NetWork()
 {
@@ -77,11 +77,15 @@ bool NetWork::ConnectServer(sockaddr_in& clientService)
     }
 }
 
-bool NetWork::SendRequest(const char* sendBuffer)
+bool NetWork::SendRequest(int x, int y)
 {
-    const size_t sendBufferSize = 0;// TO DO
+    std::string data = "{ \"x\": \"";
+    data += x;
+    data += "\", \"y\": \"";
+    data += y;
+    data += "\" }";
 
-    if (send(mConnectSocket, sendBuffer, sendBufferSize, 0) == SOCKET_ERROR)
+    if (send(mConnectSocket, data.c_str(), PACKET_SIZE, 0) == SOCKET_ERROR)
     {
         printf("Erreur send() %d\n", WSAGetLastError());
         Close();
@@ -91,12 +95,11 @@ bool NetWork::SendRequest(const char* sendBuffer)
         return true;
 }
 
-char* NetWork::Recieve()
+json NetWork::Recieve()
 {
-    char* recieveBuffer = nullptr;
-    const size_t recieveBufferSize = 0;// TO DO
+    char* data = nullptr;
 
-    int iResult = recv(mConnectSocket, recieveBuffer, recieveBufferSize, 0);
+    int iResult = recv(mConnectSocket, data, PACKET_SIZE, 0);
     if (iResult <= 0)
     {
         if (iResult == 0)
@@ -105,9 +108,14 @@ char* NetWork::Recieve()
             printf("Erreur recv() : %d\n", WSAGetLastError());
 
         Close();
+        return "{}";
     }
 
-    return recieveBuffer;
+    data[iResult - 1] = '\0';
+
+    json parsedMessage;
+
+    return json::parse(data);
 }
 
 void NetWork::Close()
