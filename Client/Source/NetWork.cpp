@@ -1,5 +1,4 @@
 #include "NetWork.h"
-#include <iostream>
 
 NetWork::NetWork()
 {
@@ -84,16 +83,20 @@ void NetWork::SendRequest(const char* sendBuffer)
     }
 }
 
-void NetWork::Recieve()
+std::string NetWork::Recieve()
 {
     int  recieveBufferLength = DEFAULT_BUFFER_LENGTH;
     char recieveBuffer[DEFAULT_BUFFER_LENGTH];
     int iResult;
     
+    std::string result = "";
+
     do
     {
         iResult = recv(mConnectSocket, recieveBuffer, recieveBufferLength, 0);
         for(auto c : recieveBuffer)
-            std::cout << c;
+            result += c;
     }while (iResult > 0);
+
+    return result;
 }

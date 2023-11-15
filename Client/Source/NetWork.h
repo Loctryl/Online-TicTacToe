@@ -1,10 +1,12 @@
 #pragma once
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <iostream>
+
 #pragma comment(lib, "Ws2_32.lib")
 
 #define PORT "80"
-#define ADRESS "localhost"
+#define ADRESS "google.com"
 #define DEFAULT_BUFFER_LENGTH 512
 
 
@@ -18,7 +20,7 @@ public:
     void CreateSocket();
     bool ConnectServer();
     void SendRequest(const char *sendBuffer);
-    void Recieve();
+    std::string Recieve();
     
 private:
     WSADATA mWsaData;
