@@ -23,7 +23,6 @@ class GameManager
     SFMLWindow* mMainWindow;
     Grid* mMainGrid;
     Tile* mPieceSelected;
-    
 
 public:
     static GameManager* mInstance;

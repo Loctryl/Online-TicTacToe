@@ -256,8 +256,8 @@ void Grid::DrawGrid(SFMLWindow* mainWindow) const {
             }
         }
     }
-    REL_PTR(rect);
-    REL_PTR(circ);
+    REL_PTR(rect)
+    REL_PTR(circ)
 }
 
 void Grid::ClearHighlights() {

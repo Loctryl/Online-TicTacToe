@@ -75,6 +75,8 @@ void GameManager::OnClick() {
             if(mMainGrid->IsClickOnHighLight(tile))
             {
                eat = mMainGrid->MovePiece(mPieceSelected, tile);
+               //Send infos to server here
+               
                mMainGrid->ClearHighlights();
                mCurrentState = PLAYING;
             }
