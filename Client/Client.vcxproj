@@ -133,9 +133,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="client.cpp" />
+    <ClCompile Include="Source\MessageWindow.cpp" />
     <ClCompile Include="Source\NetWork.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\MessageWindow.h" />
     <ClInclude Include="Source\NetWork.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

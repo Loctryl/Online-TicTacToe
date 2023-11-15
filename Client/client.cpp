@@ -36,6 +36,8 @@ void DeserializeIntArray(int array[nbData], char buffer[bufferSizeData])
 
 int main()
 {
+
+
 	// TABLEAUX POUR L'ENVOI
 	int sendData[nbData];
 	char sendBuf[bufferSizeData];
