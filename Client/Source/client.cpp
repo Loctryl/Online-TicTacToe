@@ -8,18 +8,6 @@ using json = nlohmann::json;
 
 #pragma comment(lib, "Ws2_32.lib")
 
-void Close(SOCKET& connectSocket)
-{
-	int close = closesocket(connectSocket);
-
-	if (close == SOCKET_ERROR)
-		printf("Erreur fermeture socket : %d\n", close);
-	else
-		printf("Socket ferme\n");
-
-	WSACleanup();
-}
-
 int main()
 {
 	NetWork netWork = NetWork();
