@@ -44,4 +44,6 @@ public:
     void DrawGrid(SFMLWindow*) const;
 
     void ClearHighlights();
+
+    bool IsEnd();
 };

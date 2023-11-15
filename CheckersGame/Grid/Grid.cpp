@@ -269,3 +269,8 @@ void Grid::ClearHighlights() {
             }
 }
 
+bool Grid::IsEnd()
+{
+    return nbPieces[0] == 0 || nbPieces[1] == 0;
+}
+
