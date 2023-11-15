@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="client.cpp">
+    <ClCompile Include="Source\NetWork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\NetWork.cpp">
@@ -24,12 +24,24 @@
     <ClCompile Include="Source\MessageWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\NetWork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\MessageWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ressources\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NetWork.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ressources\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

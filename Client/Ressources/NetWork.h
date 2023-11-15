@@ -1,8 +1,8 @@
 #pragma once
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <iostream>
 #include "Ressources/json.hpp"
-#include "Ressources/framework.h"
 
 using json = nlohmann::json;
 
@@ -16,26 +16,19 @@ using json = nlohmann::json;
 class NetWork
 {
 public:
+    NetWork();
     ~NetWork();
 
-    static NetWork* GetInstance();
-
-    bool Init(HWND hWnd);
+    bool Init(HWND* hWnd);
 
     bool SendRequest(int x, int y);
     json Recieve();
     void Close();
-
-    inline SOCKET GetSocket() { return mConnectSocket; };
     
 private:
-    NetWork();
-
-    static NetWork* mInstance;
-
     SOCKET mConnectSocket = {};
-    HWND mHWnd;
 
+    HWND* mHWnd;
     bool SettingSocket();
     bool CreateSocket();
     sockaddr_in SettingProtocol();

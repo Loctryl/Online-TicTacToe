@@ -1,11 +1,12 @@
 #pragma once
-#include <windows.h>
+#include "Ressources/framework.h"
 
 // Handles the Windows window
-class Window
+class MessageWindow
 {
 	static HWND hWnd;
 	HINSTANCE hInst; // current instance
+	WCHAR szWindowClass[100] = L"MessageWindow";
 
 	HINSTANCE hPrevInstance = 0;
 	LPWSTR lpCmdLine = 0;
@@ -17,8 +18,8 @@ class Window
 
 
 public:
-	Window();
-	~Window() = default;
+	MessageWindow();
+	~MessageWindow() = default;
 
 	bool InitWindow();
 

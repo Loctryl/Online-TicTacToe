@@ -1,8 +1,8 @@
 #include "MessageWindow.h"
 
-HWND Window::hWnd = NULL;
+HWND MessageWindow::hWnd = NULL;
 
-Window::Window()
+MessageWindow::MessageWindow()
 {
     hInst = GetModuleHandle(0);
     hPrevInstance = 0;
@@ -10,7 +10,7 @@ Window::Window()
     nCmdShow = SW_SHOW;
 }
 
-bool Window::InitWindow()
+bool MessageWindow::InitWindow()
 {
     MyRegisterClass();
 
@@ -23,11 +23,11 @@ bool Window::InitWindow()
     return TRUE;
 }
 
-BOOL Window::InitInstance()
+BOOL MessageWindow::InitInstance()
 {
     bool fullscreen = false;
 
-    hWnd = CreateWindowW(L"", L"",
+    hWnd = CreateWindowW(szWindowClass, L"",
         fullscreen ? WS_POPUP : WS_OVERLAPPEDWINDOW,
         100, 100, 1600, 900,
         nullptr, nullptr, hInst, nullptr);
@@ -37,13 +37,10 @@ BOOL Window::InitInstance()
         return FALSE;
     }
 
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
-
     return TRUE;
 }
 
-ATOM Window::MyRegisterClass()
+ATOM MessageWindow::MyRegisterClass()
 {
     WNDCLASSEXW wcex;
 
@@ -54,16 +51,19 @@ ATOM Window::MyRegisterClass()
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = hInst;
+    wcex.hIcon = nullptr;
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = nullptr;
+    wcex.lpszClassName = szWindowClass;
+    wcex.hIconSm = nullptr;
 
     return RegisterClassExW(&wcex);
 }
 
-HWND& Window::GetHWND() { return hWnd; }
+HWND& MessageWindow::GetHWND() { return hWnd; }
 
-HINSTANCE& Window::GetHInstance() { return hInst; }
+HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -75,17 +75,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     break;
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hWnd, &ps);
-        // TODO: Add any drawing code that uses hdc here...
-        EndPaint(hWnd, &ps);
-    }
-    break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+
+    case WM_READ_SOCKET:
+    {
+        cout << "test" << endl;
+    }
+        break;
+
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
