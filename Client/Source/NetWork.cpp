@@ -76,11 +76,9 @@ bool NetWork::ConnectServer(sockaddr_in& clientService)
         Close();
         return false;
     }
-    else
-    {
-        printf("connexion au serveur reussite\n");
-        return true;
-    }
+
+    printf("connexion au serveur reussite\n");
+    return true;
 }
 
 bool NetWork::SendRequest(const char* data)
@@ -91,18 +89,19 @@ bool NetWork::SendRequest(const char* data)
         Close();
         return false;
     }
-    else
-        return true;
+
+    printf("Requete envoyee\n");
+    return true;
 }
 
 char* NetWork::Recieve()
 {
-    char* data = nullptr;
+    char data[PACKET_SIZE];
 
     int iResult = recv(mConnectSocket, data, PACKET_SIZE, 0);
-    if (iResult<=0)
+    if (iResult <= 0)
     {
-        if (iResult==0)
+        if (iResult == 0)
             printf("connexion fermee\n");
         else
             printf("Erreur recv() : %d\n", WSAGetLastError());

@@ -1,6 +1,7 @@
 #include "Headers/RequestManager.h"
 #include <Headers/json.hpp>
 #include "Headers/NetWork.h"
+#include <iostream>
 
 using json = nlohmann::json;
 
@@ -10,37 +11,40 @@ bool RequestManager::Init() { return mNetWork->Init(); }
 
 bool RequestManager::SendRequest(int coord[2])
 {
-    std::string data = "{ \"x\": \"";
-    data += coord[0];
-    data += "\", \"y\": \"";
-    data += coord[1];
-    data += "\" }";
+    json data = {
+        {"x", coord[0]},
+        {"y", coord[1]}
+    };
 
-    return mNetWork->SendRequest(data.c_str());
+    return mNetWork->SendRequest(data.dump().c_str());
 }
 
 bool RequestManager::RecieveValidation(bool& validation)
 {
-    const char* data = mNetWork->Recieve();
+    std::string data = mNetWork->Recieve();
 
-    if (data==nullptr)
-        return false;
+    /*if (data == nullptr)
+        return false;*/
 
     json parsedMessage = json::parse(data);
     validation = parsedMessage["answer"];
+
+    printf("validation recue\n");
     return true;
 }
 
 bool RequestManager::RecievePlay(int coord[2])
 {
-    const char* data = mNetWork->Recieve();
+    std::string data = mNetWork->Recieve();
 
-    if (data==nullptr)
-        return false;
+    /*if (data == nullptr)
+        return false;*/
 
     json parsedMessage = json::parse(data);
     coord[0] = parsedMessage["x"];
     coord[1] = parsedMessage["y"];
+
+    printf("deplacement recue\n");
     return true;
 }
 

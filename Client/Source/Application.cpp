@@ -27,6 +27,10 @@ int Application::Run()
 	x = -1;
 	y = -1;
 
+	// RECEPTION DE LA VALIDATION DE LANCEMENT DE JEU
+	if (!mRequestManager->RecieveValidation(validation))
+		return 1;
+
 	/*Event event{};
 	while (mGame.IsWindowOpened())
 	{
@@ -54,7 +58,7 @@ int Application::Run()
 				return 1;
 
 
-			// RECEPTION DE LA VALIDATION
+			// RECEPTION DE LA VALIDATION DU DEPLACEMENT
 			if (!mRequestManager->RecieveValidation(validation))
 				return 1;
 		}
