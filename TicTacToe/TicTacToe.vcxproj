@@ -108,8 +108,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)SFML-2.6.0\include\</AdditionalIncludeDirectories>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -216,7 +217,8 @@
   <ItemGroup>
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid\Grid.h" />
-    <ClInclude Include="Resources\framework.h" />
+    <ClInclude Include="Resources\utilities.h" />
+    <ClInclude Include="Resources\SfmlIncluder.h" />
     <ClInclude Include="Window\SFMLWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

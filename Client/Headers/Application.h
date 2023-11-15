@@ -1,11 +1,12 @@
 #pragma once
-#include "GameManager.h"
-#include "RequestManager.h"
+
+class RequestManager;
+class GameManager;
 
 class Application
 {
-	RequestManager mRequestManager;
-	GameManager mGame;
+	RequestManager* mRequestManager;
+	GameManager* mGame;
 
 public:
 	Application();
@@ -15,4 +16,3 @@ public:
 
 	int Run();
 };
-

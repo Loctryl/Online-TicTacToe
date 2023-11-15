@@ -1,11 +1,8 @@
 ﻿#pragma once
-#include <Window/SFMLWindow.h>
-
-#include <iostream>
+#include "Window/SFMLWindow.h"
 
 class Grid;
 class SFMLWindow;
-
 
 class GameManager
 {
@@ -23,11 +20,11 @@ public:
 
     void Play(int x, int y,void (*func)() = nullptr) const;
 
-    inline bool IsWindowOpened() const { return mWindow->GetWindow()->isOpen(); }
+    bool IsWindowOpened() const;
 
-    inline bool IsPressEsc(const Event* e) const { return (e->type == Event::Closed || e->key.code == Keyboard::Escape); }
+    bool IsPressEsc(const Event* e) const;
 
-    inline bool IsMouseClick(const Event* e) const { return (e->type == Event::MouseButtonPressed && e->mouseButton.button == Mouse::Left); }
+    bool IsMouseClick(const Event* e) const;
 
     bool IsMove(int* x, int* y) const;
     

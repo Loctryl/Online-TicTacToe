@@ -1,19 +1,20 @@
 #include "Headers/Application.h"
-#include "Headers/framework.h"
+#include "GameManager.h"
+#include "Headers/RequestManager.h"
 
 
 Application::Application() 
 {
-	mRequestManager = RequestManager();
-	mGame = GameManager();
+	mRequestManager = new RequestManager();
+	mGame = new GameManager();
 }
 
 Application::~Application() { }
 
 bool Application::Init() 
 {
-	mGame.InitGame(5);
-	return mRequestManager.Init();
+	mGame->InitGame(5);
+	return mRequestManager->Init();
 }
 
 int Application::Run() 
@@ -48,23 +49,23 @@ int Application::Run()
 		while (!validation)
 		{
 			// ENVOI D'UN DEPLACEMENT
-			// récupérer déplacement
-			if (!mRequestManager.SendRequest(coord))
+			// recuperer deplacement
+			if (!mRequestManager->SendRequest(coord))
 				return 1;
 
 
 			// RECEPTION DE LA VALIDATION
-			if (!mRequestManager.RecieveValidation(validation))
+			if (!mRequestManager->RecieveValidation(validation))
 				return 1;
 		}
 
-		// faire le déplacement
+		// faire le deplacement
 		// endGame = IsEnd()
 		if (endGame)
 			break;
 
 		// RECEPTION DU COUP DE L'AUTRE JOUEUR
-		if (!mRequestManager.RecievePlay(coord))
+		if (!mRequestManager->RecievePlay(coord))
 			return 1;
 
 		// faire le dplacement
@@ -73,7 +74,7 @@ int Application::Run()
 
 
 	// FERMETURE DU CLIENT
-	if (!mRequestManager.Close())
+	if (!mRequestManager->Close())
 		return 1;
 
 	return 0;

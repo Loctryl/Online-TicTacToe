@@ -1,12 +1,12 @@
 ﻿#pragma once
-#include "Resources/framework.h"
+#include <vector>
 
 class SFMLWindow;
 
 class Grid
 {
 public:
-    vector<vector<int>> mMainGrid;
+    std::vector<std::vector<int>> mMainGrid;
     int mSize = 3;
     
     Grid();

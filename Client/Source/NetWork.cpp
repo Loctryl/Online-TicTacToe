@@ -1,13 +1,18 @@
+#pragma comment(lib, "Ws2_32.lib")
+
+#include <cstdio>
+#include <WS2tcpip.h>
+
 #include "Headers/NetWork.h"
 
-NetWork::NetWork()
-{
-}
+#define PORT 6666
+#define ADRESSE "127.0.0.1"
+#define PACKET_SIZE 2048
 
-NetWork::~NetWork()
-{
-    closesocket(mConnectSocket);
-}
+
+NetWork::NetWork() { }
+
+NetWork::~NetWork() { closesocket(mConnectSocket); }
 
 bool NetWork::Init()
 {
@@ -18,7 +23,7 @@ bool NetWork::Init()
         return false;
 
     sockaddr_in clientService = SettingProtocol();
-    
+
     if (!ConnectServer(clientService))
         return false;
 
@@ -27,8 +32,8 @@ bool NetWork::Init()
 
 bool NetWork::SettingSocket()
 {
-    WORD wVersionRequested = MAKEWORD(2, 2);	// Version min et max de la spécification Windows Sockets
-    WSADATA wsaData;							// Informations sur l’implémentation de Windows Sockets
+    WORD wVersionRequested = MAKEWORD(2, 2); // Version min et max de la spï¿½cification Windows Sockets
+    WSADATA wsaData; // Informations sur lï¿½implï¿½mentation de Windows Sockets
 
     int err = WSAStartup(wVersionRequested, &wsaData);
     if (err)
@@ -43,7 +48,7 @@ bool NetWork::SettingSocket()
 bool NetWork::CreateSocket()
 {
     mConnectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (mConnectSocket == INVALID_SOCKET)
+    if (mConnectSocket==INVALID_SOCKET)
     {
         printf("Erreur Socket : %d\n", WSAGetLastError());
         WSACleanup();
@@ -58,7 +63,8 @@ sockaddr_in NetWork::SettingProtocol()
     sockaddr_in clientService;
     clientService.sin_family = AF_INET;
     clientService.sin_port = htons(PORT);
-    inet_pton(AF_INET, ADRESSE, &clientService.sin_addr);// Convertit une adresse réseau IPv4 ou IPv6 en une forme binaire numérique
+    inet_pton(AF_INET, ADRESSE, &clientService.sin_addr);
+    // Convertit une adresse rï¿½seau IPv4 ou IPv6 en une forme binaire numï¿½rique
     return clientService;
 }
 
@@ -79,7 +85,7 @@ bool NetWork::ConnectServer(sockaddr_in& clientService)
 
 bool NetWork::SendRequest(const char* data)
 {
-    if (send(mConnectSocket, data, PACKET_SIZE, 0) == SOCKET_ERROR)
+    if (send(mConnectSocket, data, PACKET_SIZE, 0)==SOCKET_ERROR)
     {
         printf("Erreur send() %d\n", WSAGetLastError());
         Close();
@@ -94,9 +100,9 @@ char* NetWork::Recieve()
     char* data = nullptr;
 
     int iResult = recv(mConnectSocket, data, PACKET_SIZE, 0);
-    if (iResult <= 0)
+    if (iResult<=0)
     {
-        if (iResult == 0)
+        if (iResult==0)
             printf("connexion fermee\n");
         else
             printf("Erreur recv() : %d\n", WSAGetLastError());
@@ -105,7 +111,7 @@ char* NetWork::Recieve()
         return data;
     }
 
-    data[iResult - 1] = '\0';
+    data[iResult-1] = '\0';
 
     return data;
 }
@@ -115,7 +121,7 @@ bool NetWork::Close()
     int close = closesocket(mConnectSocket);
     WSACleanup();
 
-    if (close == SOCKET_ERROR)
+    if (close==SOCKET_ERROR)
     {
         printf("Erreur fermeture socket : %d\n", close);
         return false;

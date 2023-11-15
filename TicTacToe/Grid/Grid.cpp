@@ -1,5 +1,4 @@
 ﻿#include "Grid.h"
-#include "Window/SFMLWindow.h"
 
 Grid::Grid() { }
 

@@ -1,6 +1,5 @@
 ﻿#include "GameManager.h"
 #include "Grid/Grid.h"
-#include "Window/SFMLWindow.h"
 
 GameManager* GameManager::mInstance = nullptr;
 

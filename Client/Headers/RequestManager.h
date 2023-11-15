@@ -1,11 +1,12 @@
 #pragma once
-#include "NetWork.h"
+
+class NetWork;
 
 class RequestManager
 {
 public:
     RequestManager();
-    virtual ~RequestManager();
+    virtual ~RequestManager() = default;
 
     bool Init();
 
@@ -15,5 +16,5 @@ public:
     bool Close();
 
 private:
-    NetWork mNetWork;
+    NetWork* mNetWork;
 };

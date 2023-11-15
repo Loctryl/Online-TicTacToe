@@ -1,11 +1,14 @@
-﻿#include "GameManager.h"
+﻿#include <Resources/utilities.h>
+#include <Window/SFMLWindow.h>
 #include "Grid/Grid.h"
-#include "Window/SFMLWindow.h"
+#include "GameManager.h"
 
 GameManager::GameManager()
 {
     mWindow = new SFMLWindow();
     mGrid = new Grid();
+    mTileSize = 100;
+    mMarginLeft = 0;
 }
 
 GameManager::~GameManager()
@@ -28,6 +31,12 @@ void GameManager::Play(int x, int y, void (*func)()) const
     if(func)
         func();
 }
+
+bool GameManager::IsWindowOpened() const { return mWindow->GetWindow()->isOpen(); }
+
+bool GameManager::IsPressEsc(const Event* e) const { return (e->type == Event::Closed || e->key.code == Keyboard::Escape); }
+
+bool GameManager::IsMouseClick(const Event* e) const { return (e->type == Event::MouseButtonPressed && e->mouseButton.button == Mouse::Left); }
 
 bool GameManager::IsMove(int* x, int* y) const
 {
