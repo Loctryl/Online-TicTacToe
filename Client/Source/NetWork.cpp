@@ -77,15 +77,9 @@ bool NetWork::ConnectServer(sockaddr_in& clientService)
     }
 }
 
-bool NetWork::SendRequest(int x, int y)
+bool NetWork::SendRequest(const char* data)
 {
-    std::string data = "{ \"x\": \"";
-    data += x;
-    data += "\", \"y\": \"";
-    data += y;
-    data += "\" }";
-
-    if (send(mConnectSocket, data.c_str(), PACKET_SIZE, 0) == SOCKET_ERROR)
+    if (send(mConnectSocket, data, PACKET_SIZE, 0) == SOCKET_ERROR)
     {
         printf("Erreur send() %d\n", WSAGetLastError());
         Close();
@@ -95,7 +89,7 @@ bool NetWork::SendRequest(int x, int y)
         return true;
 }
 
-json NetWork::Recieve()
+char* NetWork::Recieve()
 {
     char* data = nullptr;
 
@@ -108,24 +102,27 @@ json NetWork::Recieve()
             printf("Erreur recv() : %d\n", WSAGetLastError());
 
         Close();
-        return "{}";
+        return data;
     }
 
     data[iResult - 1] = '\0';
 
-    json parsedMessage;
-
-    return json::parse(data);
+    return data;
 }
 
-void NetWork::Close()
+bool NetWork::Close()
 {
     int close = closesocket(mConnectSocket);
+    WSACleanup();
 
     if (close == SOCKET_ERROR)
+    {
         printf("Erreur fermeture socket : %d\n", close);
+        return false;
+    }
     else
+    {
         printf("Socket ferme\n");
-
-    WSACleanup();
+        return true;
+    }
 }

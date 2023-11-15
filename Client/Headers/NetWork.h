@@ -2,9 +2,6 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iostream>
-#include <Headers/json.hpp>
-
-using json = nlohmann::json;
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -21,9 +18,9 @@ public:
 
     bool Init();
 
-    bool SendRequest(int x, int y);
-    json Recieve();
-    void Close();
+    bool SendRequest(const char* data);
+    char* Recieve();
+    bool Close();
     
 private:
     SOCKET mConnectSocket = {};

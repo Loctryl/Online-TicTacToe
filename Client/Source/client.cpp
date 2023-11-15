@@ -1,24 +1,21 @@
 #include <iostream>
 #include <winsock2.h>
 #include <WS2tcpip.h>
-#include "Headers/json.hpp"
-#include <Headers/NetWork.h>
-
-using json = nlohmann::json;
+#include "Headers/RequestManager.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
 int main()
 {
-	NetWork netWork = NetWork();
+	RequestManager requestManager = RequestManager();
 
-	if (!netWork.Init())
+	if (!requestManager.Init())
 		return 1;
 
 
-	int iResult = -1;
 	bool endGame = false;
 	bool validation = false;
+	int coord[2] = { -1, -1 };
 	while (!endGame)
 	{
 		validation = false;
@@ -26,17 +23,13 @@ int main()
 		{
 			// ENVOI D'UN DEPLACEMENT
 			// récupérer déplacement
-			if (!netWork.SendRequest(0, 0))
+			if (!requestManager.SendRequest(coord))
 				return 1;
 
 
 			// RECEPTION DE LA VALIDATION
-			json data = netWork.Recieve();
-			
-			if (!data)
+			if (!requestManager.RecieveValidation(validation))
 				return 1;
-
-			validation = data["answer"];
 		}
 
 		// faire le d�placement
@@ -45,13 +38,17 @@ int main()
 			break;
 
 		// RECEPTION DU COUP DE L'AUTRE JOUEUR
-		json data = netWork.Recieve();
+		if (!requestManager.RecievePlay(coord))
+			return 1;
+
 		// faire le d�placement
 		// endGame = IsEnd()
 	}
 
 
 	// FERMETURE DU CLIENT
-	netWork.Close();
+	if (!requestManager.Close())
+		return 1;
+
 	return 0;
 }
