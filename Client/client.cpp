@@ -92,11 +92,8 @@ int main()
 		while (!validation)
 		{
 			// ENVOI D'UN DEPLACEMENT
-			sendData[0] = 1;
-			sendData[1] = 12;
-			sendData[2] = 4;
-			sendData[3] = 0;
-			SerializeIntArray(sendData, sendBuf);
+			// deplacement(sendData)
+			//sendBuf = "{json}";
 			if (send(connectSocket, sendBuf, bufferSizeData, 0) == SOCKET_ERROR)
 			{
 				printf("Erreur send() %d\n", WSAGetLastError());
@@ -125,7 +122,7 @@ int main()
 		}
 
 		// faire le déplacement
-		// MAj endGame
+		// endGame = IsEnd()
 		if (endGame)
 			break;
 
@@ -147,7 +144,7 @@ int main()
 		}
 
 		// faire le déplacement
-		// MAj endGame
+		// endGame = IsEnd()
 	}
 
 

@@ -42,4 +42,6 @@ public:
     void DrawGrid(SFMLWindow*);
 
     void ClearHighlights();
+
+    bool IsEnd();
 };
