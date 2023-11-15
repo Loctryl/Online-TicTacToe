@@ -1,6 +1,9 @@
 #include <iostream>
 #include <winsock2.h>
 #include <WS2tcpip.h>
+#include "Headers/json.hpp"
+
+using json = nlohmann::json;
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -22,32 +25,13 @@ const size_t bufferSizeData = sizeof(int) * nbData;
 bool validation = true;
 const size_t bufferSizeValidation = sizeof(bool);
 
-// Sérialisation d'un tableau d'entier
-void SerializeIntArray(int array[nbData], char buffer[bufferSizeData])
-{
-	memcpy(buffer, array, bufferSizeData);
-}
-
-// Désérialisation d'un tableau d'entier
-void DeserializeIntArray(int array[nbData], char buffer[bufferSizeData])
-{
-	memcpy(array, buffer, bufferSizeData);
-}
+#define PACKET_SIZE 2048
 
 int main()
 {
-	// TABLEAUX POUR L'ENVOI
-	int sendData[nbData];
-	char sendBuf[bufferSizeData];
-
-	// TABLEAUX POUR LA RECEPTION
-	int recvData[nbData];
-	char recvBuf[bufferSizeData];
-
-
 	// PARAMETRAGE DU SOCKET
-	WORD wVersionRequested = MAKEWORD(2, 2);	// Version min et max de la spécification Windows Sockets
-	WSADATA wsaData;							// Informations sur l’implémentation de Windows Sockets
+	WORD wVersionRequested = MAKEWORD(2, 2);	// Version min et max de la spï¿½cification Windows Sockets
+	WSADATA wsaData;							// Informations sur lï¿½implï¿½mentation de Windows Sockets
 
 	int err = WSAStartup(wVersionRequested, &wsaData);
 	if (err)
@@ -71,7 +55,7 @@ int main()
 	sockaddr_in clientService;
 	clientService.sin_family = AF_INET;
 	clientService.sin_port = htons(6666);
-	inet_pton(AF_INET, "127.0.0.1", &clientService.sin_addr);// Convertit une adresse réseau IPv4 ou IPv6 en une forme binaire numérique
+	inet_pton(AF_INET, "127.0.0.1", &clientService.sin_addr);// Convertit une adresse rï¿½seau IPv4 ou IPv6 en une forme binaire numï¿½rique
 
 
 	// CONNEXION AU SERVER
@@ -81,7 +65,7 @@ int main()
 		Close(connectSocket);
 		return 1;
 	}
-	printf("connexion au serveur reussite\n");
+	printf("connexion au serveur reussie\n");
 
 
 	int iResult = -1;
@@ -107,7 +91,7 @@ int main()
 			iResult = recv(connectSocket, recvBuf, bufferSizeData, 0);
 			if (iResult > 0)
 			{
-				// validation = récup d'un bool
+				// validation = rï¿½cup d'un bool
 			}
 			else
 			{
@@ -121,7 +105,7 @@ int main()
 			}
 		}
 
-		// faire le déplacement
+		// faire le dï¿½placement
 		// endGame = IsEnd()
 		if (endGame)
 			break;
@@ -130,8 +114,52 @@ int main()
 		iResult = recv(connectSocket, recvBuf, bufferSizeData, 0);
 		if (iResult > 0)
 		{
-			// réception de son déplacement
+			// rï¿½ception de son dï¿½placement
 		}
+	// // ENVOI D'UN MESSAGE
+
+	// std::string connectString = R"(
+    //     {
+    //         "connection": "Username"
+    //     }
+    // )";
+
+	// if (send(connectSocket, connectString.c_str(), connectString.size(), 0) == SOCKET_ERROR)
+	// {
+	// 	printf("Erreur send() %d\n", WSAGetLastError());
+	// 	Close(connectSocket);
+	// 	return 1;
+	// }
+	// printf("Message envoye\n");
+
+
+	// // FERMETURE DE LA CONNEXION D'ENVOI (la rï¿½ception est toujours possible)
+	// if (shutdown(connectSocket, SD_SEND) == SOCKET_ERROR)
+	// {
+	// 	std::cout << "Erreur shutdown() : " << WSAGetLastError() << "\n";
+	// 	Close(connectSocket);
+	// 	return 1;
+	// }
+	// printf("connexion d'envoi fermee\n");
+
+
+	// // RECEPTION DES MESSAGES
+	// int iResult = -1;
+	// char recvBuf[PACKET_SIZE];
+	// std::string ACKString = "";
+
+	// do
+	// {
+	// 	iResult = recv(connectSocket, recvBuf, PACKET_SIZE, 0);
+	// 	if (iResult > 0)
+	// 	{
+	// 		recvBuf[iResult - 1] = '\0';
+	// 		ACKString.append(recvBuf);
+	// 	}
+	// 	else if (iResult == 0)
+	// 	{
+	// 		std::cout << "Recieved Message : " << ACKString << "\nClosed Connection\n";
+	// 	}
 		else
 		{
 			if (iResult == 0)
@@ -143,7 +171,7 @@ int main()
 			return 1;
 		}
 
-		// faire le déplacement
+		// faire le dï¿½placement
 		// endGame = IsEnd()
 	}
 

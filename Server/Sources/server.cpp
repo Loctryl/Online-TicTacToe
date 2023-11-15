@@ -1,6 +1,8 @@
 #include <iostream>
 #include <winsock2.h>
 #include <WS2tcpip.h>
+#include "Headers/json.hpp"
+using json = nlohmann::json;
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -20,13 +22,13 @@ const size_t bufferSizeData = sizeof(int) * nbData;
 bool validation = true;
 const size_t bufferSizeValidation = sizeof(bool);
 
-// Sérialisation d'un tableau d'entier
+// Sï¿½rialisation d'un tableau d'entier
 void SerializeIntArray(int array[nbData], char buffer[bufferSizeData])
 {
 	memcpy(buffer, array, bufferSizeData);
 }
 
-// Désérialisation d'un tableau d'entier
+// Dï¿½sï¿½rialisation d'un tableau d'entier
 void DeserializeIntArray(int array[nbData], char buffer[bufferSizeData])
 {
 	memcpy(array, buffer, bufferSizeData);
@@ -44,8 +46,8 @@ int main()
 
 
 	// PARAMETRAGE DU SOCKET
-	WORD wVersionRequested = MAKEWORD(2, 2);	// Version min et max de la spécification Windows Sockets
-	WSADATA wsaData;							// Informations sur l’implémentation de Windows Sockets
+	WORD wVersionRequested = MAKEWORD(2, 2);	// Version min et max de la spï¿½cification Windows Sockets
+	WSADATA wsaData;							// Informations sur lï¿½implï¿½mentation de Windows Sockets
 
 	int err = WSAStartup(wVersionRequested, &wsaData);
 	if (err)
@@ -69,7 +71,7 @@ int main()
 	sockaddr_in serviceServer;
 	serviceServer.sin_family = AF_INET;
 	serviceServer.sin_port = htons(6666);
-	inet_pton(AF_INET, "127.0.0.1", &serviceServer.sin_addr);// Convertit une adresse réseau IPv4 ou IPv6 en une forme binaire numérique
+	inet_pton(AF_INET, "127.0.0.1", &serviceServer.sin_addr);// Convertit une adresse rï¿½seau IPv4 ou IPv6 en une forme binaire numï¿½rique
 
 	if (bind(listenSocket, (SOCKADDR*)&serviceServer, sizeof(serviceServer)) == SOCKET_ERROR)// Associe l'adresse locale au socket
 	{
@@ -82,7 +84,7 @@ int main()
 	// RECHERCHE DE 2 CLIENTs
 	if (listen(listenSocket, 2) == SOCKET_ERROR)
 	{
-		printf("Erreur lors de l'écoute : %d\n", WSAGetLastError());
+		printf("Erreur lors de l'ï¿½coute : %d\n", WSAGetLastError());
 		Close(listenSocket);
 		WSACleanup();
 		return 1;
@@ -160,14 +162,14 @@ int main()
 
 		if (validation)
 		{
-			// faire le déplacement
+			// faire le dï¿½placement
 			// MAj endGame
 			// changer le acceptSocket
-			// envoie du déplcement à l'autre joueur
+			// envoie du dï¿½plcement ï¿½ l'autre joueur
 		}
 
 
-	} while (false);// Tant que la connexion n'est pas fermée ou qu'il n'y a pas eu d'erreurs
+	} while (false);// Tant que la connexion n'est pas fermï¿½e ou qu'il n'y a pas eu d'erreurs
 
 
 	// FERMETURE DE LA CONNEXION
