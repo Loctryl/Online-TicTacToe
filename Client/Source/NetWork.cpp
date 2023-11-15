@@ -9,94 +9,115 @@ NetWork::~NetWork()
     closesocket(mConnectSocket);
 }
 
-void NetWork::Init()
+bool NetWork::Init()
 {
-    WSAStartup(MAKEWORD(2, 2), &mWsaData);
-    mPtr = NULL;
-    CreateSocket();
-    ConnectServer();
-}
-
-void NetWork::CreateSocket()
-{
-    addrinfo *result = NULL, hints;
-    
-    ZeroMemory(&hints, sizeof(hints));
-    hints.ai_family = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-    
-    // Resolve the server address and port
-    const char adrress[] = ADRESS;
-    const int iResult = getaddrinfo(adrress, PORT, &hints, &result);
-    if (iResult != 0)
-    {
-        WSACleanup();
-        std::cout << "CreateSocket -> getaddrinfo failed: " << iResult << std::endl;
-        throw;
-    }
-
-    mConnectSocket = INVALID_SOCKET;
-
-    // Attempt to connect to the first address returned by
-    // the call to getaddrinfo
-    mPtr = result;
-
-    // Create a SOCKET for connecting to server
-    mConnectSocket = socket(mPtr->ai_family, mPtr->ai_socktype, mPtr->ai_protocol);
-
-    if (mConnectSocket == INVALID_SOCKET)
-    {
-        WSACleanup();
-        std::cout << "CreateSocket -> Error at socket(): " << WSAGetLastError() << std::endl;
-        throw;
-    }
-
-    freeaddrinfo(result);
-}
-
-bool NetWork::ConnectServer()
-{
-    // Connect to server.
-    int iResult = connect(mConnectSocket, mPtr->ai_addr, static_cast<int>(mPtr->ai_addrlen));
-    if (iResult == SOCKET_ERROR)
-    {
-        closesocket(mConnectSocket);
-        mConnectSocket = INVALID_SOCKET;
-        std::cout << "connexion failed." << std::endl << "Try to reconnect..." << std::endl;
-        WSACleanup();
+    if (!SettingSocket())
         return false;
-        
-    }
+
+    if (!CreateSocket())
+        return false;
+
+    sockaddr_in clientService = SettingProtocol();
     
+    if (!ConnectServer(clientService))
+        return false;
+
     return true;
 }
 
-void NetWork::SendRequest(const char* sendBuffer)
+bool NetWork::SettingSocket()
 {
-    // Send an initial buffer
-    int iResult = send(mConnectSocket, sendBuffer, (int) strlen(sendBuffer), 0);
-    if (iResult == SOCKET_ERROR) {
-        printf("send failed: %d\n", WSAGetLastError());
-        closesocket(mConnectSocket);
+    WORD wVersionRequested = MAKEWORD(2, 2);	// Version min et max de la spécification Windows Sockets
+    WSADATA wsaData;							// Informations sur l’implémentation de Windows Sockets
+
+    int err = WSAStartup(wVersionRequested, &wsaData);
+    if (err)
+    {
+        printf("Erreur WSAStartup : %d\n", err);
+        return false;
+    }
+    else
+        return true;
+}
+
+bool NetWork::CreateSocket()
+{
+    mConnectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (mConnectSocket == INVALID_SOCKET)
+    {
+        printf("Erreur Socket : %d\n", WSAGetLastError());
         WSACleanup();
+        return false;
+    }
+    else
+        return true;
+}
+
+sockaddr_in NetWork::SettingProtocol()
+{
+    sockaddr_in clientService;
+    clientService.sin_family = AF_INET;
+    clientService.sin_port = htons(PORT);
+    inet_pton(AF_INET, ADRESSE, &clientService.sin_addr);// Convertit une adresse réseau IPv4 ou IPv6 en une forme binaire numérique
+    return clientService;
+}
+
+bool NetWork::ConnectServer(sockaddr_in& clientService)
+{
+    if (connect(mConnectSocket, (SOCKADDR*)&clientService, sizeof(clientService)))
+    {
+        printf("Erreur connect() %d\n", WSAGetLastError());
+        Close();
+        return false;
+    }
+    else
+    {
+        printf("connexion au serveur reussite\n");
+        return true;
     }
 }
 
-std::string NetWork::Recieve()
+bool NetWork::SendRequest(const char* sendBuffer)
 {
-    int  recieveBufferLength = DEFAULT_BUFFER_LENGTH;
-    char recieveBuffer[DEFAULT_BUFFER_LENGTH];
-    int iResult;
-    
-    std::string result = "";
+    const size_t sendBufferSize = 0;// TO DO
 
-    do
+    if (send(mConnectSocket, sendBuffer, sendBufferSize, 0) == SOCKET_ERROR)
     {
-        iResult = recv(mConnectSocket, recieveBuffer, recieveBufferLength, 0);
-        for(auto c : recieveBuffer)
-            result += c;
-    }while (iResult > 0);
+        printf("Erreur send() %d\n", WSAGetLastError());
+        Close();
+        return false;
+    }
+    else
+        return true;
+}
 
-    return result;
+char* NetWork::Recieve()
+{
+    char* recieveBuffer = nullptr;
+    const size_t recieveBufferSize = 0;// TO DO
+
+    int iResult = recv(mConnectSocket, recieveBuffer, recieveBufferSize, 0);
+    if (iResult <= 0)
+    {
+        if (iResult == 0)
+            printf("connexion fermee\n");
+        else
+            printf("Erreur recv() : %d\n", WSAGetLastError());
+
+        Close();
+    }
+
+    return recieveBuffer;
+}
+
+void NetWork::Close()
+{
+    int close = closesocket(mConnectSocket);
+
+    if (close == SOCKET_ERROR)
+        printf("Erreur fermeture socket : %d\n", close);
+    else
+        printf("Socket ferme\n");
+
+    WSACleanup();
 }

@@ -5,10 +5,8 @@
 
 #pragma comment(lib, "Ws2_32.lib")
 
-#define PORT "80"
-#define ADRESS "google.com"
-#define DEFAULT_BUFFER_LENGTH 512
-
+#define PORT 6666
+#define ADRESSE "127.0.0.1"
 
 class NetWork
 {
@@ -16,14 +14,18 @@ public:
     NetWork();
     ~NetWork();
 
-    void Init();
-    void CreateSocket();
-    bool ConnectServer();
-    void SendRequest(const char *sendBuffer);
-    std::string Recieve();
+    bool Init();
+    bool SettingSocket();
+    bool CreateSocket();
+    sockaddr_in SettingProtocol();
+    bool ConnectServer(sockaddr_in& clientService);
+
+
+    bool SendRequest(const char *sendBuffer);
+    char* Recieve();
     
 private:
-    WSADATA mWsaData;
     SOCKET mConnectSocket;
-    addrinfo* mPtr;
+
+    void Close();
 };
