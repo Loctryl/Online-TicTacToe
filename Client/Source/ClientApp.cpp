@@ -28,7 +28,7 @@ int ClientApp::Run()
 	y = -1;
 
 	// RECEPTION DE LA VALIDATION DE LANCEMENT DE JEU
-	if (!mRequestManager->RecieveValidation(validation))
+	if (!mRequestManager->ReceiveValidation(validation))
 		return 1;
 
 	/*Event event{};
@@ -59,7 +59,7 @@ int ClientApp::Run()
 
 
 			// RECEPTION DE LA VALIDATION DU DEPLACEMENT
-			if (!mRequestManager->RecieveValidation(validation))
+			if (!mRequestManager->ReceiveValidation(validation))
 				return 1;
 		}
 

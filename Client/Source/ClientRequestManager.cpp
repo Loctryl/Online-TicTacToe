@@ -1,13 +1,24 @@
 #include "Headers/ClientRequestManager.h"
-#include <Headers/json.hpp>
 #include "Headers/ClientNetWork.h"
 #include <iostream>
-
-using json = nlohmann::json;
 
 ClientRequestManager::ClientRequestManager() : mNetWork(new ClientNetWork()) { }
 
 bool ClientRequestManager::Init() { return mNetWork->Init(); }
+
+bool ClientRequestManager::Receive(std::string request)
+{
+    json parsedMessage = json::parse(request);
+
+    std::string type = parsedMessage["type"].dump();
+    if (type == "play")
+        return ReceivePlay(parsedMessage);
+    else if (type == "validation")
+        return ReceiveValidation(parsedMessage);
+    else if (type == "start")
+        return ReceiveStart(parsedMessage);
+
+}
 
 bool ClientRequestManager::SendRequest(int coord[2])
 {
@@ -20,33 +31,27 @@ bool ClientRequestManager::SendRequest(int coord[2])
     return mNetWork->SendRequest(data.dump().c_str());
 }
 
-bool ClientRequestManager::RecieveValidation(bool& validation)
+bool ClientRequestManager::ReceiveValidation(json parsedMessage)
 {
-    std::string data = mNetWork->Recieve();
-
-    /*if (data == nullptr)
-        return false;*/
-
-    json parsedMessage = json::parse(data);
-    validation = parsedMessage["answer"];
-
+    if (parsedMessage["answer"]) {
+        //return game.validateMove(true);
+    }
+    //game.validateMove(false);
     printf("validation recue\n");
+
+    return false;
+}
+
+bool ClientRequestManager::ReceivePlay(json parsedMessage)
+{
+    //return game.play(parsedMessage["x"], parsedMessage["y"]);
     return true;
 }
 
-bool ClientRequestManager::RecievePlay(int coord[2])
+bool ClientRequestManager::ReceiveStart(json parsedMessage)
 {
-    std::string data = mNetWork->Recieve();
-
-    /*if (data == nullptr)
-        return false;*/
-
-    json parsedMessage = json::parse(data);
-    coord[0] = parsedMessage["x"];
-    coord[1] = parsedMessage["y"];
-
-    printf("deplacement recue\n");
-    return true;
+    //game.start(parsedMessage["player"],parsedMessage["enemyNickname"])
+    return false;
 }
 
 bool ClientRequestManager::Close() { return mNetWork->Close(); }
