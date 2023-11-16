@@ -7,32 +7,24 @@
 class Network
 {
 public:
-    Network();
-    ~Network();
+    Network() = default;
+    ~Network() = default;
 
-    bool InitAsClient();
-    bool InitAsServer();
+    static bool InitAsClient(SOCKET sock);
+    static bool InitAsServer(SOCKET sock);
     
-    bool SendRequest(const char* data);
-    std::string Receive();
-    bool CloseSocket();
+    static bool SendRequest(SOCKET sock, const char* data);
+    static std::string Receive(SOCKET sock);
+    static bool CloseSocket(SOCKET sock);
 
 private:
-    bool SettingSocket();
-    bool CreateSocket();
-    sockaddr_in SettingProtocol();
+    static bool SettingSocket();
+    static bool CreateSocket(SOCKET sock);
+    static sockaddr_in SettingProtocol();
     
-    // Client using
-    SOCKET mConnectSocket = {};
-    bool ConnectServer(sockaddr_in& clientService);
-
+    static bool ConnectServer(SOCKET sock, sockaddr_in& clientService);
     
-    // Server using
-    SOCKET mListenSocket = {};
-    SOCKET mAcceptSocket[NB_CLIENT];
-    int mActualClient = 0;
-    bool Bind(sockaddr_in& serviceServer);
-    bool WaitClients();
-    bool AcceptClient(int& numClient);
-    //bool CloseClient(int& numClient);
+    static bool Bind(SOCKET sock, sockaddr_in& serviceServer);
+    static bool WaitClients(SOCKET sock);
+    static bool AcceptClient(SOCKET sockClient, SOCKET sockServer);
 };
