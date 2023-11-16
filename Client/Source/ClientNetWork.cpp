@@ -9,6 +9,9 @@
 #define PORT 6666
 #define ADRESSE "127.0.0.1"
 #define PACKET_SIZE 2048
+#define SIGNATURE_SIZE 4
+#define LENGTH_MESSAGE_SIZE 4
+#define SIGNATURE 122943136
 
 
 ClientNetWork::ClientNetWork() { }
@@ -82,9 +85,22 @@ bool ClientNetWork::ConnectServer(sockaddr_in& clientService)
     return true;
 }
 
-bool ClientNetWork::SendRequest(const char* data)
+bool ClientNetWork::SendRequest(std::string data)
 {
-    if (send(mConnectSocket, data, PACKET_SIZE, 0)==SOCKET_ERROR)
+    int datasize = data.size();
+    int total = datasize + SIGNATURE_SIZE + LENGTH_MESSAGE_SIZE;
+    char* dataBuffer = new char[total];
+
+
+    // Making Header
+    std::uint32_t sign = SIGNATURE;
+    std::uint32_t length = datasize;
+    std::memcpy(dataBuffer, &sign, SIGNATURE_SIZE);
+    std::memcpy(dataBuffer + SIGNATURE_SIZE, &length, LENGTH_MESSAGE_SIZE);
+    std::memcpy(dataBuffer + SIGNATURE_SIZE + LENGTH_MESSAGE_SIZE, data.c_str(), datasize);
+
+    // Sending Message
+    if (send(mConnectSocket, dataBuffer, total, 0) == SOCKET_ERROR)
     {
         printf("Erreur send() %d\n", WSAGetLastError());
         Close();
@@ -101,23 +117,38 @@ std::string ClientNetWork::Recieve()
     std::string recvString = "";
 
     int iResult = -1;
-    do
-    {
-        iResult = recv(mConnectSocket, data, PACKET_SIZE, 0);
-        if (iResult > 0)
-        {
-            data[iResult - 1] = '\0';
-            recvString.append(data);
-        }
-        else if (iResult == 0)
-            std::cout << "Recieved Message : " << recvString << "\n";
-        else
-        {
-            printf("Erreur recv() : %d\n", WSAGetLastError());
-            Close();
-        }
+    iResult = recv(mConnectSocket, data, SIGNATURE_SIZE, 0);
+    std::uint32_t MessageSignature;// = new std::uint32_t;
+    std::memcpy(&MessageSignature, data, SIGNATURE_SIZE);
 
-    } while (iResult > 0);
+    if (MessageSignature != SIGNATURE) {
+        printf("Signature non reconnue, message ingore\n");
+        return "";
+    }
+
+    iResult = recv(mConnectSocket, data, LENGTH_MESSAGE_SIZE, 0);
+    std::uint32_t MessageLength; //= new std::uint32_t;
+    std::memcpy(&MessageLength, data, LENGTH_MESSAGE_SIZE);
+
+
+    for (std::uint32_t packet_index = 0; packet_index < MessageLength / PACKET_SIZE; packet_index++) {
+        iResult = recv(mConnectSocket, data, PACKET_SIZE, 0);
+        recvString.append(data);
+    }
+
+    int buffersize = MessageLength % PACKET_SIZE;
+
+    iResult = recv(mConnectSocket, data, buffersize, 0);
+    data[iResult] = '\0';
+    recvString.append(data);
+
+    printf(recvString.c_str()); printf("\n");
+
+    if (iResult < 0)
+    {
+        printf("Erreur recv() : %d\n", WSAGetLastError());
+        Close();
+    }
 
     return recvString;
 }

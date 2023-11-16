@@ -1,6 +1,7 @@
 #include "Headers/ServerRequestManager.h"
 #include <Headers/json.hpp>
 #include "..\Headers\ServerNetWork.h"
+#include <string>
 
 using json = nlohmann::json;
 
@@ -15,7 +16,7 @@ bool ServerRequestManager::SendRequest(bool validation) const
         {"answer", validation}
     };
 
-    return mNetWork->SendRequest(data.dump().c_str());
+    return mNetWork->SendRequest(data.dump());
 }
 
 bool ServerRequestManager::SendRequest(int coord[2]) const

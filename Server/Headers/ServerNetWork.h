@@ -13,7 +13,7 @@ public:
 
     bool Init();
 
-    bool SendRequest(const char* data);
+    bool SendRequest(std::string data);
     std::string Recieve();
     bool Close();
     void NextClient();
