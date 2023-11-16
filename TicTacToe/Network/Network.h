@@ -13,7 +13,7 @@ public:
     static bool InitAsClient(SOCKET sock);
     static bool InitAsServer(SOCKET sock);
     
-    static bool SendRequest(SOCKET sock, const char* data);
+    static bool SendRequest(SOCKET sock, std::string data);
     static std::string Receive(SOCKET sock);
     static bool CloseSocket(SOCKET sock);
 
