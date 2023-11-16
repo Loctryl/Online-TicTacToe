@@ -137,8 +137,8 @@
     <ClCompile Include="Sources\server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\ServApp.h" />
     <ClInclude Include="Headers\json.hpp" />
+    <ClInclude Include="Headers\ServApp.h" />
     <ClInclude Include="Headers\ServerNetWork.h" />
     <ClInclude Include="Headers\ServerRequestManager.h" />
   </ItemGroup>

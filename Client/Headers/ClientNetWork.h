@@ -20,5 +20,6 @@ private:
     bool SettingSocket();
     bool CreateSocket();
     sockaddr_in SettingProtocol();
+    
     bool ConnectServer(sockaddr_in& clientService);
 };

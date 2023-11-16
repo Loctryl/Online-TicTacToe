@@ -153,7 +153,6 @@
   <ItemGroup>
     <ClInclude Include="Headers\ClientApp.h" />
     <ClInclude Include="Headers\framework.h" />
-    <ClInclude Include="Headers\json.hpp" />
     <ClInclude Include="Headers\ClientNetWork.h" />
     <ClInclude Include="Headers\ClientRequestManager.h" />
   </ItemGroup>
