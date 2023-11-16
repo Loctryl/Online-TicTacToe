@@ -1,12 +1,12 @@
 #pragma once
 
 class ClientRequestManager;
-class GameManager;
+//class GameManager;
 
 class ClientApp
 {
 	ClientRequestManager* mRequestManager;
-	GameManager* mGame;
+	//GameManager* mGame;
 
 public:
 	ClientApp();

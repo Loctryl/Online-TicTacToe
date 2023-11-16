@@ -1,8 +1,9 @@
-#pragma once
-#include <WinSock2.h>
-#include <string>
+#pragma comment(lib, "Ws2_32.lib")
 
-class ClientNetWork
+#pragma once
+#include "Network/Network.h"
+
+class ClientNetWork : public Network
 {
 public:
     ClientNetWork();
@@ -16,10 +17,6 @@ public:
     
 private:
     SOCKET mConnectSocket = {};
-
-    bool SettingSocket();
-    bool CreateSocket();
-    sockaddr_in SettingProtocol();
     
     bool ConnectServer(sockaddr_in& clientService);
 };

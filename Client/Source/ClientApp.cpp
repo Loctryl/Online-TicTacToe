@@ -1,5 +1,5 @@
 #include "Headers/ClientApp.h"
-#include "GameManager.h"
+//#include "GameManager.h"
 #include "Headers/ClientRequestManager.h"
 
 
@@ -49,31 +49,39 @@ int ClientApp::Run()
 
 	while (!endGame)
 	{
-		validation = false;
-		while (!validation)
+		switch (1)// Evenement
 		{
+		case 1:
 			// ENVOI D'UN DEPLACEMENT
 			// recuperer deplacement
 			if (!mRequestManager->SendRequest(coord))
 				return 1;
+			break;
 
-
+		case 2:
 			// RECEPTION DE LA VALIDATION DU DEPLACEMENT
 			if (!mRequestManager->RecieveValidation(validation))
 				return 1;
-		}
 
-		// faire le deplacement
-		// endGame = IsEnd()
-		if (endGame)
+			if (validation)
+			{
+				// faire le deplacement
+				// endGame = IsEnd()
+			}
 			break;
 
-		// RECEPTION DU COUP DE L'AUTRE JOUEUR
-		if (!mRequestManager->RecievePlay(coord))
-			return 1;
+		case 3:
+			// RECEPTION DU COUP DE L'AUTRE JOUEUR --> reception qui notifie que c'est a nous
+			if (!mRequestManager->RecievePlay(coord))
+				return 1;
 
-		// faire le dplacement
-		// endGame = IsEnd()
+			// faire le dplacement
+			// endGame = IsEnd()
+			break;
+
+		default:
+			break;
+		}
 	}
 
 

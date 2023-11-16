@@ -1,30 +1,13 @@
-#pragma comment(lib, "Ws2_32.lib")
-
-#include <cstdio>
-#include <WS2tcpip.h>
-#include <iostream>
-
 #include "Headers/ClientNetWork.h"
 
-#define PORT 6666
-#define ADRESSE "127.0.0.1"
-#define PACKET_SIZE 2048
-#define SIGNATURE_SIZE 4
-#define LENGTH_MESSAGE_SIZE 4
-#define SIGNATURE 122943136
 
+ClientNetWork::ClientNetWork() : Network() { }
 
-ClientNetWork::ClientNetWork() { }
-
-ClientNetWork::~ClientNetWork() { closesocket(mConnectSocket); }
+ClientNetWork::~ClientNetWork() { }
 
 bool ClientNetWork::Init()
 {
-    if (!SettingSocket())
-        return false;
-
-    if (!CreateSocket())
-        return false;
+    Network::Init(mConnectSocket);
 
     sockaddr_in clientService = SettingProtocol();
 
@@ -32,44 +15,6 @@ bool ClientNetWork::Init()
         return false;
 
     return true;
-}
-
-bool ClientNetWork::SettingSocket()
-{
-    WORD wVersionRequested = MAKEWORD(2, 2); // Version min et max de la sp�cification Windows Sockets
-    WSADATA wsaData; // Informations sur l�impl�mentation de Windows Sockets
-
-    int err = WSAStartup(wVersionRequested, &wsaData);
-    if (err)
-    {
-        printf("Erreur WSAStartup : %d\n", err);
-        return false;
-    }
-    else
-        return true;
-}
-
-bool ClientNetWork::CreateSocket()
-{
-    mConnectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (mConnectSocket==INVALID_SOCKET)
-    {
-        printf("Erreur Socket : %d\n", WSAGetLastError());
-        WSACleanup();
-        return false;
-    }
-    else
-        return true;
-}
-
-sockaddr_in ClientNetWork::SettingProtocol()
-{
-    sockaddr_in clientService;
-    clientService.sin_family = AF_INET;
-    clientService.sin_port = htons(PORT);
-    inet_pton(AF_INET, ADRESSE, &clientService.sin_addr);
-    // Convertit une adresse r�seau IPv4 ou IPv6 en une forme binaire num�rique
-    return clientService;
 }
 
 bool ClientNetWork::ConnectServer(sockaddr_in& clientService)
@@ -87,85 +32,29 @@ bool ClientNetWork::ConnectServer(sockaddr_in& clientService)
 
 bool ClientNetWork::SendRequest(std::string data)
 {
-    int datasize = data.size();
-    int total = datasize + SIGNATURE_SIZE + LENGTH_MESSAGE_SIZE;
-    char* dataBuffer = new char[total];
+    bool result = Network::SendRequest(mConnectSocket, data);
 
-
-    // Making Header
-    std::uint32_t sign = SIGNATURE;
-    std::uint32_t length = datasize;
-    std::memcpy(dataBuffer, &sign, SIGNATURE_SIZE);
-    std::memcpy(dataBuffer + SIGNATURE_SIZE, &length, LENGTH_MESSAGE_SIZE);
-    std::memcpy(dataBuffer + SIGNATURE_SIZE + LENGTH_MESSAGE_SIZE, data.c_str(), datasize);
-
-    // Sending Message
-    if (send(mConnectSocket, dataBuffer, total, 0) == SOCKET_ERROR)
-    {
-        printf("Erreur send() %d\n", WSAGetLastError());
+    if (!result)
         Close();
-        return false;
-    }
 
-    printf("Requete envoyee\n");
-    return true;
+    return result;
 }
 
 std::string ClientNetWork::Recieve()
 {
-    char data[PACKET_SIZE];
-    std::string recvString = "";
+    std::string result = Network::Receive(mConnectSocket);
 
-    int iResult = -1;
-    iResult = recv(mConnectSocket, data, SIGNATURE_SIZE, 0);
-    std::uint32_t MessageSignature;// = new std::uint32_t;
-    std::memcpy(&MessageSignature, data, SIGNATURE_SIZE);
-
-    if (MessageSignature != SIGNATURE) {
-        printf("Signature non reconnue, message ingore\n");
-        return "";
-    }
-
-    iResult = recv(mConnectSocket, data, LENGTH_MESSAGE_SIZE, 0);
-    std::uint32_t MessageLength; //= new std::uint32_t;
-    std::memcpy(&MessageLength, data, LENGTH_MESSAGE_SIZE);
-
-
-    for (std::uint32_t packet_index = 0; packet_index < MessageLength / PACKET_SIZE; packet_index++) {
-        iResult = recv(mConnectSocket, data, PACKET_SIZE, 0);
-        recvString.append(data);
-    }
-
-    int buffersize = MessageLength % PACKET_SIZE;
-
-    iResult = recv(mConnectSocket, data, buffersize, 0);
-    data[iResult] = '\0';
-    recvString.append(data);
-
-    printf(recvString.c_str()); printf("\n");
-
-    if (iResult < 0)
-    {
-        printf("Erreur recv() : %d\n", WSAGetLastError());
+    if (result == "")
         Close();
-    }
 
-    return recvString;
+    return result;
 }
 
 bool ClientNetWork::Close()
 {
-    int close = closesocket(mConnectSocket);
+    bool closeSuccess = Network::CloseSocket(mConnectSocket);
+
     WSACleanup();
 
-    if (close==SOCKET_ERROR)
-    {
-        printf("Erreur fermeture socket : %d\n", close);
-        return false;
-    }
-    else
-    {
-        printf("Socket ferme\n");
-        return true;
-    }
+    return closeSuccess;
 }

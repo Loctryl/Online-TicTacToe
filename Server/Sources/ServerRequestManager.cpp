@@ -7,7 +7,10 @@ using json = nlohmann::json;
 
 ServerRequestManager::ServerRequestManager() : mNetWork(new ServerNetWork()) { }
 
-bool ServerRequestManager::Init() { return mNetWork->Init(); }
+bool ServerRequestManager::Init()
+{
+    return mNetWork->Init();
+}
 
 bool ServerRequestManager::SendRequest(bool validation) const
 {
@@ -22,19 +25,20 @@ bool ServerRequestManager::SendRequest(bool validation) const
 bool ServerRequestManager::SendRequest(int coord[2]) const
 {
     json data = {
+        {"type", "play"},
         {"x", coord[0]},
         {"y", coord[1]}
     };
 
-    return mNetWork->SendRequest(data.dump().c_str());
+    return mNetWork->SendRequest(data.dump());
 }
 
 bool ServerRequestManager::RecievePlay(int coord[2])
 {
     std::string data = mNetWork->Recieve();
 
-    /*if (data == nullptr)
-        return false;*/
+    if (data == "")
+        return false;
 
     //if (donnée invalide) TO DO : vérification réception
         //return false;
@@ -47,9 +51,12 @@ bool ServerRequestManager::RecievePlay(int coord[2])
     return true;
 }
 
-bool ServerRequestManager::Close() { return mNetWork->Close(); }
+bool ServerRequestManager::Close() const
+{
+    return mNetWork->Close();
+}
 
-void ServerRequestManager::NextClient()
+void ServerRequestManager::NextClient() const
 {
     mNetWork->NextClient();
 }

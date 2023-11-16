@@ -1,9 +1,5 @@
 #include "Headers/ServApp.h"
-#include <Headers/json.hpp>
-#include "..\Headers\ServerNetWork.h"
 #include "Headers/ServerRequestManager.h"
-
-using json = nlohmann::json;
 
 ServApp::ServApp()
 {
@@ -32,52 +28,35 @@ int ServApp::Run()
 		return 1;
 	mRequestManager->NextClient();
 
-	std::string Message = "";
-
 	while (!endGame)
 	{
-		Message = mRequestManager->mNetWork->Recieve();
-		if (Message == "") continue;
+		switch (1)// Evenement
+		{
+		case 1:// Reception choix case
+			if (!mRequestManager->RecievePlay(coord))
+				return 1;
 
-		json parsedMessage = json::parse(Message);
-		if (parsedMessage["type"] == "play") {
-			coord[0] = parsedMessage["x"];
-			coord[1] = parsedMessage["y"];
+			validation = true;// test le choix et valide/invalide le choix
 
-			// test du deplacement --> validation = true/false
-			validation = true;
+			// ENVOI DE LA VALIDATION
+			if (!mRequestManager->SendRequest(validation))
+				return 1;
 
-			if (validation) {
+			if (validation)
+			{
+				// faire le deplacement
+				// MAj endGame
 				mRequestManager->NextClient();
-				mRequestManager->SendRequest(coord);
+
+				// ENVOI DU DEPLACEMENT A L'AUTRE JOUEUR
+				if (!mRequestManager->SendRequest(coord))
+					return 1;
 			}
-			else {
-				json answer = {
-					{"type", "answer"},
-					{"answer", validation}
-				};
-				mRequestManager->mNetWork->SendRequest(answer.dump().c_str());
-			}
+			break;
+
+		default:
+			break;
 		}
-		// RECEPTION D'UN DEPLACEMENT
-		//if (!mRequestManager->RecievePlay(coord))
-		//	return 1;
-
-
-		// ENVOI DE LA VALIDATION
-		//if (!mRequestManager->SendRequest(validation))
-		//	return 1;
-
-		//if (validation)
-		//{
-		//	// faire le deplacement
-		//	// MAj endGame
-		//	mRequestManager->NextClient();
-
-		//	// ENVOI DU DEPLACEMENT A L'AUTRE JOUEUR
-		//	if (!mRequestManager->SendRequest(coord))
-		//		return 1;
-		//}
 	}
 
 	// FERMETURE DU SERVER
