@@ -79,9 +79,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
 
-    case WM_READ_SOCKET:
+    case WM_SOCKET:
     {
+        switch (lParam)
+        {
+        case FD_READ:
+
+            break;
+
+        case FD_CLOSE:
+            break;
+
+        default:
+            break;
+        }
         cout << "test" << endl;
+
     }
         break;
 

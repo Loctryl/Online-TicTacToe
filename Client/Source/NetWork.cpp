@@ -65,7 +65,7 @@ bool NetWork::CreateSocket()
     }
     else
     {
-        if(WSAAsyncSelect(mConnectSocket, mHWnd, WM_USER + 1, FD_READ | FD_CLOSE) == 0)
+        if(WSAAsyncSelect(mConnectSocket, mHWnd, WM_SOCKET, FD_READ | FD_CLOSE) == 0)
             return true;
         else
             return false;
