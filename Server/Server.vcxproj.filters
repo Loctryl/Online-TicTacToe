@@ -18,13 +18,13 @@
     <ClCompile Include="Sources\server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\NetWork.cpp">
+    <ClCompile Include="Sources\ServApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\RequestManager.cpp">
+    <ClCompile Include="Sources\ServerNetWork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Application.cpp">
+    <ClCompile Include="Sources\ServerRequestManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,13 +32,16 @@
     <ClInclude Include="Headers\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\NetWork.h">
+    <ClInclude Include="Headers\ServApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\RequestManager.h">
+    <ClInclude Include="Headers\ServerNetWork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Application.h">
+    <ClInclude Include="Headers\ServerRequestManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

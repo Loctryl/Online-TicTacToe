@@ -26,6 +26,7 @@ private:
     bool SettingSocket();
     bool CreateSocketServer();
     sockaddr_in SettingProtocol();
+    
     bool Bind(sockaddr_in& serviceServer);// Associe une adresse IP et un numero de port à un socket
     bool WaitClients();
     bool AcceptClient(int& numClient);
