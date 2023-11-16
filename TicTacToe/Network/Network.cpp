@@ -4,7 +4,7 @@
 #include <WS2tcpip.h>
 #include <iostream>
 
-#include "NetWork.h"
+#include "Network.h"
 
 #define PORT 6666
 #define ADRESSE "127.0.0.1"
