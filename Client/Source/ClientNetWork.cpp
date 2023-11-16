@@ -4,18 +4,18 @@
 #include <WS2tcpip.h>
 #include <iostream>
 
-#include "Headers/NetWork.h"
+#include "Headers/ClientNetWork.h"
 
 #define PORT 6666
 #define ADRESSE "127.0.0.1"
 #define PACKET_SIZE 2048
 
 
-NetWork::NetWork() { }
+ClientNetWork::ClientNetWork() { }
 
-NetWork::~NetWork() { closesocket(mConnectSocket); }
+ClientNetWork::~ClientNetWork() { closesocket(mConnectSocket); }
 
-bool NetWork::Init()
+bool ClientNetWork::Init()
 {
     if (!SettingSocket())
         return false;
@@ -31,7 +31,7 @@ bool NetWork::Init()
     return true;
 }
 
-bool NetWork::SettingSocket()
+bool ClientNetWork::SettingSocket()
 {
     WORD wVersionRequested = MAKEWORD(2, 2); // Version min et max de la sp�cification Windows Sockets
     WSADATA wsaData; // Informations sur l�impl�mentation de Windows Sockets
@@ -46,7 +46,7 @@ bool NetWork::SettingSocket()
         return true;
 }
 
-bool NetWork::CreateSocket()
+bool ClientNetWork::CreateSocket()
 {
     mConnectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (mConnectSocket==INVALID_SOCKET)
@@ -59,7 +59,7 @@ bool NetWork::CreateSocket()
         return true;
 }
 
-sockaddr_in NetWork::SettingProtocol()
+sockaddr_in ClientNetWork::SettingProtocol()
 {
     sockaddr_in clientService;
     clientService.sin_family = AF_INET;
@@ -69,7 +69,7 @@ sockaddr_in NetWork::SettingProtocol()
     return clientService;
 }
 
-bool NetWork::ConnectServer(sockaddr_in& clientService)
+bool ClientNetWork::ConnectServer(sockaddr_in& clientService)
 {
     if (connect(mConnectSocket, (SOCKADDR*)&clientService, sizeof(clientService)))
     {
@@ -82,7 +82,7 @@ bool NetWork::ConnectServer(sockaddr_in& clientService)
     return true;
 }
 
-bool NetWork::SendRequest(const char* data)
+bool ClientNetWork::SendRequest(const char* data)
 {
     if (send(mConnectSocket, data, PACKET_SIZE, 0)==SOCKET_ERROR)
     {
@@ -95,7 +95,7 @@ bool NetWork::SendRequest(const char* data)
     return true;
 }
 
-std::string NetWork::Recieve()
+std::string ClientNetWork::Recieve()
 {
     char data[PACKET_SIZE];
     std::string recvString = "";
@@ -122,7 +122,7 @@ std::string NetWork::Recieve()
     return recvString;
 }
 
-bool NetWork::Close()
+bool ClientNetWork::Close()
 {
     int close = closesocket(mConnectSocket);
     WSACleanup();

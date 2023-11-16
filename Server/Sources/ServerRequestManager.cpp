@@ -1,14 +1,14 @@
-#include "Headers/RequestManager.h"
+#include "Headers/ServerRequestManager.h"
 #include <Headers/json.hpp>
-#include "Headers/NetWork.h"
+#include "..\Headers\ServerNetWork.h"
 
 using json = nlohmann::json;
 
-RequestManager::RequestManager() : mNetWork(new NetWork()) { }
+ServerRequestManager::ServerRequestManager() : mNetWork(new ClientNetWork()) { }
 
-bool RequestManager::Init() { return mNetWork->Init(); }
+bool ServerRequestManager::Init() { return mNetWork->Init(); }
 
-bool RequestManager::SendRequest(bool validation) const
+bool ServerRequestManager::SendRequest(bool validation) const
 {
     json data = {
         {"type", "answer"},
@@ -18,7 +18,7 @@ bool RequestManager::SendRequest(bool validation) const
     return mNetWork->SendRequest(data.dump().c_str());
 }
 
-bool RequestManager::SendRequest(int coord[2]) const
+bool ServerRequestManager::SendRequest(int coord[2]) const
 {
     json data = {
         {"x", coord[0]},
@@ -28,7 +28,7 @@ bool RequestManager::SendRequest(int coord[2]) const
     return mNetWork->SendRequest(data.dump().c_str());
 }
 
-bool RequestManager::RecievePlay(int coord[2])
+bool ServerRequestManager::RecievePlay(int coord[2])
 {
     std::string data = mNetWork->Recieve();
 
@@ -46,9 +46,9 @@ bool RequestManager::RecievePlay(int coord[2])
     return true;
 }
 
-bool RequestManager::Close() { return mNetWork->Close(); }
+bool ServerRequestManager::Close() { return mNetWork->Close(); }
 
-void RequestManager::NextClient()
+void ServerRequestManager::NextClient()
 {
     mNetWork->NextClient();
 }

@@ -1,12 +1,12 @@
 #pragma once
 
-class NetWork;
+class ClientNetWork;
 
-class RequestManager
+class ServerRequestManager
 {
 public:
-    RequestManager();
-    virtual ~RequestManager() = default;
+    ServerRequestManager();
+    virtual ~ServerRequestManager() = default;
 
     bool Init();
 
@@ -17,5 +17,5 @@ public:
     void NextClient();
 
 public:
-    NetWork* mNetWork;
+    ClientNetWork* mNetWork;
 };

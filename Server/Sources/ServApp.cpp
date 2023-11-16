@@ -1,23 +1,23 @@
-#include "Headers/Application.h"
-#include "Headers/RequestManager.h"
-#include "Headers/NetWork.h"
+#include "Headers/ServApp.h"
 #include <Headers/json.hpp>
+#include "..\Headers\ServerNetWork.h"
+#include "Headers/ServerRequestManager.h"
 
 using json = nlohmann::json;
 
-Application::Application()
+ServApp::ServApp()
 {
-	mRequestManager = new RequestManager();
+	mRequestManager = new ServerRequestManager();
 }
 
-Application::~Application() { }
+ServApp::~ServApp() { }
 
-bool Application::Init()
+bool ServApp::Init()
 {
 	return mRequestManager->Init();
 }
 
-int Application::Run()
+int ServApp::Run()
 {
 	int coord[2];
 

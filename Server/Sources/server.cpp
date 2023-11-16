@@ -1,8 +1,8 @@
-#include "Headers/Application.h"
+#include "Headers/ServApp.h"
 
 int main()
 {
-	Application app = Application();
+	ServApp app = ServApp();
 
 	if (!app.Init())
 		return 1;

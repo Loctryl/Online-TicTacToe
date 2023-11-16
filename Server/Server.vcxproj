@@ -131,16 +131,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Application.cpp" />
-    <ClCompile Include="Sources\NetWork.cpp" />
-    <ClCompile Include="Sources\RequestManager.cpp" />
+    <ClCompile Include="Sources\ServApp.cpp" />
+    <ClCompile Include="Sources\ServerNetWork.cpp" />
+    <ClCompile Include="Sources\ServerRequestManager.cpp" />
     <ClCompile Include="Sources\server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\Application.h" />
+    <ClInclude Include="Headers\ServApp.h" />
     <ClInclude Include="Headers\json.hpp" />
-    <ClInclude Include="Headers\NetWork.h" />
-    <ClInclude Include="Headers\RequestManager.h" />
+    <ClInclude Include="Headers\ServerNetWork.h" />
+    <ClInclude Include="Headers\ServerRequestManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

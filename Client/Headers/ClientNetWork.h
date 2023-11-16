@@ -2,11 +2,11 @@
 #include <WinSock2.h>
 #include <string>
 
-class NetWork
+class ClientNetWork
 {
 public:
-    NetWork();
-    ~NetWork();
+    ClientNetWork();
+    ~ClientNetWork();
 
     bool Init();
 

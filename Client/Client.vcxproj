@@ -145,17 +145,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\ClientApp.cpp" />
     <ClCompile Include="Source\client.cpp" />
-    <ClCompile Include="Source\NetWork.cpp" />
-    <ClCompile Include="Source\RequestManager.cpp" />
+    <ClCompile Include="Source\ClientNetWork.cpp" />
+    <ClCompile Include="Source\ClientRequestManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\Application.h" />
+    <ClInclude Include="Headers\ClientApp.h" />
     <ClInclude Include="Headers\framework.h" />
     <ClInclude Include="Headers\json.hpp" />
-    <ClInclude Include="Headers\NetWork.h" />
-    <ClInclude Include="Headers\RequestManager.h" />
+    <ClInclude Include="Headers\ClientNetWork.h" />
+    <ClInclude Include="Headers\ClientRequestManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TicTacToe\TicTacToe.vcxproj">

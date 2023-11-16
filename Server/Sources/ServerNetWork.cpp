@@ -4,18 +4,18 @@
 #include <WS2tcpip.h>
 #include <iostream>
 
-#include "Headers/NetWork.h"
+#include "Headers\ServerNetWork.h"
 
 #define PORT 6666
 #define ADRESSE "127.0.0.1"
 #define PACKET_SIZE 2048
 
 
-NetWork::NetWork() { }
+ServerNetWork::ServerNetWork() { }
 
-NetWork::~NetWork() { closesocket(mListenSocket); }
+ServerNetWork::~ServerNetWork() { closesocket(mListenSocket); }
 
-bool NetWork::Init()
+bool ServerNetWork::Init()
 {
     if (!SettingSocket())
         return false;
@@ -47,7 +47,7 @@ bool NetWork::Init()
     return true;
 }
 
-bool NetWork::SettingSocket()
+bool ServerNetWork::SettingSocket()
 {
     WORD wVersionRequested = MAKEWORD(2, 2); // Version min et max de la specification Windows Sockets
     WSADATA wsaData; // Informations sur l implementation de Windows Sockets
@@ -62,7 +62,7 @@ bool NetWork::SettingSocket()
         return true;
 }
 
-bool NetWork::CreateSocketServer()
+bool ServerNetWork::CreateSocketServer()
 {
     mListenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (mListenSocket == INVALID_SOCKET)
@@ -75,7 +75,7 @@ bool NetWork::CreateSocketServer()
         return true;
 }
 
-sockaddr_in NetWork::SettingProtocol()
+sockaddr_in ServerNetWork::SettingProtocol()
 {
     sockaddr_in serviceServer;
     serviceServer.sin_family = AF_INET;
@@ -85,7 +85,7 @@ sockaddr_in NetWork::SettingProtocol()
     return serviceServer;
 }
 
-bool NetWork::Bind(sockaddr_in& serviceServer)
+bool ServerNetWork::Bind(sockaddr_in& serviceServer)
 {
     if (bind(mListenSocket, (SOCKADDR*)&serviceServer, sizeof(serviceServer)) == SOCKET_ERROR)// Associe l'adresse locale au socket
     {
@@ -97,7 +97,7 @@ bool NetWork::Bind(sockaddr_in& serviceServer)
         return true;
 }
 
-bool NetWork::WaitClients()
+bool ServerNetWork::WaitClients()
 {
     if (listen(mListenSocket, NB_CLIENT) == SOCKET_ERROR)
     {
@@ -110,7 +110,7 @@ bool NetWork::WaitClients()
     return true;
 }
 
-bool NetWork::AcceptClient(int &numClient)
+bool ServerNetWork::AcceptClient(int &numClient)
 {
     mAcceptSocket[numClient] = accept(mListenSocket, NULL, NULL);
     if (mAcceptSocket[numClient] == INVALID_SOCKET)
@@ -123,7 +123,7 @@ bool NetWork::AcceptClient(int &numClient)
     return true;
 }
 
-bool NetWork::SendRequest(const char* data)
+bool ServerNetWork::SendRequest(const char* data)
 {
     if (send(mAcceptSocket[mActualClient], data, PACKET_SIZE, 0) == SOCKET_ERROR)
     {
@@ -136,7 +136,7 @@ bool NetWork::SendRequest(const char* data)
     return true;
 }
 
-std::string NetWork::Recieve()
+std::string ServerNetWork::Recieve()
 {
     char data[PACKET_SIZE];
     std::string recvString = "";
@@ -163,7 +163,7 @@ std::string NetWork::Recieve()
     return recvString;
 }
 
-bool NetWork::Close()
+bool ServerNetWork::Close()
 {
     bool closeSuccess = true;
 
@@ -179,12 +179,12 @@ bool NetWork::Close()
     return closeSuccess;
 }
 
-void NetWork::NextClient()
+void ServerNetWork::NextClient()
 {
     mActualClient = (mActualClient + 1) % 2;
 }
 
-bool NetWork::CloseClient(int& numClient)
+bool ServerNetWork::CloseClient(int& numClient)
 {
     int close = closesocket(mAcceptSocket[numClient]);
 
@@ -198,7 +198,7 @@ bool NetWork::CloseClient(int& numClient)
     return true;
 }
 
-bool NetWork::CloseServer()
+bool ServerNetWork::CloseServer()
 {
     int close = closesocket(mListenSocket);
 

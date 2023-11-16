@@ -1,23 +1,23 @@
-#include "Headers/Application.h"
+#include "Headers/ClientApp.h"
 #include "GameManager.h"
-#include "Headers/RequestManager.h"
+#include "Headers/ClientRequestManager.h"
 
 
-Application::Application() 
+ClientApp::ClientApp() 
 {
-	mRequestManager = new RequestManager();
+	mRequestManager = new ClientRequestManager();
 	//mGame = new GameManager();
 }
 
-Application::~Application() { }
+ClientApp::~ClientApp() { }
 
-bool Application::Init() 
+bool ClientApp::Init() 
 {
 	//mGame->InitGame(5);
 	return mRequestManager->Init();
 }
 
-int Application::Run() 
+int ClientApp::Run() 
 {
 	bool endGame = false;
 	bool validation = false;

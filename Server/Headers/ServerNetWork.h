@@ -5,11 +5,11 @@
 
 #define NB_CLIENT 2
 
-class NetWork
+class ServerNetWork
 {
 public:
-    NetWork();
-    ~NetWork();
+    ServerNetWork();
+    ~ServerNetWork();
 
     bool Init();
 
@@ -26,7 +26,7 @@ private:
     bool SettingSocket();
     bool CreateSocketServer();
     sockaddr_in SettingProtocol();
-    bool Bind(sockaddr_in& serviceServer);// Associe une adresse IP et un numéro de port à un socket
+    bool Bind(sockaddr_in& serviceServer);// Associe une adresse IP et un numero de port à un socket
     bool WaitClients();
     bool AcceptClient(int& numClient);
     bool CloseClient(int& numClient);
