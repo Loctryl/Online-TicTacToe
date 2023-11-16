@@ -1,6 +1,6 @@
 #pragma once
 
-class ClientNetWork;
+class ServerNetWork;
 
 class ServerRequestManager
 {
@@ -17,5 +17,5 @@ public:
     void NextClient();
 
 public:
-    ClientNetWork* mNetWork;
+    ServerNetWork* mNetWork;
 };

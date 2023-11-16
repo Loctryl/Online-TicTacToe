@@ -4,7 +4,7 @@
 
 using json = nlohmann::json;
 
-ServerRequestManager::ServerRequestManager() : mNetWork(new ClientNetWork()) { }
+ServerRequestManager::ServerRequestManager() : mNetWork(new ServerNetWork()) { }
 
 bool ServerRequestManager::Init() { return mNetWork->Init(); }
 

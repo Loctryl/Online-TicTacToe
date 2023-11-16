@@ -54,7 +54,7 @@ int ServApp::Run()
 			else {
 				json answer = {
 					{"type", "answer"},
-					{"answer", false}
+					{"answer", validation}
 				};
 				mRequestManager->mNetWork->SendRequest(answer.dump().c_str());
 			}
