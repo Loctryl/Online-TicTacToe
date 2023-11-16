@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <WS2tcpip.h>
+#include <iostream>
 
 #include "Headers/NetWork.h"
 
@@ -94,25 +95,31 @@ bool NetWork::SendRequest(const char* data)
     return true;
 }
 
-char* NetWork::Recieve()
+std::string NetWork::Recieve()
 {
     char data[PACKET_SIZE];
+    std::string recvString = "";
 
-    int iResult = recv(mConnectSocket, data, PACKET_SIZE, 0);
-    if (iResult <= 0)
+    int iResult = -1;
+    do
     {
-        if (iResult == 0)
-            printf("connexion fermee\n");
+        iResult = recv(mConnectSocket, data, PACKET_SIZE, 0);
+        if (iResult > 0)
+        {
+            data[iResult - 1] = '\0';
+            recvString.append(data);
+        }
+        else if (iResult == 0)
+            std::cout << "Recieved Message : " << recvString << "\n";
         else
+        {
             printf("Erreur recv() : %d\n", WSAGetLastError());
+            Close();
+        }
 
-        Close();
-        return data;
-    }
+    } while (iResult > 0);
 
-    data[iResult-1] = '\0';
-
-    return data;
+    return recvString;
 }
 
 bool NetWork::Close()

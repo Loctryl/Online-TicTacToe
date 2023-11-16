@@ -11,6 +11,7 @@ bool RequestManager::Init() { return mNetWork->Init(); }
 bool RequestManager::SendRequest(bool validation) const
 {
     json data = {
+        {"type", "answer"},
         {"answer", validation}
     };
 

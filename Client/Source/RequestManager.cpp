@@ -12,6 +12,7 @@ bool RequestManager::Init() { return mNetWork->Init(); }
 bool RequestManager::SendRequest(int coord[2])
 {
     json data = {
+        {"type", "play"},
         {"x", coord[0]},
         {"y", coord[1]}
     };

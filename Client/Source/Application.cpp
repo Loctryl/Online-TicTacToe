@@ -6,14 +6,14 @@
 Application::Application() 
 {
 	mRequestManager = new RequestManager();
-	mGame = new GameManager();
+	//mGame = new GameManager();
 }
 
 Application::~Application() { }
 
 bool Application::Init() 
 {
-	mGame->InitGame(5);
+	//mGame->InitGame(5);
 	return mRequestManager->Init();
 }
 

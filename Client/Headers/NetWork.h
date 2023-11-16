@@ -1,5 +1,6 @@
 #pragma once
 #include <WinSock2.h>
+#include <string>
 
 class NetWork
 {
@@ -10,7 +11,7 @@ public:
     bool Init();
 
     bool SendRequest(const char* data);
-    char* Recieve();
+    std::string Recieve();
     bool Close();
     
 private:

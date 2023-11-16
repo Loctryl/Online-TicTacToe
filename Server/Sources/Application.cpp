@@ -1,5 +1,9 @@
 #include "Headers/Application.h"
 #include "Headers/RequestManager.h"
+#include "Headers/NetWork.h"
+#include <Headers/json.hpp>
+
+using json = nlohmann::json;
 
 Application::Application()
 {
@@ -28,29 +32,52 @@ int Application::Run()
 		return 1;
 	mRequestManager->NextClient();
 
+	std::string Message = "";
+
 	while (!endGame)
 	{
-		// RECEPTION D'UN DEPLACEMENT
-		if (!mRequestManager->RecievePlay(coord))
-			return 1;
+		Message = mRequestManager->mNetWork->Recieve();
+		if (Message == "") continue;
 
-		// test du deplacement --> validation = true/false
-		
+		json parsedMessage = json::parse(Message);
+		if (parsedMessage["type"] == "play") {
+			coord[0] = parsedMessage["x"];
+			coord[1] = parsedMessage["y"];
+
+			// test du deplacement --> validation = true/false
+			validation = true;
+
+			if (validation) {
+				mRequestManager->NextClient();
+				mRequestManager->SendRequest(coord);
+			}
+			else {
+				json answer = {
+					{"type", "answer"},
+					{"answer", false}
+				};
+				mRequestManager->mNetWork->SendRequest(answer.dump().c_str());
+			}
+		}
+		// RECEPTION D'UN DEPLACEMENT
+		//if (!mRequestManager->RecievePlay(coord))
+		//	return 1;
+
 
 		// ENVOI DE LA VALIDATION
-		if (!mRequestManager->SendRequest(validation))
-			return 1;
+		//if (!mRequestManager->SendRequest(validation))
+		//	return 1;
 
-		if (validation)
-		{
-			// faire le deplacement
-			// MAj endGame
-			mRequestManager->NextClient();
+		//if (validation)
+		//{
+		//	// faire le deplacement
+		//	// MAj endGame
+		//	mRequestManager->NextClient();
 
-			// ENVOI DU DEPLACEMENT A L'AUTRE JOUEUR
-			if (!mRequestManager->SendRequest(coord))
-				return 1;
-		}
+		//	// ENVOI DU DEPLACEMENT A L'AUTRE JOUEUR
+		//	if (!mRequestManager->SendRequest(coord))
+		//		return 1;
+		//}
 	}
 
 	// FERMETURE DU SERVER

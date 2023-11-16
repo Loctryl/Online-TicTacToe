@@ -16,6 +16,6 @@ public:
     bool Close();
     void NextClient();
 
-private:
+public:
     NetWork* mNetWork;
 };
