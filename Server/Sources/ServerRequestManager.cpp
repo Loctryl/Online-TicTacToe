@@ -7,7 +7,6 @@ ServerRequestManager::ServerRequestManager() { mNetWork = new ServerNetWork(); }
 
 int ServerRequestManager::EventToInt(std::string event)
 {
-    //, notif, , 
     if (event == "play")
         return play;
     else if (event == "notif")
@@ -37,11 +36,12 @@ bool ServerRequestManager::Init()
     return mNetWork->Init();
 }
 
-bool ServerRequestManager::SendRequestAnswer(bool validation) const
+bool ServerRequestManager::SendRequestChoice(int coord[2]) const
 {
     json data = {
-        {"type", "answer"},
-        {"answer", validation}
+        {"type", "choice"},
+        {"x", coord[0]},
+        {"y", coord[1]}
     };
 
     return mNetWork->SendRequest(data.dump());
@@ -58,7 +58,15 @@ bool ServerRequestManager::SendRequestPlay(int coord[2]) const
     return mNetWork->SendRequest(data.dump());
 }
 
+bool ServerRequestManager::SendRequestValidation(bool validation) const
+{
+    json data = {
+        {"type", "validation"},
+        {"answer", validation}
+    };
 
+    return mNetWork->SendRequest(data.dump());
+}
 
 bool ServerRequestManager::SendRequestNotif(std::string Message) const
 {
@@ -95,30 +103,33 @@ bool ServerRequestManager::ManageMessage(std::string Message)
 
     switch (EventToInt(MessageType))
     {
-    case play:
-        int Coords[2];
-        if (!RecievePlay(parsedMessage, Coords)) {
-            printf("Erreur lors de la réception de Coordonnées\n");
+    case choice:
+        int Coords[2] = { parsedMessage["x"], parsedMessage["y"] };
+        if (!SendRequestChoice(Coords))
+        {
+            Close();
             return false;
         }
-        //game.play(Coords) -> returns if Coords is playable or not
-        bool IsPlayable = true; // A remplacer
-        printf("Coordonnee Recue\n");
+        break;
 
-        SendRequestAnswer(IsPlayable);
-        if (IsPlayable) {
-            // Si le move finit la partie -> Endgame
-            NextClient();
-            SendRequestPlay(Coords);
+    case play:
+        int Coords[2] = { parsedMessage["x"], parsedMessage["y"] };
+        //game.play(Coords)
+        printf("Coordonnee Recue\n");
+        break;
+
+    case validation:
+        bool validation = parsedMessage["answer"];
+
+        if (validation)
+        {
+            printf("Choix valide\n");
+            //game.play(Coords)
         }
         break;
 
     case notif:
         // do something
-        break;
-
-    case answer:
-        printf("this shouldn't happen\n");
         break;
 
     case player:
