@@ -45,36 +45,25 @@ int ClientApp::Run()
 
 	while (!endGame)
 	{
+		// Premier coup si My Turn == true :
+		int Coords[2];
+		Coords[0] = -1;
+		Coords[1] = -1;
+		mRequestManager->SendRequestPlay(Coords);
+
+		std::string Message = "";
+		bool validation = false;
+
 		switch (1)// Evenement
 		{
 		case 1:
-			// ENVOI D'UN DEPLACEMENT
-			// recuperer deplacement
-			if (!mRequestManager->SendRequest(coord))
-				return 1;
+			Message = mRequestManager->Recieve();
+			validation = mRequestManager->ManageMessage(Message);
 			break;
-
 		case 2:
-			// RECEPTION DE LA VALIDATION DU DEPLACEMENT
-			if (!mRequestManager->RecieveValidation(validation))
-				return 1;
-
-			if (validation)
-			{
-				// faire le deplacement
-				// endGame = IsEnd()
-			}
 			break;
-
 		case 3:
-			// RECEPTION DU COUP DE L'AUTRE JOUEUR --> reception qui notifie que c'est a nous
-			if (!mRequestManager->RecievePlay(coord))
-				return 1;
-
-			// faire le dplacement
-			// endGame = IsEnd()
 			break;
-
 		default:
 			break;
 		}

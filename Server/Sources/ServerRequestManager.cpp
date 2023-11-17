@@ -77,7 +77,6 @@ bool ServerRequestManager::ManageMessage(std::string Message)
         if (IsPlayable) {
             // Si le move finit la partie -> Endgame
             NextClient();
-            SendRequestNotif("C'est à vous de jouer !\n");
             SendRequestPlay(Coords);
         }
     }
