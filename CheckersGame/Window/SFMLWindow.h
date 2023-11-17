@@ -1,26 +1,24 @@
 ﻿#pragma once
-#include "SFML/Graphics.hpp"
-#include "Structures.h"
-using namespace sf;
+#include "Resources/framework.h"
 
 class SFMLWindow {
 private:
-   RenderWindow* _window;
-   VideoMode _v_mode;
-   Font _font;
+   RenderWindow* mWindow;
+   VideoMode mVMode;
+   Font mFont;
    
 public:
    SFMLWindow();
    ~SFMLWindow();
 
    /// Returns the window
-   RenderWindow* getWindow();
+   RenderWindow* GetWindow() const;
 
    /// Return the used font
-   Font &getFont();
+   Font* GetFont();
 
    /// Returns the window's video mode
-   VideoMode* getVideoMode();
+   VideoMode* GetVideoMode();
 
    /// Initiates the windows and its parameters
    void InitWindow();

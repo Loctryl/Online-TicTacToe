@@ -1,5 +1,5 @@
 #pragma once
-#include "Ressources/framework.h"
+#include "../Ressources/framework.h"
 
 // Handles the Windows window
 class MessageWindow

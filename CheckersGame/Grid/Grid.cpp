@@ -1,4 +1,5 @@
-﻿#include "../Headers/Grid.h"
+﻿#include "Grid.h"
+#include "Tile.h"
 #include <iostream>
 
 Grid::Grid() {
@@ -7,8 +8,6 @@ Grid::Grid() {
     nbPieces[0] = 0;
     nbPieces[1] = 0;
 }
-
-Grid::~Grid() { }
 
 void Grid::InitGrid(int size, int margin) {
     tileSize = size;
@@ -67,20 +66,20 @@ Tile* Grid::GetTile(Vector2i mousePos) {
 
 bool Grid::IsPlayableTile(int dir, Tile* tile, int player) const {
     if(dir % 2 == player % 2
-        && mainGrid[tile->x + all_directions[dir][0]][tile->y + all_directions[dir][1]].state == EMPTY) return true;
+        && mainGrid[tile->x + ALL_DIRECTIONS[dir][0]][tile->y + ALL_DIRECTIONS[dir][1]].state == EMPTY) return true;
     return false;
 }
 
 bool Grid::IsQueenPlayableTile(int dir, Tile* tile, int player, int n) const {
-    if(mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].state == EMPTY) return true;
+    if(mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*n][tile->y + ALL_DIRECTIONS[dir][1]*n].state == EMPTY) return true;
     return false;
 }
 
 bool Grid::IsEatableTile(int dir, Tile* tile, int player, int n) const {
-    if((mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].state == SIMPLE
-        || mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].state == QUEEN)
-        && mainGrid[tile->x + all_directions[dir][0]*n][tile->y + all_directions[dir][1]*n].player != player
-        && mainGrid[tile->x + all_directions[dir][0]*(n+1)][tile->y + all_directions[dir][1]*(n+1)].state == EMPTY) return true;
+    if((mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*n][tile->y + ALL_DIRECTIONS[dir][1]*n].state == SIMPLE
+        || mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*n][tile->y + ALL_DIRECTIONS[dir][1]*n].state == QUEEN)
+        && mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*n][tile->y + ALL_DIRECTIONS[dir][1]*n].player != player
+        && mainGrid[tile->x + ALL_DIRECTIONS[dir][0]*(n+1)][tile->y + ALL_DIRECTIONS[dir][1]*(n+1)].state == EMPTY) return true;
     return false;
 }
 
@@ -88,10 +87,10 @@ void Grid::ShowFirstPossibilities(int player, Tile* tile) {
     if(tile->state == SIMPLE) {
         for (int dir = 0; dir < 4; dir ++) {
             if(IsPlayableTile(dir, tile, player)) 
-                ShowHighLight({tile->x + all_directions[dir][0],tile->y + all_directions[dir][1]}, player);
+                ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0],tile->y + ALL_DIRECTIONS[dir][1]}, player);
             
             if(IsEatableTile(dir, tile, player, 1)) 
-                ShowHighLight({tile->x + all_directions[dir][0]*2,tile->y + all_directions[dir][1]*2}, player);
+                ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0]*2,tile->y + ALL_DIRECTIONS[dir][1]*2}, player);
         }
     }
     else if (tile->state == QUEEN) {
@@ -99,12 +98,12 @@ void Grid::ShowFirstPossibilities(int player, Tile* tile) {
             int n = 1;
             bool eat = false;
             
-            while(tile->x + all_directions[dir][0]*n >= 0
-                && tile->x + all_directions[dir][0]*n < 10
-                && tile->y + all_directions[dir][1]*n >= 0
-                && tile->y + all_directions[dir][1]*n < 10) {
+            while(tile->x + ALL_DIRECTIONS[dir][0]*n >= 0
+                && tile->x + ALL_DIRECTIONS[dir][0]*n < 10
+                && tile->y + ALL_DIRECTIONS[dir][1]*n >= 0
+                && tile->y + ALL_DIRECTIONS[dir][1]*n < 10) {
                 if(IsQueenPlayableTile(dir, tile, player, n)) {
-                    ShowHighLight({tile->x + all_directions[dir][0]*n,tile->y + all_directions[dir][1]*n}, player);
+                    ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0]*n,tile->y + ALL_DIRECTIONS[dir][1]*n}, player);
                 }
                 else if(!IsEatableTile(dir, tile, player, n) || eat) break;
                 else eat = true;
@@ -121,7 +120,7 @@ bool Grid::ShowNextPossibilities(int player, Tile* tile) {
     if(tile->state == SIMPLE) {
         for (int dir = 0; dir < 4; dir ++) {
             if(IsEatableTile(dir, tile, player, 1)) {
-                ShowHighLight({tile->x + all_directions[dir][0]*2,tile->y + all_directions[dir][1]*2}, player);
+                ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0]*2,tile->y + ALL_DIRECTIONS[dir][1]*2}, player);
                 ret = true;
             }
         }
@@ -131,15 +130,15 @@ bool Grid::ShowNextPossibilities(int player, Tile* tile) {
             int n = 1;
             bool eat = false;
 
-            while(tile->x + all_directions[dir][0]*n >= 0
-                && tile->x + all_directions[dir][0]*n < 10
-                && tile->y + all_directions[dir][1]*n >= 0
-                && tile->y + all_directions[dir][1]*n < 10) {
+            while(tile->x + ALL_DIRECTIONS[dir][0]*n >= 0
+                && tile->x + ALL_DIRECTIONS[dir][0]*n < 10
+                && tile->y + ALL_DIRECTIONS[dir][1]*n >= 0
+                && tile->y + ALL_DIRECTIONS[dir][1]*n < 10) {
                 
                 if(IsEatableTile(dir, tile, player, n)) eat = true;
                 if(eat && IsQueenPlayableTile(dir, tile, player, n)) {
                     if(!IsEatableTile(dir, tile, player, n)) {
-                        ShowHighLight({tile->x + all_directions[dir][0]*n,tile->y + all_directions[dir][1]*n}, player);
+                        ShowHighLight({tile->x + ALL_DIRECTIONS[dir][0]*n,tile->y + ALL_DIRECTIONS[dir][1]*n}, player);
                         ret = true;
                     } else break;
                 }
@@ -155,6 +154,25 @@ void Grid::ShowHighLight(Vector2i coord, int playnum) {
     if(coord.x >= 0 && coord.x < 10 && coord.y >= 0 && coord.y < 10) {
         mainGrid[coord.x][coord.y].state = HIGHLIGHT;
         mainGrid[coord.x][coord.y].player = playnum;
+    }
+}
+
+
+bool Grid::CheckMove(Tile* origin, Tile* moved)
+{
+    if (origin->state == SIMPLE) 
+    {
+        for (int dir = 0; dir < 4; dir++) {
+            if (IsPlayableTile(dir, moved, origin->player))
+                return true;
+
+            if (IsEatableTile(dir, moved, origin->player, 1))
+                return true;
+        }
+    }
+    else if (origin->state == QUEEN) 
+    {
+
     }
 }
 
@@ -189,66 +207,66 @@ void Grid::SetPieceColor(CircleShape* _circ, Vector2i xy) const {
         _circ->setFillColor(Color(145, 50, 1,255));
 }
 
-void Grid::DrawGrid(SFMLWindow* mainWindow) {
+void Grid::DrawGrid(SFMLWindow* mainWindow) const {
+    auto* rect = new RectangleShape();
+    auto* circ = new CircleShape();
     for(int x = 0; x < 10 ; x++) {
         for (int y = 0; y < 10; y ++) {
-            auto* _rect = new RectangleShape();
-            auto* _circ = new CircleShape();
          
-            _rect->setSize({static_cast<float>(tileSize), static_cast<float>(tileSize)});
-            _rect->setPosition({
+            rect->setSize({static_cast<float>(tileSize), static_cast<float>(tileSize)});
+            rect->setPosition({
                static_cast<float>(x * tileSize + marginLeft),
                static_cast<float>(y * tileSize + tileSize)
             });
-            _rect->setOutlineThickness(1);
-            _rect->setOutlineColor(Color(12,80,138,255));
+            rect->setOutlineThickness(1);
+            rect->setOutlineColor(Color(12,80,138,255));
             if (x % 2 == 0 && y % 2 != 0 || x % 2 != 0 && y % 2 == 0)
-                _rect->setFillColor(Color(20, 20, 20, 255));
+                rect->setFillColor(Color(20, 20, 20, 255));
             else
-                _rect->setFillColor(Color(70, 70, 70, 255));
+                rect->setFillColor(Color(70, 70, 70, 255));
 
-            mainWindow->getWindow()->draw(*_rect);
+            mainWindow->GetWindow()->draw(*rect);
          
             if (mainGrid[x][y].state != EMPTY) {
                 switch (mainGrid[x][y].state) {
                 case SIMPLE:
-                    SetPieceColor(_circ, {x,y});
+                    SetPieceColor(circ, {x,y});
                     break;
                 case QUEEN:
-                    SetPieceColor(_circ, {x,y});
-                    _circ->setOutlineColor(Color(255,0,0));
-                    _circ->setOutlineThickness(2);
+                    SetPieceColor(circ, {x,y});
+                    circ->setOutlineColor(Color(255,0,0));
+                    circ->setOutlineThickness(2);
                     break;
                 case HIGHLIGHT:
                     if (mainGrid[x][y].player == 0) 
-                        _circ->setFillColor(Color(240, 245, 185,150));
+                        circ->setFillColor(Color(240, 245, 185,150));
                     else
-                        _circ->setFillColor(Color(145, 50, 1,150));
+                        circ->setFillColor(Color(145, 50, 1,150));
                     break;
                 case EMPTY: break;
                 }
             
-                _circ->setRadius(tileSize/2.5);
-                _circ->setPosition({
+                circ->setRadius(tileSize/2.5);
+                circ->setPosition({
                    static_cast<float>(x * tileSize + marginLeft + (tileSize/10)),
                    static_cast<float>(y * tileSize + tileSize + (tileSize/10))
                 });
                 
-                mainWindow->getWindow()->draw(*_circ);
+                mainWindow->GetWindow()->draw(*circ);
             }
         }
     }
+    REL_PTR(rect)
+    REL_PTR(circ)
 }
 
 void Grid::ClearHighlights() {
-    for(int x = 0;x < 10;x++) {
-        for (int y = 0; y< 10;y++) {
+    for(int x = 0;x < 10;x++)
+        for (int y = 0; y< 10;y++) 
             if(mainGrid[x][y].state == HIGHLIGHT) {
                 mainGrid[x][y].state = EMPTY;
                 mainGrid[x][y].player = -1;
             }
-        }
-    }
 }
 
 bool Grid::IsEnd()

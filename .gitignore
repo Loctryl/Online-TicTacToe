@@ -18,12 +18,11 @@
 
 .idea
 .vs
-/CheckersGame/SFML-2.6.0/
-
-/CheckersGame/SFML-2.6.0
+/SFML-2.6.0/
 /CheckersGame/x64/Debug
 
 /Client/x64/
 /Server/x64/
+/TicTacToe/x64/
 
 /x64

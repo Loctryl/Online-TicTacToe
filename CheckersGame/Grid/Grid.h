@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "Tile.h"
-#include "SFMLWindow.h"
+#include "Window/SFMLWindow.h"
+#include "Grid/Tile.h"
 
 class Grid {
 public:
@@ -11,7 +11,7 @@ public:
     int nbPieces[2];
 
     Grid();
-    ~Grid();
+    ~Grid() = default;
 
     void InitGrid(int, int);
 
@@ -35,11 +35,13 @@ public:
 
     bool ShowNextPossibilities(int, Tile*);
 
+    bool CheckMove(Tile*, Tile*);
+
     bool MovePiece(Tile*, Tile*);
 
     void SetPieceColor(CircleShape*, Vector2i) const;
 
-    void DrawGrid(SFMLWindow*);
+    void DrawGrid(SFMLWindow*) const;
 
     void ClearHighlights();
 
