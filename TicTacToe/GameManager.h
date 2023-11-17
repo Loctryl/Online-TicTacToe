@@ -13,10 +13,10 @@ public:
     int mTileSize;
     float mMarginLeft;
     
-    GameManager();
+    GameManager(Grid* grid = nullptr, int gridSize = 3);
     ~GameManager();
 
-    void InitGame(int gridSize = 3);
+    void InitWindow();
 
     void Play(int x, int y,void (*func)() = nullptr) const;
 
