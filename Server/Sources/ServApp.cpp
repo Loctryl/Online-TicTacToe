@@ -1,8 +1,11 @@
 #include "Headers/ServApp.h"
 #include "Headers/ServerRequestManager.h"
+#include "Headers/MessageWindow.h"
 
 ServApp::ServApp()
 {
+	mMessageWindow = new MessageWindow();
+	mMessageWindow->InitWindow();
 	mRequestManager = new ServerRequestManager();
 }
 
@@ -15,53 +18,35 @@ bool ServApp::Init()
 
 int ServApp::Run()
 {
-	int coord[2];
 
-	bool endGame = false;
-	bool validation = false;
+	MSG msg = { 0 };
 
-	// ENVOI DE LA VALIDATION DE LANCEMENT DE JEU
-	if (!mRequestManager->SendRequest(validation))
-		return 1;
-	mRequestManager->NextClient();
-	if (!mRequestManager->SendRequest(validation))
-		return 1;
-	mRequestManager->NextClient();
+	bool running = true;
 
-	while (!endGame)
+	// Boucle de messages principale :
+	while (running)
 	{
-		switch (1)// Evenement
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-		case 1:// Reception choix case
-			if (!mRequestManager->RecievePlay(coord))
-				return 1;
-
-			validation = true;// test le choix et valide/invalide le choix
-
-			// ENVOI DE LA VALIDATION
-			if (!mRequestManager->SendRequest(validation))
-				return 1;
-
-			if (validation)
-			{
-				// faire le deplacement
-				// MAj endGame
-				mRequestManager->NextClient();
-
-				// ENVOI DU DEPLACEMENT A L'AUTRE JOUEUR
-				if (!mRequestManager->SendRequest(coord))
-					return 1;
-			}
-			break;
-
-		default:
-			break;
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			if (msg.message == WM_QUIT)
+				running = false;
 		}
+
+		running = Update();
 	}
+
+	return (int)msg.wParam;
 
 	// FERMETURE DU SERVER
 	if (!mRequestManager->Close())
 		return 1;
 
 	return 0;
+}
+
+int ServApp::Update()
+{
+	return 1;
 }

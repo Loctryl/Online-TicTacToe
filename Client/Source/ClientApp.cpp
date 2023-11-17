@@ -1,15 +1,19 @@
 #include "Headers/ClientApp.h"
 //#include "GameManager.h"
 #include "Headers/ClientRequestManager.h"
+#include "Headers/MessageWindow.h"
 
 
 ClientApp::ClientApp() 
 {
+	mMessageWindow = new MessageWindow();
+	mMessageWindow->InitWindow();
 	mRequestManager = new ClientRequestManager();
 	//mGame = new GameManager();
 }
 
-ClientApp::~ClientApp() { }
+ClientApp::~ClientApp() {
+}
 
 bool ClientApp::Init() 
 {
@@ -19,69 +23,22 @@ bool ClientApp::Init()
 
 int ClientApp::Run() 
 {
-	bool endGame = false;
-	bool validation = false;
-	int coord[2] = { -1, -1 };
+	MSG msg = { 0 };
 
-	int x, y;
-	x = -1;
-	y = -1;
+	bool running = true;
 
-	// RECEPTION DE LA VALIDATION DE LANCEMENT DE JEU
-	if (!mRequestManager->RecieveValidation(validation))
-		return 1;
-
-	/*Event event{};
-	while (mGame.IsWindowOpened())
+	// Boucle de messages principale :
+	while (running)
 	{
-		while (mGame.mWindow->GetWindow()->pollEvent(event))
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			if (mGame.IsPressEsc(&event)) mGame.mWindow->GetWindow()->close();
-			if (mGame.IsMouseClick(&event) && mGame.IsMove(&x, &y)) {
-				mGame.Play(x, y, &Oui);
-
-				x = -1;
-				y = -1;
-			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			if (msg.message == WM_QUIT)
+				running = false;
 		}
-		mGame.RenderGame();
-	}*/
 
-	while (!endGame)
-	{
-		switch (1)// Evenement
-		{
-		case 1:
-			// ENVOI D'UN DEPLACEMENT
-			// recuperer deplacement
-			if (!mRequestManager->SendRequest(coord))
-				return 1;
-			break;
-
-		case 2:
-			// RECEPTION DE LA VALIDATION DU DEPLACEMENT
-			if (!mRequestManager->RecieveValidation(validation))
-				return 1;
-
-			if (validation)
-			{
-				// faire le deplacement
-				// endGame = IsEnd()
-			}
-			break;
-
-		case 3:
-			// RECEPTION DU COUP DE L'AUTRE JOUEUR --> reception qui notifie que c'est a nous
-			if (!mRequestManager->RecievePlay(coord))
-				return 1;
-
-			// faire le dplacement
-			// endGame = IsEnd()
-			break;
-
-		default:
-			break;
-		}
+		running = Update();
 	}
 
 
@@ -90,4 +47,9 @@ int ClientApp::Run()
 		return 1;
 
 	return 0;
+}
+
+int ClientApp::Update()
+{
+	return 1;
 }

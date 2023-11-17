@@ -13,23 +13,10 @@ bool ServerNetWork::Init()
     if (!Bind(serviceServer))
         return false;
 
-    WSAAsyncSelect(mListenSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_ACCEPT);
-
     if (!WaitClients())
         return false;
 
-    for (int i = 0; i < NB_CLIENT; i++)
-    {
-        if (!AcceptClient(i))
-        {
-            for (int j = 0; j <= i; j++)
-                Network::CloseSocket(mAcceptSocket[j]);
-
-            Network::CloseSocket(mListenSocket);
-
-            return false;
-        }
-    }
+    WSAAsyncSelect(mListenSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_ACCEPT);
 
     return true;
 }

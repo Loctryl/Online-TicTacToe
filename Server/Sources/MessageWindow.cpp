@@ -81,7 +81,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_SOCKET:
     {
-        switch (lParam)
+        SOCKET socket = wParam;
+
+        switch (LOWORD(lParam))
         {
         case FD_ACCEPT:
 
@@ -92,6 +94,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         case FD_CLOSE:
+
             break;
 
         default:
