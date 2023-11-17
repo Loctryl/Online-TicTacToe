@@ -157,7 +157,7 @@
     <ClInclude Include="Headers\ClientRequestManager.h" />
     <ClInclude Include="Headers\json.hpp" />
     <ClInclude Include="Ressources\framework.h" />
-    <ClInclude Include="Source\MessageWindow.h" />
+    <ClInclude Include="Headers\MessageWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TicTacToe\TicTacToe.vcxproj">

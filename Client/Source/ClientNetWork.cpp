@@ -1,4 +1,6 @@
 #include "Headers/ClientNetWork.h"
+#include "Ressources/framework.h"
+#include "Headers/MessageWindow.h"
 
 
 ClientNetWork::ClientNetWork() : Network() { }
@@ -10,6 +12,8 @@ bool ClientNetWork::Init()
     Network::Init(mConnectSocket);
 
     sockaddr_in clientService = SettingProtocol();
+
+    WSAAsyncSelect(mConnectSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_CONNECT | FD_READ | FD_CLOSE);
 
     if (!ConnectServer(clientService))
         return false;

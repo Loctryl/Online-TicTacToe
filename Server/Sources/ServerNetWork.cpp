@@ -1,4 +1,5 @@
 #include "Headers\ServerNetWork.h"
+#include "Headers/MessageWindow.h"
 
 
 ServerNetWork::ServerNetWork() { }
@@ -11,6 +12,8 @@ bool ServerNetWork::Init()
 
     if (!Bind(serviceServer))
         return false;
+
+    WSAAsyncSelect(mListenSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_ACCEPT);
 
     if (!WaitClients())
         return false;
@@ -64,7 +67,9 @@ bool ServerNetWork::AcceptClient(int &numClient)
         printf("Erreur accept() socket numero %d : %d\n", numClient, WSAGetLastError());
         return false;
     }
-    
+
+    WSAAsyncSelect(mAcceptSocket[numClient], MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
+
     printf("Client connecte\n");
     return true;
 }

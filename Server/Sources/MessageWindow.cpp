@@ -83,7 +83,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         switch (lParam)
         {
-        case FD_CONNECT:
+        case FD_ACCEPT:
 
             break;
 
