@@ -1,19 +1,19 @@
 #include "Headers/ClientApp.h"
-//#include "GameManager.h"
+#include "GameManager.h"
 #include "Headers/ClientRequestManager.h"
 
 
 ClientApp::ClientApp() 
 {
 	mRequestManager = new ClientRequestManager();
-	//mGame = new GameManager();
+	mGame = new GameManager();
 }
 
 ClientApp::~ClientApp() { }
 
 bool ClientApp::Init() 
 {
-	//mGame->InitGame(5);
+	mGame->InitWindow();
 	return mRequestManager->Init();
 }
 
@@ -82,6 +82,8 @@ int ClientApp::Run()
 		default:
 			break;
 		}
+
+		mGame->RenderGame();
 	}
 
 
