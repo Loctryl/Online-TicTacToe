@@ -19,8 +19,14 @@ void Grid::InitGrid(int gridSize)
     }
 }
 
-void Grid::Play(int x, int y)
+bool Grid::Play(int x, int y)
 {
-    mMainGrid[x][y] = mTurnPlayer;
-    mTurnPlayer = (mTurnPlayer+1) % 2;
+    if (mMainGrid[x][y] == -1)
+    {
+        mMainGrid[x][y] = mTurnPlayer;
+        mTurnPlayer = (mTurnPlayer + 1) % 2;
+        return true;
+    }
+    else
+        return false;
 }

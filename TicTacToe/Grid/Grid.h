@@ -18,7 +18,7 @@ public:
     
     void InitGrid(int gridSize);
 
-    void Play(int x, int y);
+    bool Play(int x, int y);
 
     bool IsTileEmpty(int x, int y) const { return mMainGrid[x][y] == -1; }
 

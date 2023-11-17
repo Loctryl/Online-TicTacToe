@@ -18,7 +18,7 @@ public:
 
     void InitWindow();
 
-    void Play(int x, int y,void (*func)() = nullptr) const;
+    bool Play(int x, int y) const;
 
     bool IsWindowOpened() const;
 
