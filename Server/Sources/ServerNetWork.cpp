@@ -1,27 +1,11 @@
-#pragma comment(lib, "Ws2_32.lib")
-
-#include <cstdio>
-#include <WS2tcpip.h>
-#include <iostream>
-
 #include "Headers\ServerNetWork.h"
-
-#define PORT 6666
-#define ADRESSE "127.0.0.1"
-#define PACKET_SIZE 2048
 
 
 ServerNetWork::ServerNetWork() { }
 
-ServerNetWork::~ServerNetWork() { closesocket(mListenSocket); }
-
 bool ServerNetWork::Init()
 {
-    if (!SettingSocket())
-        return false;
-
-    if (!CreateSocketServer())
-        return false;
+    Network::Init(mListenSocket);
 
     sockaddr_in serviceServer = SettingProtocol();
 
@@ -36,9 +20,9 @@ bool ServerNetWork::Init()
         if (!AcceptClient(i))
         {
             for (int j = 0; j <= i; j++)
-                CloseClient(j);
+                Network::CloseSocket(mAcceptSocket[j]);
 
-            CloseServer();
+            Network::CloseSocket(mListenSocket);
 
             return false;
         }
@@ -47,50 +31,12 @@ bool ServerNetWork::Init()
     return true;
 }
 
-bool ServerNetWork::SettingSocket()
-{
-    WORD wVersionRequested = MAKEWORD(2, 2); // Version min et max de la specification Windows Sockets
-    WSADATA wsaData; // Informations sur l implementation de Windows Sockets
-
-    int err = WSAStartup(wVersionRequested, &wsaData);
-    if (err)
-    {
-        printf("Erreur WSAStartup : %d\n", err);
-        return false;
-    }
-    else
-        return true;
-}
-
-bool ServerNetWork::CreateSocketServer()
-{
-    mListenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (mListenSocket == INVALID_SOCKET)
-    {
-        printf("Erreur Socket : %d\n", WSAGetLastError());
-        CloseServer();
-        return false;
-    }
-    else
-        return true;
-}
-
-sockaddr_in ServerNetWork::SettingProtocol()
-{
-    sockaddr_in serviceServer;
-    serviceServer.sin_family = AF_INET;
-    serviceServer.sin_port = htons(PORT);
-    inet_pton(AF_INET, ADRESSE, &serviceServer.sin_addr);
-    // Convertit une adresse reseau IPv4 ou IPv6 en une forme binaire numerique
-    return serviceServer;
-}
-
 bool ServerNetWork::Bind(sockaddr_in& serviceServer)
 {
     if (bind(mListenSocket, (SOCKADDR*)&serviceServer, sizeof(serviceServer)) == SOCKET_ERROR)// Associe l'adresse locale au socket
     {
         printf("Erreur bind() %d\n", WSAGetLastError());
-        CloseServer();
+        Network::CloseSocket(mListenSocket);
         return false;
     }
     else
@@ -102,7 +48,7 @@ bool ServerNetWork::WaitClients()
     if (listen(mListenSocket, NB_CLIENT) == SOCKET_ERROR)
     {
         printf("Erreur lors de l'ecoute : %d\n", WSAGetLastError());
-        CloseServer();
+        Network::CloseSocket(mListenSocket);
         return false;
     }
 
@@ -123,44 +69,24 @@ bool ServerNetWork::AcceptClient(int &numClient)
     return true;
 }
 
-bool ServerNetWork::SendRequest(const char* data)
+bool ServerNetWork::SendRequest(std::string data)
 {
-    if (send(mAcceptSocket[mActualClient], data, PACKET_SIZE, 0) == SOCKET_ERROR)
-    {
-        printf("Erreur send() %d\n", WSAGetLastError());
-        Close();
-        return false;
-    }
+    bool result = Network::SendRequest(mAcceptSocket[mActualClient], data);
 
-    printf("Requete envoyee\n");
-    return true;
+    if (!result)
+        Close();
+
+    return result;
 }
 
 std::string ServerNetWork::Recieve()
 {
-    char data[PACKET_SIZE];
-    std::string recvString = "";
+    std::string result = Network::Receive(mAcceptSocket[mActualClient]);
 
-    int iResult = -1;
-    do
-    {
-        iResult = recv(mAcceptSocket[mActualClient], data, PACKET_SIZE, 0);
-        if (iResult > 0)
-        {
-            data[iResult - 1] = '\0';
-            recvString.append(data);
-        }
-        else if (iResult == 0)
-            std::cout << "Recieved Message : " << recvString << "\n";
-        else
-        {
-            printf("Erreur recv() : %d\n", WSAGetLastError());
-            Close();
-        }
+    if (result == "")
+        Close();
 
-    } while (iResult > 0);
-
-    return recvString;
+    return result;
 }
 
 bool ServerNetWork::Close()
@@ -169,47 +95,19 @@ bool ServerNetWork::Close()
 
     for (int i = 0; i < NB_CLIENT; i++)
     {
-        if (!CloseClient(i))
+        if (!Network::CloseSocket(mAcceptSocket[i]))
             closeSuccess = false;
     }
 
-    if (!CloseServer())
+    if (!Network::CloseSocket(mListenSocket))
         closeSuccess = false;
+
+    WSACleanup();
 
     return closeSuccess;
 }
 
 void ServerNetWork::NextClient()
 {
-    mActualClient = (mActualClient + 1) % 2;
-}
-
-bool ServerNetWork::CloseClient(int& numClient)
-{
-    int close = closesocket(mAcceptSocket[numClient]);
-
-    if (close == SOCKET_ERROR)
-    {
-        printf("Erreur fermeture socket numero %d : %d\n", numClient, close);
-        return false;
-    }
-
-    printf("Socket numero %d ferme\n", numClient);
-    return true;
-}
-
-bool ServerNetWork::CloseServer()
-{
-    int close = closesocket(mListenSocket);
-
-    WSACleanup();
-
-    if (close == SOCKET_ERROR)
-    {
-        printf("Erreur fermeture socket serveur\n");
-        return false;
-    }
-    
-    printf("Socket serveur ferme\n");
-    return true;
+    mActualClient = (mActualClient + 1) % NB_CLIENT;
 }

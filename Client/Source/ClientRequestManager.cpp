@@ -17,7 +17,7 @@ bool ClientRequestManager::SendRequest(int coord[2])
         {"y", coord[1]}
     };
 
-    return mNetWork->SendRequest(data.dump().c_str());
+    return mNetWork->SendRequest(data.dump());
 }
 
 bool ClientRequestManager::RecieveValidation(bool& validation)

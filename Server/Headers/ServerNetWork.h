@@ -1,35 +1,32 @@
 #pragma once
-#include <WinSock2.h>
-#include <string>
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment (lib, "TicTacToe.lib")
 
+#include "Network/Network.h"
 
 #define NB_CLIENT 2
 
-class ServerNetWork
+class ServerNetWork : public Network
 {
 public:
     ServerNetWork();
-    ~ServerNetWork();
+    ~ServerNetWork() = default;
 
     bool Init();
 
-    bool SendRequest(const char* data);
+    bool SendRequest(std::string data);
     std::string Recieve();
+
     bool Close();
+
     void NextClient();
 
 private:
     SOCKET mListenSocket = {};
-    SOCKET mAcceptSocket[NB_CLIENT];
+    SOCKET mAcceptSocket[NB_CLIENT] = {};
     int mActualClient = 0;
-
-    bool SettingSocket();
-    bool CreateSocketServer();
-    sockaddr_in SettingProtocol();
     
     bool Bind(sockaddr_in& serviceServer);// Associe une adresse IP et un numero de port à un socket
     bool WaitClients();
     bool AcceptClient(int& numClient);
-    bool CloseClient(int& numClient);
-    bool CloseServer();
 };

@@ -13,8 +13,8 @@ public:
     bool SendRequest(bool validation) const;
     bool SendRequest(int coord[2]) const;
     bool RecievePlay(int coord[2]);
-    bool Close();
-    void NextClient();
+    bool Close() const;
+    void NextClient() const;
 
 public:
     ServerNetWork* mNetWork;
