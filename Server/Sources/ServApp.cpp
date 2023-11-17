@@ -6,10 +6,13 @@ ServApp::ServApp()
 {
 	mMessageWindow = new MessageWindow();
 	mMessageWindow->InitWindow();
-	mRequestManager = new ServerRequestManager();
+	mRequestManager = ServerRequestManager::GetInstance();
 }
 
-ServApp::~ServApp() { }
+ServApp::~ServApp() {
+	delete mMessageWindow;
+	delete mRequestManager;
+}
 
 bool ServApp::Init()
 {

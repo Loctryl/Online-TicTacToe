@@ -1,18 +1,28 @@
 #include "Headers/ServerRequestManager.h"
-#include <Headers/json.hpp>
 #include "..\Headers\ServerNetWork.h"
-#include <string>
 
-using json = nlohmann::json;
+ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 
-ServerRequestManager::ServerRequestManager() : mNetWork(new ServerNetWork()) { }
+ServerRequestManager::ServerRequestManager() { mNetWork = new ServerNetWork(); }
+
+ServerRequestManager::~ServerRequestManager() {
+    delete mNetWork;
+}
+
+ServerRequestManager* ServerRequestManager::GetInstance()
+{
+    if (mInstance != nullptr) return mInstance;
+    mInstance = new ServerRequestManager();
+    return mInstance;
+}
+
 
 bool ServerRequestManager::Init()
 {
     return mNetWork->Init();
 }
 
-bool ServerRequestManager::SendRequest(bool validation) const
+bool ServerRequestManager::SendRequestAnswer(bool validation) const
 {
     json data = {
         {"type", "answer"},
@@ -22,7 +32,7 @@ bool ServerRequestManager::SendRequest(bool validation) const
     return mNetWork->SendRequest(data.dump());
 }
 
-bool ServerRequestManager::SendRequest(int coord[2]) const
+bool ServerRequestManager::SendRequestPlay(int coord[2]) const
 {
     json data = {
         {"type", "play"},
@@ -33,22 +43,78 @@ bool ServerRequestManager::SendRequest(int coord[2]) const
     return mNetWork->SendRequest(data.dump());
 }
 
-bool ServerRequestManager::RecievePlay(int coord[2])
+
+
+bool ServerRequestManager::SendRequestNotif(std::string Message) const
 {
-    std::string data = mNetWork->Recieve();
+    json data = {
+        {"type", "notif"},
+        {"content", Message.c_str()}
+    };
 
-    if (data == "")
-        return false;
+    return mNetWork->SendRequest(data.dump());
+}
 
-    //if (donnée invalide) TO DO : vérification réception
-        //return false;
+bool ServerRequestManager::SendRequestPlayer(int number)
+{
+    json data = {
+    {"type", "player"},
+    {"number", number}
+    };
 
-    json parsedMessage = json::parse(data);
-    coord[0] = parsedMessage["x"];
-    coord[1] = parsedMessage["y"];
+    return mNetWork->SendRequest(data.dump());
+}
 
-    printf("deplacement recue\n");
+bool ServerRequestManager::RecievePlay(json Message, int* coord)
+{
+    coord[0] = Message["x"];
+    coord[1] = Message["y"];
+
     return true;
+}
+
+bool ServerRequestManager::ManageMessage(std::string Message)
+{
+    json parsedMessage = json::parse(Message);
+    std::string MessageType = parsedMessage["type"];
+    if (MessageType == "play") {
+        int Coords[2];
+        if (!RecievePlay(parsedMessage, Coords)) {
+            printf("Erreur lors de la réception de Coordonnées\n");
+            return false;
+        }
+        //game.play(Coords) -> returns if Coords is playable or not
+        bool IsPlayable = true; // A remplacer
+        printf("Coordonnee Recue\n");
+
+        SendRequestAnswer(IsPlayable);
+        if (IsPlayable) {
+            // Si le move finit la partie -> Endgame
+            NextClient();
+            SendRequestPlay(Coords);
+        }
+    }
+    else if (MessageType == "notif") {
+        // do something
+    }
+    else if (MessageType == "answer") {
+        printf("this shouldn't happen\n");
+    }
+    else if (MessageType == "player") {
+        printf("this shouldn't happen\n");
+    }
+    else if (MessageType == "connect") {
+        // Attribute ID
+        SendRequestPlayer(1); // A changer
+        printf("Sent Player Number to Player\n");
+        NextClient();
+    }
+    return true;
+}
+
+std::string ServerRequestManager::Recieve()
+{
+    return mNetWork->Recieve();
 }
 
 bool ServerRequestManager::Close() const

@@ -1,4 +1,5 @@
 #include "Headers/MessageWindow.h"
+#include "Headers/ServerRequestManager.h"
 
 HWND MessageWindow::hWnd = NULL;
 
@@ -82,15 +83,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_SOCKET:
     {
         SOCKET socket = wParam;
+        ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
+        string message = "";
 
         switch (LOWORD(lParam))
         {
         case FD_ACCEPT:
-
             break;
 
         case FD_READ:
-            
+            message = requestManager->Recieve();
+            requestManager->ManageMessage(message);
             break;
 
         case FD_CLOSE:

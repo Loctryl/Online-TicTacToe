@@ -8,11 +8,13 @@ ClientApp::ClientApp()
 {
 	mMessageWindow = new MessageWindow();
 	mMessageWindow->InitWindow();
-	mRequestManager = new ClientRequestManager();
+	mRequestManager = ClientRequestManager::GetInstance();
 	//mGame = new GameManager();
 }
 
 ClientApp::~ClientApp() {
+	delete mMessageWindow;
+	delete mRequestManager;
 }
 
 bool ClientApp::Init() 
