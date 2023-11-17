@@ -5,6 +5,21 @@ ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 
 ServerRequestManager::ServerRequestManager() { mNetWork = new ServerNetWork(); }
 
+int ServerRequestManager::EventToInt(std::string event)
+{
+    //, notif, , 
+    if (event == "play")
+        return play;
+    else if (event == "notif")
+        return notif;
+    else if (event == "answer")
+        return answer;
+    else if (event == "player")
+        return player;
+    else// if (event == "connect")
+        return connection;
+}
+
 ServerRequestManager::~ServerRequestManager() {
     delete mNetWork;
 }
@@ -77,7 +92,10 @@ bool ServerRequestManager::ManageMessage(std::string Message)
 {
     json parsedMessage = json::parse(Message);
     std::string MessageType = parsedMessage["type"];
-    if (MessageType == "play") {
+
+    switch (EventToInt(MessageType))
+    {
+    case play:
         int Coords[2];
         if (!RecievePlay(parsedMessage, Coords)) {
             printf("Erreur lors de la réception de Coordonnées\n");
@@ -93,22 +111,31 @@ bool ServerRequestManager::ManageMessage(std::string Message)
             NextClient();
             SendRequestPlay(Coords);
         }
-    }
-    else if (MessageType == "notif") {
+        break;
+
+    case notif:
         // do something
-    }
-    else if (MessageType == "answer") {
+        break;
+
+    case answer:
         printf("this shouldn't happen\n");
-    }
-    else if (MessageType == "player") {
+        break;
+
+    case player:
         printf("this shouldn't happen\n");
-    }
-    else if (MessageType == "connect") {
+        break;
+
+    case connection:
         // Attribute ID
         SendRequestPlayer(1); // A changer
         printf("Sent Player Number to Player\n");
         NextClient();
+        break;
+
+    default:
+        break;
     }
+
     return true;
 }
 

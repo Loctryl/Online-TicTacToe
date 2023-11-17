@@ -7,6 +7,11 @@ using json = nlohmann::json;
 
 class ServerNetWork;
 
+enum EventMessage
+{
+    play, notif, answer, player, connection
+};
+
 class ServerRequestManager
 {
 public:
@@ -31,4 +36,6 @@ private:
 
     ServerRequestManager();
     ServerNetWork* mNetWork;
+
+    int EventToInt(std::string event);
 };
