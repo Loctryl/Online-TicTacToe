@@ -2,7 +2,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment (lib, "TicTacToe.lib")
 
-#include "Network/Network.h"
+#include "Utility/Network/Network.h"
 
 #define NB_CLIENT 2
 

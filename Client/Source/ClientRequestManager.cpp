@@ -1,5 +1,5 @@
 #include "Headers/ClientRequestManager.h"
-#include <Network/json.hpp>
+#include <Utility/Network/json.hpp>
 #include "Headers/ClientNetWork.h"
 #include <iostream>
 
