@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <vector>
+#include <string>
 #include <winsock2.h>
 
 class Grid;
@@ -16,11 +17,11 @@ public:
     std::vector<Grid*> mGames;
     std::vector<Player*> mPlayers;
 
-    void CreateGame();
+    Grid* CreateGame();
+    void CreatePlayer(SOCKET* sock, std::string name);
 
-    void AddGame(Grid* game);
-    void AddPlayer();
+    void AddPlayerToGame(Player* p);
 
     Grid* GetGameByPlayerId(int id) const;
-    int GetPlayerBySocket(SOCKET sock);
+    int GetPlayerBySocket(SOCKET* sock) const;
 };

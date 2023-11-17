@@ -9,6 +9,6 @@ struct Player
     UINT mId;
     UINT mInGameId;
     std::string mNickName;
-    SOCKET mSocket;
+    SOCKET* mSocket;
     Grid* mCurrentGame;
 };
