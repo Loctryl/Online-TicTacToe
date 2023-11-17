@@ -1,6 +1,9 @@
 ﻿#include "Grid.h"
 
-Grid::Grid() { }
+Grid::Grid(int gridSize)
+{
+    InitGrid(gridSize);
+}
 
 Grid::~Grid() { }
 
@@ -16,4 +19,14 @@ void Grid::InitGrid(int gridSize)
     }
 }
 
-void Grid::Play() {}
+bool Grid::Play(int x, int y)
+{
+    if (mMainGrid[x][y] == -1)
+    {
+        mMainGrid[x][y] = mTurnPlayer;
+        mTurnPlayer = (mTurnPlayer + 1) % 2;
+        return true;
+    }
+    else
+        return false;
+}

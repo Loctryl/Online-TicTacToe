@@ -2,14 +2,14 @@
 
 class ClientRequestManager;
 class MessageWindow;
-//class GameManager;
+class GameManager;
 
 class ClientApp
 {
 	ClientRequestManager* mRequestManager;
 	MessageWindow* mMessageWindow;
 
-	//GameManager* mGame;
+	GameManager* mGame;
 
 public:
 	ClientApp();

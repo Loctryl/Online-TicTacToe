@@ -3,10 +3,11 @@
 #include "Grid/Grid.h"
 #include "GameManager.h"
 
-GameManager::GameManager()
+GameManager::GameManager(Grid* grid, int gridSize)
 {
     mWindow = new SFMLWindow();
-    mGrid = new Grid();
+    if(grid) mGrid = grid;
+    else mGrid = new Grid(gridSize);
     mTileSize = 100;
     mMarginLeft = 0;
 }
@@ -17,19 +18,16 @@ GameManager::~GameManager()
     REL_PTR(mGrid)
 }
 
-void GameManager::InitGame(int gridSize)
+void GameManager::InitWindow()
 {
     mWindow->InitWindow();
-    mTileSize = mWindow->GetVideoMode()->height / (gridSize + 2);
-    mMarginLeft = ((float)mWindow->GetVideoMode()->width / 2.f) - ((float)mTileSize * ((float)gridSize / 2.f));
-    mGrid->InitGrid(gridSize);
+    mTileSize = mWindow->GetVideoMode()->height / (mGrid->mSize + 2);
+    mMarginLeft = ((float)mWindow->GetVideoMode()->width / 2.f) - ((float)mTileSize * ((float)mGrid->mSize / 2.f));
 }
 
-void GameManager::Play(int x, int y, void (*func)()) const
+bool GameManager::Play(int x, int y) const
 {
-    mGrid->mMainGrid[x][y] = 1;
-    if(func)
-        func();
+    return mGrid->Play(x, y);
 }
 
 bool GameManager::IsWindowOpened() const { return mWindow->GetWindow()->isOpen(); }
