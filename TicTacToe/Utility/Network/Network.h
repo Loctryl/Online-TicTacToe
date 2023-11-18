@@ -12,12 +12,21 @@ public:
 
     virtual bool Close() = 0;
 
-    bool Init(SOCKET &sock);
-    sockaddr_in SettingProtocol();
+
+    virtual bool Init() = 0;
+
+    virtual bool SendRequest(std::string data) = 0;
+    virtual std::string Recieve() = 0;
+
     
-    bool SendRequest(SOCKET &sock, std::string data);
-    std::string Receive(SOCKET &sock);
     bool CloseSocket(SOCKET &sock);
+
+protected:
+    bool Init(SOCKET& sock);
+    sockaddr_in SettingProtocol();
+
+    bool SendRequest(SOCKET& sock, std::string data);
+    std::string Receive(SOCKET& sock);
 
 private:
     bool SettingSocket();

@@ -214,6 +214,7 @@
     </ClCompile>
     <ClCompile Include="Utility\GamePlayer\NetManager.cpp" />
     <ClCompile Include="Utility\Network\Network.cpp" />
+    <ClCompile Include="Utility\RequestManager\RequestManager.cpp" />
     <ClCompile Include="Window\SFMLWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -223,8 +224,9 @@
     <ClInclude Include="Resources\utilities.h" />
     <ClInclude Include="Resources\SfmlIncluder.h" />
     <ClInclude Include="Utility\GamePlayer\NetManager.h" />
-    <ClInclude Include="Utility\Network\json.hpp" />
+    <ClInclude Include="Utility\json.hpp" />
     <ClInclude Include="Utility\Network\Network.h" />
+    <ClInclude Include="Utility\RequestManager\RequestManager.h" />
     <ClInclude Include="Window\SFMLWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
