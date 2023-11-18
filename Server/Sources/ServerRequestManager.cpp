@@ -1,5 +1,5 @@
 #include "Headers/ServerRequestManager.h"
-#include "..\Headers\ServerNetWork.h"
+#include "Headers/ServerNetWork.h"
 
 ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 
@@ -21,17 +21,6 @@ bool ServerRequestManager::Init()
     return ((ServerNetWork*)mNetWork)->Init();
 }
 
-bool ServerRequestManager::SendRequestPlay(int coord[2]) const
-{
-    json data = {
-        {"type", "play"},
-        {"x", coord[0]},
-        {"y", coord[1]}
-    };
-
-    return mNetWork->SendRequest(data.dump());
-}
-
 bool ServerRequestManager::SendRequestValidation(bool validation) const
 {
     json data = {
@@ -42,14 +31,6 @@ bool ServerRequestManager::SendRequestValidation(bool validation) const
     return mNetWork->SendRequest(data.dump());
 }
 
-bool ServerRequestManager::RecievePlay(json Message, int* coord)
-{
-    coord[0] = Message["x"];
-    coord[1] = Message["y"];
-
-    return true;
-}
-
 bool ServerRequestManager::ManageMessage(std::string Message)
 {
     json parsedMessage = json::parse(Message);
@@ -58,19 +39,25 @@ bool ServerRequestManager::ManageMessage(std::string Message)
     switch (EventToInt(MessageType))
     {
     case play:// Le serveur recoit le coup d'un joueur
-        printf("Coordonnee Recue\n");
-        int Coords[2] = { parsedMessage["x"], parsedMessage["y"] };
-        bool validation = true;//game.play(Coords[0], Coords[1])
-        SendRequestValidation(validation);
-
-        if (validation)
         {
-            NextClient();
-
-            if (!SendRequestPlay(Coords))
+            printf("Coordonnee Recue\n");
+            int Coords[2] = { parsedMessage["x"], parsedMessage["y"] };
+            bool validation = true;//game.TestChoice(Coords[0], Coords[1])
+            
+            if (!SendRequestValidation(validation))
                 return false;
-        }
 
+            if (validation)
+            {
+                //game.Play(Coords[0], Coords[1])
+                // MAJ EndGame
+
+                NextClient();
+
+                if (!SendRequestPlay(Coords))
+                    return false;
+            }
+        }
         break;
 
     //case connection:

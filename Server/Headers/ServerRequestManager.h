@@ -1,4 +1,6 @@
 #pragma once
+#pragma comment (lib, "TicTacToe.lib")
+
 #include "Utility/RequestManager/RequestManager.h"
 
 class ServerRequestManager : public RequestManager
@@ -18,8 +20,5 @@ private:
 
     ServerRequestManager();
 
-    bool SendRequestPlay(int coord[2]) const;
     bool SendRequestValidation(bool validation) const;
-
-    bool RecievePlay(json Message, int* coord);
 };

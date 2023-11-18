@@ -30,7 +30,7 @@ int ClientApp::Run()
 	bool running = true;
 
 	// Boucle de messages principale :
-	while (running)
+	while (running && !mRequestManager->GameIsEnded())
 	{
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
@@ -40,7 +40,7 @@ int ClientApp::Run()
 				running = false;
 		}
 
-		running = Update();
+		Update();
 		mGame->RenderGame();
 	}
 
@@ -52,7 +52,14 @@ int ClientApp::Run()
 	return 0;
 }
 
-int ClientApp::Update()
+void ClientApp::Update()
 {
-	return 1;
+	if (mRequestManager->IsMyTurn())// Si c'est à moi de jouer
+	{
+		if (true)//if (j'ai choisi une case)
+		{
+			int coord[2];// mon choix
+			mRequestManager->Play(coord);
+		}
+	}
 }

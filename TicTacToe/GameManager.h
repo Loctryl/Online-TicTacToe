@@ -18,7 +18,8 @@ public:
 
     void InitWindow();
 
-    bool Play(int x, int y) const;
+    bool TestChoice(int x, int y) const;
+    void Play(int x, int y) const;
 
     bool IsWindowOpened() const;
 

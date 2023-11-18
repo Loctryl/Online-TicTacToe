@@ -18,5 +18,5 @@ public:
 	bool Init();
 
 	int Run();
-	int Update();
+	void Update();
 };

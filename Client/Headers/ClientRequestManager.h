@@ -1,33 +1,26 @@
 #pragma once
+#include "Utility/RequestManager/RequestManager.h"
 
-#include <string>
-#include "json.hpp"
-
-using json = nlohmann::json;
-
-class ClientNetWork;
-
-class ClientRequestManager
+class ClientRequestManager : public RequestManager
 {
 public:
     ~ClientRequestManager();
 
     static ClientRequestManager* GetInstance();
 
+    bool IsMyTurn() const;
+
+    void Play(int coord[2]);
+
     bool Init();
-    bool SendRequestPlay(int coord[2]) const;
-    bool SendRequestNotif(std::string Message) const;
-    bool RecievePlay(json Message, int* coord);
-    bool RecieveNotif(json Message, std::string* Notif);
-    bool RecieveAnswer(json Message, bool* Answer);
-    std::string Recieve();
-    bool Close() const;
 
     bool ManageMessage(std::string Message);
 
 private:
    static ClientRequestManager* mInstance;
 
+   bool mIsMyTurn = false;
+   int mMyChoice[2] = {};
+
     ClientRequestManager();
-    ClientNetWork* mNetWork;
 };

@@ -19,14 +19,13 @@ void Grid::InitGrid(int gridSize)
     }
 }
 
-bool Grid::Play(int x, int y)
+bool Grid::TestChoice(int x, int y) const
 {
-    if (mMainGrid[x][y] == -1)
-    {
-        mMainGrid[x][y] = mTurnPlayer;
-        mTurnPlayer = (mTurnPlayer + 1) % 2;
-        return true;
-    }
-    else
-        return false;
+    return mMainGrid[x][y] == -1;
+}
+
+void Grid::Play(int x, int y)
+{
+    mMainGrid[x][y] = mTurnPlayer;
+    mTurnPlayer = (mTurnPlayer + 1) % 2;
 }

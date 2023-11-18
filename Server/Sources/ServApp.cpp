@@ -37,7 +37,7 @@ int ServApp::Run()
 				running = false;
 		}
 
-		running = Update();
+		Update();
 	}
 
 	return (int)msg.wParam;

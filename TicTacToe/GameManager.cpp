@@ -25,9 +25,14 @@ void GameManager::InitWindow()
     mMarginLeft = ((float)mWindow->GetVideoMode()->width / 2.f) - ((float)mTileSize * ((float)mGrid->mSize / 2.f));
 }
 
-bool GameManager::Play(int x, int y) const
+bool GameManager::TestChoice(int x, int y) const
 {
-    return mGrid->Play(x, y);
+    return mGrid->TestChoice(x, y);
+}
+
+void GameManager::Play(int x, int y) const
+{
+    mGrid->Play(x, y);
 }
 
 bool GameManager::IsWindowOpened() const { return mWindow->GetWindow()->isOpen(); }

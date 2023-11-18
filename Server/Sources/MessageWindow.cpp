@@ -83,7 +83,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_SOCKET:
     {
         SOCKET socket = wParam;
-        ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
+        ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
         string message = "";
 
         switch (LOWORD(lParam))
