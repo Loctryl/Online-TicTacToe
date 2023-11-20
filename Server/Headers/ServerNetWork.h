@@ -28,7 +28,7 @@ private:
     SOCKET mAcceptSocket[NB_CLIENT] = {};
     int mActualClient = 0;
     
-    bool Bind(sockaddr_in& serviceServer);// Associe une adresse IP et un numero de port à un socket
+    bool Bind(sockaddr_in& serviceServer, SOCKET* socket);// Associe une adresse IP et un numero de port à un socket
     bool ConnectServer(sockaddr_in& serviceServer);
     bool WaitClients();
     bool AcceptClient(int& numClient);

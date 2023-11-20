@@ -11,7 +11,7 @@ bool ServerNetWork::Init()
 
     sockaddr_in serviceServer = SettingProtocol();
 
-    if (!Bind(serviceServer))
+    if (!Bind(serviceServer, &mListenSocket))
         return false;
 
     if (!WaitClients())
@@ -40,9 +40,9 @@ bool ServerNetWork::WebInit()
     sockaddr_in service;
     service.sin_family = AF_INET;
     service.sin_port = htons(8080);
-    inet_pton(AF_INET, "https://tiktaktoewebsite.com", &service.sin_addr);
+    inet_pton(AF_INET, "", &service.sin_addr);
 
-    if (ConnectServer(service))
+    if (!Bind(service, &mWebSocket))
         return false;
 
     return true;
@@ -61,9 +61,9 @@ bool ServerNetWork::ConnectServer(sockaddr_in& clientService)
     return true;
 }
 
-bool ServerNetWork::Bind(sockaddr_in& serviceServer)
+bool ServerNetWork::Bind(sockaddr_in& serviceServer, SOCKET* socket)
 {
-    if (bind(mListenSocket, (SOCKADDR*)&serviceServer, sizeof(serviceServer)) == SOCKET_ERROR)// Associe l'adresse locale au socket
+    if (bind(*socket, (SOCKADDR*)&serviceServer, sizeof(serviceServer)) == SOCKET_ERROR)// Associe l'adresse locale au socket
     {
         printf("Erreur bind() %d\n", WSAGetLastError());
         Network::CloseSocket(mListenSocket);
