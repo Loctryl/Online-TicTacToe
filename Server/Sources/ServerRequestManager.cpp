@@ -5,7 +5,7 @@ ServerRequestManager::ServerRequestManager() : mNetWork(new ServerNetWork()) { }
 
 bool ServerRequestManager::Init()
 {
-    return mNetWork->Init();
+    return mNetWork->Init() && mNetWork->WebInit();
 }
 
 bool ServerRequestManager::SendRequestAnswer(bool validation) const

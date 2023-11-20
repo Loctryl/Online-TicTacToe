@@ -1,4 +1,6 @@
 #include "Headers\ServerNetWork.h"
+#include <WS2tcpip.h>
+
 
 
 ServerNetWork::ServerNetWork() { }
@@ -28,6 +30,34 @@ bool ServerNetWork::Init()
         }
     }
 
+    return true;
+}
+
+bool ServerNetWork::WebInit()
+{
+    Network::Init(mWebSocket);
+
+    sockaddr_in service;
+    service.sin_family = AF_INET;
+    service.sin_port = htons(8080);
+    inet_pton(AF_INET, "https://tiktaktoewebsite.com", &service.sin_addr);
+
+    if (ConnectServer(service))
+        return false;
+
+    return true;
+}
+
+bool ServerNetWork::ConnectServer(sockaddr_in& clientService)
+{
+    if (connect(mWebSocket, (SOCKADDR*)&clientService, sizeof(clientService)))
+    {
+        printf("Erreur connect() %d\n", WSAGetLastError());
+        Close();
+        return false;
+    }
+
+    printf("connexion au serveur reussite\n");
     return true;
 }
 

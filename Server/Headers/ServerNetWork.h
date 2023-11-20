@@ -13,6 +13,7 @@ public:
     ~ServerNetWork() = default;
 
     bool Init();
+    bool WebInit();
 
     bool SendRequest(std::string data);
     std::string Recieve();
@@ -23,10 +24,12 @@ public:
 
 private:
     SOCKET mListenSocket = {};
+    SOCKET mWebSocket = {};
     SOCKET mAcceptSocket[NB_CLIENT] = {};
     int mActualClient = 0;
     
     bool Bind(sockaddr_in& serviceServer);// Associe une adresse IP et un numero de port à un socket
+    bool ConnectServer(sockaddr_in& serviceServer);
     bool WaitClients();
     bool AcceptClient(int& numClient);
 };
