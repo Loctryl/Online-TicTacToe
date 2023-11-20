@@ -66,8 +66,12 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
             if (!SendRequestPlay(Coords, NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket))
                 return false;
         }
-        grid->mTurnPlayer = (grid->mTurnPlayer + 1) % 2;
 
+        if (grid->IsWinner() != -1) {
+            cout << "Game over !\nThe winner is player : " << grid->mTurnPlayer << endl;
+        }
+
+        grid->mTurnPlayer = (grid->mTurnPlayer + 1) % 2;
     }
         break;
     default:

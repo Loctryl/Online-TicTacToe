@@ -51,7 +51,6 @@ bool ClientRequestManager::ManageMessage(std::string Message)
         mGrid->Play(parsedMessage["x"], parsedMessage["y"]);
         mGrid->mTurnPlayer = (mGrid->mTurnPlayer + 1) % 2;
         mIsMyTurn = true;
-
         break;
 
     case validation:// Le client recoit la réponse du serveur concernant son coup
