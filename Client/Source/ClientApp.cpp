@@ -25,7 +25,7 @@ bool ClientApp::Init()
 	if (!CreateThreadEvent())
 		return false;
 
-	if (!CreateThreadGame())
+	if (!CreateThreadRender())
 		return false;
 
 	return true;
@@ -41,17 +41,19 @@ int ClientApp::Run()
 		return 1;
 	}
 
-	if (ResumeThread(mThreadGame) == -1)
+	mGame->mWindow->GetWindow()->setActive(false);
+
+	if (ResumeThread(mThreadRender) == -1)
 	{
 		printf("Erreur thread game\n");
 		return 1;
 	}
 
-	while (WaitForSingleObject(mThreadEvent, 0) != WAIT_OBJECT_0 && WaitForSingleObject(mThreadGame, 0) != WAIT_OBJECT_0)
-		continue;
+	while (WaitForSingleObject(mThreadEvent, 0) != WAIT_OBJECT_0 && mGame->mWindow->GetWindow()->isOpen())
+		Update();
 
 	CloseHandle(mThreadEvent);
-	CloseHandle(mThreadGame);
+	CloseHandle(mThreadRender);
 
 
 	// FERMETURE DU CLIENT
@@ -62,19 +64,20 @@ int ClientApp::Run()
 }
 
 
-
-void ClientApp::Update(GameManager* gameManager, ClientRequestManager* requestManager)
+void ClientApp::Update()
 {
-	auto event = gameManager->GetEvent();
-	while (gameManager->mWindow->GetWindow()->pollEvent(*event))
+	auto event = mGame->GetEvent();
+	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		int x, y = -1;
 
-		if (gameManager->IsPressEsc(event)) gameManager->mWindow->GetWindow()->close();
-		if (requestManager->IsMyTurn() && gameManager->IsMouseClick(event) && gameManager->IsMove(&x, &y)) {
-			requestManager->mMyChoice[0] = x;
-			requestManager->mMyChoice[1] = y;
-			requestManager->Play(requestManager->mMyChoice);
+		if (mGame->IsPressEsc(event))
+			mGame->mWindow->GetWindow()->close();
+
+		if (mRequestManager->IsMyTurn() && mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
+			mRequestManager->mMyChoice[0] = x;
+			mRequestManager->mMyChoice[1] = y;
+			mRequestManager->Play(mRequestManager->mMyChoice);
 		}
 	}
 }
@@ -92,25 +95,21 @@ bool ClientApp::CreateThreadEvent()
 	return true;
 }
 
-bool ClientApp::CreateThreadGame()
+bool ClientApp::CreateThreadRender()
 {
 	// Allocation de la mémoire pour pouvoir la gérer
-	DataThreadGame* dtg = (DataThreadGame*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(DataThreadGame));
+	GameManager* gameManager = (GameManager*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(GameManager));
 
-	if (dtg == NULL)
+	if (gameManager == NULL)
 		return false;
 
-	dtg->requestManager = mRequestManager;
-	dtg->gameManager = mGame;
+	gameManager = mGame;
 
-
-	dtg->gameManager->mWindow->GetWindow()->setActive(false);
-
-	mThreadGame = CreateThread(
+	mThreadRender = CreateThread(
 		NULL,                   // default security attributes
 		0,                      // use default stack size  
-		ThreadGameFunction,	// thread function name
-		dtg,					// argument to thread function 
+		ThreadRenderFunction,	// thread function name
+		gameManager,					// argument to thread function 
 		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour exécuter le thread
 		NULL);					// returns the thread identifier 
 
@@ -140,11 +139,11 @@ DWORD WINAPI ClientApp::ThreadEventFunction(LPVOID lpParam)
 	return 0;
 }
 
-DWORD WINAPI ClientApp::ThreadGameFunction(LPVOID lpParam)
+DWORD WINAPI ClientApp::ThreadRenderFunction(LPVOID lpParam)
 {
 	printf("Lancement thread game\n");
 
-	DataThreadGame* dtg = (DataThreadGame*)lpParam;
+	GameManager* gameManager = (GameManager*)lpParam;
 
 	//CRITICAL_SECTION mutex;
 	//InitializeCriticalSection(&mutex);// pour créer la critical section
@@ -153,13 +152,10 @@ DWORD WINAPI ClientApp::ThreadGameFunction(LPVOID lpParam)
 	//LeaveCriticalSection(&mutex);// pour libérer le bloc
 	//DeleteCriticalSection(&mutex);// quand c'est fini
 
-	dtg->gameManager->mWindow->GetWindow()->setActive(true);
+	gameManager->mWindow->GetWindow()->setActive(true);
 
-	while (!dtg->requestManager->GameIsEnded())
-	{
-		Update(dtg->gameManager, dtg->requestManager);
-		dtg->gameManager->RenderGame();
-	}
+	while (gameManager->mWindow->GetWindow()->isOpen())
+		gameManager->RenderGame();
 
 	printf("Sortie thread game\n");
 

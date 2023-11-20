@@ -5,12 +5,6 @@ class ClientRequestManager;
 class MessageWindow;
 class GameManager;
 
-struct DataThreadGame
-{
-	GameManager* gameManager;
-	ClientRequestManager* requestManager;
-};
-
 class ClientApp
 {
 	ClientRequestManager* mRequestManager;
@@ -27,11 +21,12 @@ public:
 
 private:
 	HANDLE mThreadEvent;
-	HANDLE mThreadGame;
+	HANDLE mThreadRender;
 
 	bool CreateThreadEvent();
-	bool CreateThreadGame();
+	bool CreateThreadRender();
 	static DWORD WINAPI ThreadEventFunction(LPVOID lpParam);
-	static DWORD WINAPI ThreadGameFunction(LPVOID lpParam);
-	static void Update(GameManager* gameManager, ClientRequestManager* requestManager);
+	static DWORD WINAPI ThreadRenderFunction(LPVOID lpParam);
+	
+	void Update();
 };
