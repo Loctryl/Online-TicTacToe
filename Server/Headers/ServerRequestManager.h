@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utility/RequestManager/RequestManager.h"
+#include "Headers/ServerNetWork.h"
 
 class ServerRequestManager : public RequestManager
 {
@@ -13,6 +14,8 @@ public:
     void NextClient() const;
 
     bool ManageMessage(std::string Message);
+
+    inline ServerNetWork* GetNetWork() { return (ServerNetWork*)mNetWork; };
 
 private:
     static ServerRequestManager* mInstance;

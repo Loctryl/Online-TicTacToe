@@ -1,5 +1,6 @@
 #include "Headers/MessageWindow.h"
 #include "Headers/ServerRequestManager.h"
+#include "Headers/NetManager.h"
 
 HWND MessageWindow::hWnd = NULL;
 
@@ -83,12 +84,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_SOCKET:
     {
         SOCKET socket = wParam;
+        SOCKET newSocket = INVALID_SOCKET;
         ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
         string message = "";
 
         switch (LOWORD(lParam))
         {
         case FD_ACCEPT:
+            requestManager->GetNetWork()->AcceptClient(&newSocket);
+            NetManager::GetInstance()->CreatePlayer(&socket);
             break;
 
         case FD_READ:

@@ -46,16 +46,16 @@ bool ServerNetWork::WaitClients()
     return true;
 }
 
-bool ServerNetWork::AcceptClient(int &numClient)
+bool ServerNetWork::AcceptClient(SOCKET* socket)
 {
-    mAcceptSocket[numClient] = accept(mListenSocket, NULL, NULL);
-    if (mAcceptSocket[numClient] == INVALID_SOCKET)
+    *socket = accept(mListenSocket, NULL, NULL);
+    if (*socket == INVALID_SOCKET)
     {
-        printf("Erreur accept() socket numero %d : %d\n", numClient, WSAGetLastError());
+        printf("Erreur accept() socket : %d\n", WSAGetLastError());
         return false;
     }
 
-    WSAAsyncSelect(mAcceptSocket[numClient], MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
+    WSAAsyncSelect(*socket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     printf("Client connecte\n");
     return true;

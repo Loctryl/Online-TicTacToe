@@ -29,6 +29,16 @@ void NetManager::CreatePlayer(SOCKET* sock, std::string name)
     p->mNickName = name;
     if(mWaitingGame)
     AddPlayerToGame(p);
+    mPlayers.push_back(p);
+}
+
+void NetManager::SetPlayerNickname(SOCKET* sock, std::string name)
+{
+    for (auto player : mPlayers)
+    {
+        if (player->mSocket == sock)
+            player->mNickName = name;
+    }
 }
 
 void NetManager::AddPlayerToGame(Player* p)

@@ -13,6 +13,7 @@ public:
     bool Init();
 
     bool SendRequest(std::string data);
+    bool AcceptClient(SOCKET* socket);
     std::string Recieve();
 
     bool Close();
@@ -26,5 +27,4 @@ private:
     
     bool Bind(sockaddr_in& serviceServer);// Associe une adresse IP et un numero de port à un socket
     bool WaitClients();
-    bool AcceptClient(int& numClient);
 };

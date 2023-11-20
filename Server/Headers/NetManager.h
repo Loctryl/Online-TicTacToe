@@ -15,7 +15,8 @@ public:
     static NetManager* GetInstance();
 
     Grid* CreateGame();
-    void CreatePlayer(SOCKET* sock, std::string name);
+    void CreatePlayer(SOCKET* sock, std::string name = "");
+    void SetPlayerNickname(SOCKET* sock, std::string name);
 
     void AddPlayerToGame(Player* p);
 
