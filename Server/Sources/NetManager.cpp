@@ -48,6 +48,7 @@ void NetManager::AddPlayerToGame(Player* p)
         mWaitingGame->mPlayers[1] = p;
         p->mInGameId = 1;
         p->mCurrentGame = mWaitingGame;
+        mWaitingGame = nullptr;
     }
     else
     {
