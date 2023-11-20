@@ -89,6 +89,21 @@ Player* NetManager::GetPlayerById(int id) const
     return nullptr;
 }
 
+Player* NetManager::GetEnemyPlayer(SOCKET* sock)
+{
+    Player* player = GetPlayerBySocket(sock);
+    return GetEnemyPlayer(player->mId);
+}
+
+Player* NetManager::GetEnemyPlayer(int id)
+{
+    Grid* game = GetGameByPlayerId(id);
+    for (auto player : game->mPlayers) {
+        if (player->mId != id)
+            return player;
+    }
+}
+
 int NetManager::SetNewID()
 {
     mCurrentId++;
