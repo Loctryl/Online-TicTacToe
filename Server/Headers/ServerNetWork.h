@@ -18,12 +18,8 @@ public:
 
     bool Close();
 
-    void NextClient();
-
 private:
     SOCKET mListenSocket = {};
-    SOCKET mAcceptSocket[NB_CLIENT] = {};
-    int mActualClient = 0;
     
     bool Bind(sockaddr_in& serviceServer);// Associe une adresse IP et un numero de port à un socket
     bool WaitClients();

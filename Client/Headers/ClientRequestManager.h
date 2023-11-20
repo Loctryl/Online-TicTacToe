@@ -21,13 +21,13 @@ public:
 
     inline ClientNetWork* GetNetWork() const { return (ClientNetWork*)mNetWork; }
 
+    int mMyChoice[2] = {};
     Grid* mGrid;
+
 private:
     static ClientRequestManager* mInstance;
 
-    bool mIsMyTurn = false;
-    int mMyChoice[2] = {};
+    bool mIsMyTurn = true;
 
-    
     ClientRequestManager();
 };

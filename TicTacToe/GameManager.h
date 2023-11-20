@@ -20,9 +20,6 @@ public:
 
     void InitWindow();
 
-    bool TestChoice(int x, int y) const;
-    void Play(int x, int y) const;
-
     bool IsWindowOpened() const;
 
     bool IsPressEsc(const Event* e) const;

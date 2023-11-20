@@ -2,6 +2,7 @@
 #include "Headers/ServerNetWork.h"
 #include "Headers/NetManager.h"
 #include "Grid/Player.h"
+#include "Grid/Grid.h"
 
 ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 
@@ -38,48 +39,39 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
     json parsedMessage = json::parse(Message);
     std::string MessageType = parsedMessage["type"];
 
-    SOCKET* enemy = NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket;
+    Player* player = NetManager::GetInstance()->GetPlayerBySocket(socket);
+    Grid* grid = player->mCurrentGame;
 
     switch (EventToInt(MessageType))
     {
-    case play:// Le serveur recoit le coup d'un joueur
+    case play: 
+    { // Le serveur recoit le coup d'un joueur
+        if (grid->mPlayers[1] == nullptr || player->mInGameId != grid->mTurnPlayer)
+            break;
+
+        printf("Coordonnee Recue\n");
+        int Coords[2] = { parsedMessage["x"], parsedMessage["y"] };
+
+        bool validation = (grid->GetValue(Coords[0], Coords[1]) == -1);
+
+        if (!SendRequestValidation(validation, socket))
+            return false;
+
+        if (validation)
         {
-            printf("Coordonnee Recue\n");
-            int Coords[2] = { parsedMessage["x"], parsedMessage["y"] };
-            bool validation = true;//game.TestChoice(Coords[0], Coords[1])
-            
-            if (!SendRequestValidation(validation, socket))
+            grid->mMainGrid[Coords[0]][Coords[1]] = player->mInGameId;
+
+            if (!SendRequestPlay(Coords, NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket))
                 return false;
-
-            if (validation)
-            {
-                //game.Play(Coords[0], Coords[1])
-                // MAJ EndGame
-
-                NextClient();
-
-                if (!SendRequestPlay(Coords, enemy))
-                    return false;
-            }
         }
+        grid->mTurnPlayer = (grid->mTurnPlayer + 1) % 2;
+
+    }
         break;
-
-    //case connection:
-    //    // Attribute ID
-    //    SendRequestPlayer(1); // A changer
-    //    printf("Sent Player Number to Player\n");
-    //    NextClient();
-    //    break;
-
     default:
         printf("Reception event incorrect : EventMessage %s\n", MessageType);
         break;
     }
 
     return true;
-}
-
-void ServerRequestManager::NextClient() const
-{
-    ((ServerNetWork*)mNetWork)->NextClient();
 }

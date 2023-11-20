@@ -11,7 +11,6 @@ public:
     static ServerRequestManager* GetInstance();
 
     bool Init();
-    void NextClient() const;
 
     bool ManageMessage(std::string Message, SOCKET* socket);
 

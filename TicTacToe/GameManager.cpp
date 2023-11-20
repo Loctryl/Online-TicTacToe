@@ -27,16 +27,6 @@ void GameManager::InitWindow()
     mMarginLeft = ((float)mWindow->GetVideoMode()->width / 2.f) - ((float)mTileSize * ((float)mGrid->mSize / 2.f));
 }
 
-bool GameManager::TestChoice(int x, int y) const
-{
-    return mGrid->TestChoice(x, y);
-}
-
-void GameManager::Play(int x, int y) const
-{
-    mGrid->Play(x, y);
-}
-
 bool GameManager::IsWindowOpened() const { return mWindow->GetWindow()->isOpen(); }
 
 bool GameManager::IsPressEsc(const Event* e) const { return (e->type == Event::Closed || e->key.code == Keyboard::Escape); }
@@ -49,14 +39,14 @@ bool GameManager::IsMove(int* x, int* y) const
     POINT pos = { mousePos.x, mousePos.y };
     ScreenToClient(mWindow->GetWindow()->getSystemHandle(), &pos);
 
-    if(mousePos.x >= mMarginLeft
-        && mousePos.x <= mMarginLeft + mTileSize * mGrid->GetGridSize()
-        && mousePos.y >= mTileSize
-        && mousePos.y <= mTileSize * (mGrid->GetGridSize() + 1)
+    if(pos.x >= mMarginLeft
+        && pos.x <= mMarginLeft + mTileSize * mGrid->GetGridSize()
+        && pos.y >= mTileSize
+        && pos.y <= mTileSize * (mGrid->GetGridSize() + 1)
         )
     {
-        *x = (mousePos.x - mMarginLeft) / mTileSize;
-        *y = (mousePos.y - mTileSize) / mTileSize;
+        *x = (pos.x - mMarginLeft) / mTileSize;
+        *y = (pos.y - mTileSize) / mTileSize;
         if(mGrid->mMainGrid[*x][*y] == -1)
             return true;
     }

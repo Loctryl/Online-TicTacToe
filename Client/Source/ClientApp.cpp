@@ -60,8 +60,10 @@ void ClientApp::Update()
 		int x, y = -1;
 
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
-		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
-			mGame->Play(x, y);
+		if (mRequestManager->IsMyTurn() && mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
+			mRequestManager->mMyChoice[0] = x;
+			mRequestManager->mMyChoice[1] = y;
+			mRequestManager->Play(mRequestManager->mMyChoice);
 		}
 	}
 }

@@ -27,5 +27,4 @@ bool Grid::TestChoice(int x, int y) const
 void Grid::Play(int x, int y)
 {
     mMainGrid[x][y] = mTurnPlayer;
-    mTurnPlayer = (mTurnPlayer + 1) % 2;
 }
