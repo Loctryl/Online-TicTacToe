@@ -11,7 +11,7 @@ ServApp::ServApp()
 
 ServApp::~ServApp() {
 	delete mMessageWindow;
-	delete mRequestManager;
+	//delete mRequestManager;
 }
 
 bool ServApp::Init()

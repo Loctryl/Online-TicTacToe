@@ -13,10 +13,10 @@ bool ClientNetWork::Init()
 
     sockaddr_in clientService = SettingProtocol();
 
-    WSAAsyncSelect(mConnectSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_CONNECT | FD_READ | FD_CLOSE);
-
     if (!ConnectServer(clientService))
         return false;
+
+    WSAAsyncSelect(mConnectSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     return true;
 }
