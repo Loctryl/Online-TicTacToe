@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sources\MessageWindow.cpp" />
+    <ClCompile Include="Sources\NetManager.cpp" />
     <ClCompile Include="Sources\ServApp.cpp" />
     <ClCompile Include="Sources\ServerNetWork.cpp" />
     <ClCompile Include="Sources\ServerRequestManager.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Headers\ServerNetWork.h" />
     <ClInclude Include="Headers\ServerRequestManager.h" />
     <ClInclude Include="Headers\MessageWindow.h" />
+    <ClInclude Include="Sources\NetManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TicTacToe\TicTacToe.vcxproj">

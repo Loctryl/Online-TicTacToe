@@ -2,9 +2,18 @@
 #include "Grid/Grid.h"
 #include "Grid/Player.h"
 
+NetManager* NetManager::mInstance = nullptr;
+
 NetManager::NetManager() {  }
 
 NetManager::~NetManager() {  }
+
+NetManager* NetManager::GetInstance()
+{
+    if (mInstance == nullptr)
+        mInstance = new NetManager();
+    return mInstance;
+}
 
 Grid* NetManager::CreateGame()
 {

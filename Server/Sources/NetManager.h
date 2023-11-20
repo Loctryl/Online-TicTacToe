@@ -12,10 +12,7 @@ public:
     NetManager();
     ~NetManager();
 
-    Grid* mWaitingGame;
-
-    std::vector<Grid*> mGames;
-    std::vector<Player*> mPlayers;
+    static NetManager* GetInstance();
 
     Grid* CreateGame();
     void CreatePlayer(SOCKET* sock, std::string name);
@@ -24,4 +21,12 @@ public:
 
     Grid* GetGameByPlayerId(int id) const;
     int GetPlayerBySocket(SOCKET* sock) const;
+
+private:
+    static NetManager* mInstance;
+
+    Grid* mWaitingGame;
+
+    std::vector<Grid*> mGames;
+    std::vector<Player*> mPlayers;
 };

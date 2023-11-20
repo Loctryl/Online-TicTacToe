@@ -24,9 +24,6 @@
     <ClCompile Include="Grid\Grid.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\GamePlayer\NetManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\Network\Network.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -51,9 +48,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Resources\SfmlIncluder.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\GamePlayer\NetManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Utility\json.hpp">
