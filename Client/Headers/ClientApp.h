@@ -10,7 +10,6 @@ class ClientApp
 	MessageWindow* mMessageWindow;
 
 	GameManager* mGame;
-
 public:
 	ClientApp();
 	~ClientApp();

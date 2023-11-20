@@ -5,6 +5,7 @@
 
 GameManager::GameManager(Grid* grid, int gridSize)
 {
+    mEvent = new Event();
     mWindow = new SFMLWindow();
     if(grid) mGrid = grid;
     else mGrid = new Grid(gridSize);

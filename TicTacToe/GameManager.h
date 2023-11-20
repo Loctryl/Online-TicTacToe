@@ -6,6 +6,8 @@ class SFMLWindow;
 
 class GameManager
 {
+    Event* mEvent;
+
 public:
     SFMLWindow* mWindow;
     Grid* mGrid;
@@ -30,4 +32,6 @@ public:
     bool IsMove(int* x, int* y) const;
     
     void RenderGame() const;
+
+    inline Event* GetEvent() { return mEvent; };
 };

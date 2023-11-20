@@ -54,12 +54,14 @@ int ClientApp::Run()
 
 void ClientApp::Update()
 {
-	if (mRequestManager->IsMyTurn())// Si c'est à moi de jouer
+	auto event = mGame->GetEvent();
+	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
-		if (true)//if (j'ai choisi une case)
-		{
-			int coord[2] = {2,2};// mon choix
-			mRequestManager->Play(coord);
+		int x, y = -1;
+
+		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
+		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
+			mGame->Play(x, y);
 		}
 	}
 }
