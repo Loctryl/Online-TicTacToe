@@ -9,6 +9,7 @@ public:
     ~ClientNetWork();
 
     bool Init();
+    bool ConnectServer();
 
     bool SendRequest(std::string data);
     std::string Recieve();
@@ -17,5 +18,4 @@ public:
 private:
     SOCKET mConnectSocket = {};
     
-    bool ConnectServer(sockaddr_in& clientService);
 };

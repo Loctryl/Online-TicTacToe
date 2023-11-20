@@ -11,9 +11,7 @@ bool ClientNetWork::Init()
 {
     Network::Init(mConnectSocket);
 
-    sockaddr_in clientService = SettingProtocol();
-
-    if (!ConnectServer(clientService))
+    if (!ConnectServer())
         return false;
 
     WSAAsyncSelect(mConnectSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
@@ -21,8 +19,9 @@ bool ClientNetWork::Init()
     return true;
 }
 
-bool ClientNetWork::ConnectServer(sockaddr_in& clientService)
+bool ClientNetWork::ConnectServer()
 {
+    sockaddr_in clientService = SettingProtocol();
     if (connect(mConnectSocket, (SOCKADDR*)&clientService, sizeof(clientService)))
     {
         printf("Erreur connect() %d\n", WSAGetLastError());
