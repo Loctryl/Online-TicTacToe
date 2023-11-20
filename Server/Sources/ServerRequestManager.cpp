@@ -1,6 +1,7 @@
 #include "Headers/ServerRequestManager.h"
 #include "Headers/ServerNetWork.h"
 #include "Headers/NetManager.h"
+#include "Grid/Player.h"
 
 ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 
@@ -37,8 +38,7 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
     json parsedMessage = json::parse(Message);
     std::string MessageType = parsedMessage["type"];
 
-    NetManager* netManager = NetManager::GetInstance();
-
+    SOCKET* enemy = NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket;
 
     switch (EventToInt(MessageType))
     {
@@ -58,7 +58,7 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
 
                 NextClient();
 
-                if (!SendRequestPlay(Coords))
+                if (!SendRequestPlay(Coords, enemy))
                     return false;
             }
         }

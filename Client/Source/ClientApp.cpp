@@ -54,7 +54,7 @@ int ClientApp::Run()
 
 void ClientApp::Update()
 {
-	//if (mRequestManager->IsMyTurn())// Si c'est à moi de jouer
+	if (mRequestManager->IsMyTurn())// Si c'est à moi de jouer
 	{
 		if (true)//if (j'ai choisi une case)
 		{

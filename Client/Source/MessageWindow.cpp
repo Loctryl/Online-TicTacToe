@@ -96,7 +96,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case FD_CLOSE:
             break;
-
+            requestManager->GetNetWork()->CloseSocket(socket);
         default:
             break;
         }
