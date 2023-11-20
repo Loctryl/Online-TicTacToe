@@ -3,12 +3,6 @@
 #include "Headers/MessageWindow.h"
 #include "Headers/ClientApp.h"
 
-HANDLE ClientApp::mutex = CreateMutex(
-	NULL,              // default security attributes
-	FALSE,             // initially not owned
-	NULL);             // unnamed mutex
-
-
 ClientApp::ClientApp() 
 {
 	mMessageWindow = new MessageWindow();
@@ -30,12 +24,6 @@ bool ClientApp::Init()
 
 	//if (!CreateThreadEvent())
 		//return false;
-
-	if (mutex == NULL)
-	{
-		printf("CreateMutex error: %d\n", GetLastError());
-		return false;
-	}
 
 	if (!CreateThreadGame())
 		return false;
@@ -151,11 +139,11 @@ DWORD WINAPI ClientApp::ThreadGameFunction(LPVOID lpParam)
 
 	DataThreadGame* dtg = (DataThreadGame*)lpParam;
 
-	DWORD waitResult = WaitForSingleObject(
-		mutex,    // handle to mutex
-		INFINITE);  // no time-out interval
-
 	printf("Test 1\n");
+
+	CRITICAL_SECTION mutex;
+	InitializeCriticalSection(&mutex);// pour créer la critical section
+	EnterCriticalSection(&mutex);// pour bloquer un bloc d'instructions
 
 	while (!dtg->requestManager->GameIsEnded())
 	{
@@ -163,14 +151,10 @@ DWORD WINAPI ClientApp::ThreadGameFunction(LPVOID lpParam)
 		dtg->gameManager->RenderGame();
 	}
 
+	LeaveCriticalSection(&mutex);// pour libérer le bloc
+	DeleteCriticalSection(&mutex);// quand c'est fini
+
 	printf("Test 2\n");
-
-	if (!ReleaseMutex(mutex))
-	{
-		printf("Erreur libération mutex");
-	}
-
-	CloseHandle(mutex);
 
 	printf("Sortie thread game\n");
 

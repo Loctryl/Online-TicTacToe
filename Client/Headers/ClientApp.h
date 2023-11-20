@@ -29,7 +29,6 @@ private:
 	HANDLE mThreadEvent;
 	HANDLE mThreadGame;
 	bool mRunning = true;
-	static HANDLE mutex;
 
 	bool CreateThreadEvent();
 	bool CreateThreadGame();
