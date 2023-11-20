@@ -1,8 +1,15 @@
 #pragma once
+#include "../Ressources/framework.h"
 
 class ClientRequestManager;
 class MessageWindow;
 class GameManager;
+
+struct DataThreadGame
+{
+	GameManager* gameManager;
+	ClientRequestManager* requestManager;
+};
 
 class ClientApp
 {
@@ -17,5 +24,16 @@ public:
 	bool Init();
 
 	int Run();
-	void Update();
+
+private:
+	HANDLE mThreadEvent;
+	HANDLE mThreadGame;
+	bool mRunning = true;
+	static HANDLE mutex;
+
+	bool CreateThreadEvent();
+	bool CreateThreadGame();
+	static DWORD WINAPI ThreadEventFunction(LPVOID lpParam);
+	static DWORD WINAPI ThreadGameFunction(LPVOID lpParam);
+	static void Update(GameManager* gameManager, ClientRequestManager* requestManager);
 };

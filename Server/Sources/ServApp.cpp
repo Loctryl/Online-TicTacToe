@@ -24,7 +24,6 @@ bool ServApp::Init()
 
 int ServApp::Run()
 {
-
 	MSG msg = { 0 };
 
 	bool running = true;
