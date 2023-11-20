@@ -1,30 +1,26 @@
 #pragma once
 
-#include <string>
-#include "json.hpp"
+#include "Utility/RequestManager/RequestManager.h"
+#include "Headers/ServerNetWork.h"
 
-using json = nlohmann::json;
-
-class ServerNetWork;
-
-class ServerRequestManager
+class ServerRequestManager : public RequestManager
 {
 public:
-    ServerRequestManager();
-    virtual ~ServerRequestManager() = default;
+    ~ServerRequestManager();
+
+    static ServerRequestManager* GetInstance();
 
     bool Init();
-    bool SendRequestPlayer(int number);
-    bool SendRequestAnswer(bool validation) const;
-    bool SendRequestPlay(int coord[2]) const;
-    bool SendRequestNotif(std::string Message) const;
-    bool RecievePlay(json Message, int* coord);
-    std::string Recieve();
-    bool Close() const;
     void NextClient() const;
 
-    bool ManageMessage(std::string Message);
+    bool ManageMessage(std::string Message, SOCKET* socket);
 
-public:
-    ServerNetWork* mNetWork;
+    inline ServerNetWork* GetNetWork() { return (ServerNetWork*)mNetWork; };
+
+private:
+    static ServerRequestManager* mInstance;
+
+    ServerRequestManager();
+
+    bool SendRequestValidation(bool validation, SOCKET* socket) const;
 };

@@ -1,6 +1,9 @@
 ﻿#include "Grid.h"
 
-Grid::Grid() { }
+Grid::Grid(int gridSize)
+{
+    InitGrid(gridSize);
+}
 
 Grid::~Grid() { }
 
@@ -16,4 +19,13 @@ void Grid::InitGrid(int gridSize)
     }
 }
 
-void Grid::Play() {}
+bool Grid::TestChoice(int x, int y) const
+{
+    return mMainGrid[x][y] == -1;
+}
+
+void Grid::Play(int x, int y)
+{
+    mMainGrid[x][y] = mTurnPlayer;
+    mTurnPlayer = (mTurnPlayer + 1) % 2;
+}

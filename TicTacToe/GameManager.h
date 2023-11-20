@@ -6,6 +6,8 @@ class SFMLWindow;
 
 class GameManager
 {
+    Event* mEvent;
+
 public:
     SFMLWindow* mWindow;
     Grid* mGrid;
@@ -13,12 +15,13 @@ public:
     int mTileSize;
     float mMarginLeft;
     
-    GameManager();
+    GameManager(Grid* grid = nullptr, int gridSize = 3);
     ~GameManager();
 
-    void InitGame(int gridSize = 3);
+    void InitWindow();
 
-    void Play(int x, int y,void (*func)() = nullptr) const;
+    bool TestChoice(int x, int y) const;
+    void Play(int x, int y) const;
 
     bool IsWindowOpened() const;
 
@@ -29,4 +32,6 @@ public:
     bool IsMove(int* x, int* y) const;
     
     void RenderGame() const;
+
+    inline Event* GetEvent() { return mEvent; };
 };

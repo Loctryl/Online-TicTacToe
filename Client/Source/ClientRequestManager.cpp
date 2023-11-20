@@ -1,113 +1,65 @@
 #include "Headers/ClientRequestManager.h"
 #include "Headers/ClientNetWork.h"
-#include <iostream>
 
+ClientRequestManager* ClientRequestManager::mInstance = nullptr;
 
-ClientRequestManager::ClientRequestManager() : mNetWork(new ClientNetWork()) { }
+ClientRequestManager::ClientRequestManager() { mNetWork = new ClientNetWork(); }
 
-bool ClientRequestManager::Init() { return mNetWork->Init(); }
-
-bool ClientRequestManager::SendRequestPlay(int coord[2]) const
+ClientRequestManager::~ClientRequestManager()
 {
-    json data = {
-        {"type", "play"},
-        {"x", coord[0]},
-        {"y", coord[1]}
-    };
-
-    return mNetWork->SendRequest(data.dump());
+    delete mNetWork;
 }
 
-
-
-bool ClientRequestManager::SendRequestNotif(std::string Message) const
+ClientRequestManager* ClientRequestManager::GetInstance()
 {
-    json data = {
-        {"type", "notif"},
-        {"content", Message.c_str()}
-    };
-
-    return mNetWork->SendRequest(data.dump());
+    if (mInstance != nullptr) return mInstance;
+    mInstance = new ClientRequestManager();
+    return mInstance;
 }
 
-bool ClientRequestManager::RecievePlay(json Message, int* coord)
+bool ClientRequestManager::IsMyTurn() const
 {
-    coord[0] = Message["x"];
-    coord[1] = Message["y"];
-
-    return true;
+    return mIsMyTurn;
 }
 
-bool ClientRequestManager::RecieveAnswer(json Message, bool* Answer)
+void ClientRequestManager::Play(int coord[2])
 {
-    bool tempanswer = Message["answer"];
-    Answer = &tempanswer;
+    mMyChoice[0] = coord[0];
+    mMyChoice[1] = coord[1];
 
-    return true;
+    SendRequestPlay(mMyChoice, ((ClientNetWork*)mNetWork)->GetClientSocket());
 }
 
-bool ClientRequestManager::RecieveNotif(json Message, std::string* Notif)
+bool ClientRequestManager::Init()
 {
-    *Notif = Message["notif"];
-
-    return true;
+    return ((ClientNetWork*)mNetWork)->Init();
 }
 
 bool ClientRequestManager::ManageMessage(std::string Message)
 {
     json parsedMessage = json::parse(Message);
     std::string MessageType = parsedMessage["type"];
-    if (MessageType == "play") {
-        // My Turn = true
-        int Coords[2];
-        if (!RecievePlay(parsedMessage, Coords)) {
-            printf("Error : Couldn't Recieve Coords properly\n");
-            return false;
+
+    switch (EventToInt(MessageType))
+    {
+    case play:// Le client recoit le coup de l'autre joueur
+        //game.Play(parsedMessage["x"], parsedMessage["y"])
+        // MAJ EndGame
+        mIsMyTurn = true;
+        break;
+
+    case validation:// Le client recoit la réponse du serveur concernant son coup
+        if (parsedMessage["answer"])// Si le coup est valide
+        {
+            //game.Play(mMyChoice[0], mMyChoice[1])
+            // MAJ EndGame
+            mIsMyTurn = false;
         }
-        // game.play(coords)
-        // Update game
-        // Event Input
-        // Send l'input au serveur
-        Coords[0] = 0; // A changer
-        Coords[1] = 1; // A changer
-        SendRequestPlay(Coords);
+        break;
+
+    default:
+        break;
     }
-    else if (MessageType == "notif") {
-        // do something
-    }
-    else if (MessageType == "answer") {
-        bool validation =  false;
-        if (!RecieveAnswer(parsedMessage, &validation)) {
-            printf("Error : Couldn't Recieve Answer properly\n");
-            return false;
-        }
-        if (!validation) {
-            int Coords[2];
-            // On rejoue
-            Coords[0] = 0; // A changer
-            Coords[1] = 1; // A changer
-            SendRequestPlay(Coords);
-        }
-        else {
-            // My Turn = false
-            // On attend que l'autre joueur ait joué ou endgame.
-        }
-    }
-    else if (MessageType == "player") {
-        // Struct player : player number = ce qu'on a reçu
-    }
-    else if (MessageType == "connect") {
-        printf("this souldn't happen\n");
-    }
+
     return true;
-}
-
-std::string ClientRequestManager::Recieve()
-{
-    return mNetWork->Recieve();
-}
-
-bool ClientRequestManager::Close() const
-{
-    return mNetWork->Close();
 }

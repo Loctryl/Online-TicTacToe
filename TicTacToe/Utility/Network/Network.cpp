@@ -102,12 +102,12 @@ bool Network::ErrorRecv(int& iResult)
 }
 
 // Receives information for a given socket
-std::string Network::Receive(SOCKET &sock)
+std::string Network::Receive(SOCKET* sock)
 {
     char data[PACKET_SIZE];
     std::string recvString = "";
 
-    int iResult = recv(sock, data, SIGNATURE_SIZE, 0);
+    int iResult = recv(*sock, data, SIGNATURE_SIZE, 0);
     if (!ErrorRecv(iResult))
         return "";
 
@@ -119,7 +119,7 @@ std::string Network::Receive(SOCKET &sock)
         return "";
     }
 
-    iResult = recv(sock, data, LENGTH_MESSAGE_SIZE, 0);
+    iResult = recv(*sock, data, LENGTH_MESSAGE_SIZE, 0);
     if (!ErrorRecv(iResult))
         return "";
 
@@ -129,7 +129,7 @@ std::string Network::Receive(SOCKET &sock)
 
     for (std::uint32_t packet_index = 0; packet_index < MessageLength / PACKET_SIZE; packet_index++)
     {
-        iResult = recv(sock, data, PACKET_SIZE, 0);
+        iResult = recv(*sock, data, PACKET_SIZE, 0);
         if (!ErrorRecv(iResult))
             return "";
 
@@ -138,7 +138,7 @@ std::string Network::Receive(SOCKET &sock)
 
     int buffersize = MessageLength % PACKET_SIZE;
 
-    iResult = recv(sock, data, buffersize, 0);
+    iResult = recv(*sock, data, buffersize, 0);
     if (!ErrorRecv(iResult))
         return "";
 

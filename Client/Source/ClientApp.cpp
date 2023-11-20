@@ -1,72 +1,47 @@
 #include "Headers/ClientApp.h"
-//#include "GameManager.h"
+#include "GameManager.h"
 #include "Headers/ClientRequestManager.h"
+#include "Headers/MessageWindow.h"
 
 
 ClientApp::ClientApp() 
 {
-	mRequestManager = new ClientRequestManager();
-	//mGame = new GameManager();
+	mMessageWindow = new MessageWindow();
+	mMessageWindow->InitWindow();
+	mRequestManager = ClientRequestManager::GetInstance();
+	mGame = new GameManager();
 }
 
-ClientApp::~ClientApp() { }
+ClientApp::~ClientApp() {
+	delete mMessageWindow;
+	//delete mRequestManager;
+}
 
 bool ClientApp::Init() 
 {
-	//mGame->InitGame(5);
+	mGame->InitWindow();
 	return mRequestManager->Init();
 }
 
 int ClientApp::Run() 
 {
-	bool endGame = false;
-	bool validation = false;
-	int coord[2] = { -1, -1 };
+	MSG msg = { 0 };
 
-	int x, y;
-	x = -1;
-	y = -1;
+	bool running = true;
 
-	/*Event event{};
-	while (mGame.IsWindowOpened())
+	// Boucle de messages principale :
+	while (running && !mRequestManager->GameIsEnded())
 	{
-		while (mGame.mWindow->GetWindow()->pollEvent(event))
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			if (mGame.IsPressEsc(&event)) mGame.mWindow->GetWindow()->close();
-			if (mGame.IsMouseClick(&event) && mGame.IsMove(&x, &y)) {
-				mGame.Play(x, y, &Oui);
-
-				x = -1;
-				y = -1;
-			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			if (msg.message == WM_QUIT)
+				running = false;
 		}
-		mGame.RenderGame();
-	}*/
 
-	while (!endGame)
-	{
-		// Premier coup si My Turn == true :
-		int Coords[2];
-		Coords[0] = -1;
-		Coords[1] = -1;
-		mRequestManager->SendRequestPlay(Coords);
-
-		std::string Message = "";
-		bool validation = false;
-
-		switch (1)// Evenement
-		{
-		case 1:
-			Message = mRequestManager->Recieve();
-			validation = mRequestManager->ManageMessage(Message);
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		default:
-			break;
-		}
+		Update();
+		mGame->RenderGame();
 	}
 
 
@@ -75,4 +50,19 @@ int ClientApp::Run()
 		return 1;
 
 	return 0;
+}
+
+void ClientApp::Update()
+{
+	auto event = mGame->GetEvent();
+	while (mGame->mWindow->GetWindow()->pollEvent(*event))
+	{
+		int x, y = -1;
+
+		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
+		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
+			int tab[2] = { x,y };
+			mRequestManager->Play(tab);
+		}
+	}
 }

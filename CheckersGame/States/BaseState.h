@@ -6,7 +6,7 @@ public:
     BaseState();
     virtual ~BaseState();
     
-    virtual void OnEnter();
-    virtual void OnStay();
-    virtual void OnExit();
+    virtual void OnEnter() = 0;
+    virtual void OnStay() = 0;
+    virtual void OnExit() = 0;
 };

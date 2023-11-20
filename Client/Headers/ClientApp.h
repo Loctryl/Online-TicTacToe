@@ -1,13 +1,15 @@
 #pragma once
 
 class ClientRequestManager;
-//class GameManager;
+class MessageWindow;
+class GameManager;
 
 class ClientApp
 {
 	ClientRequestManager* mRequestManager;
-	//GameManager* mGame;
+	MessageWindow* mMessageWindow;
 
+	GameManager* mGame;
 public:
 	ClientApp();
 	~ClientApp();
@@ -15,4 +17,5 @@ public:
 	bool Init();
 
 	int Run();
+	void Update();
 };

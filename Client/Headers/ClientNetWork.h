@@ -1,7 +1,6 @@
-#pragma comment(lib, "Ws2_32.lib")
-
 #pragma once
-#include "Network/Network.h"
+#include "../Ressources/framework.h"
+#include "Utility/Network/Network.h"
 
 class ClientNetWork : public Network
 {
@@ -10,13 +9,15 @@ public:
     ~ClientNetWork();
 
     bool Init();
+    bool ConnectServer();
 
-    bool SendRequest(std::string data);
-    std::string Recieve();
+    bool SendRequest(std::string data, SOCKET* socket);
+    std::string Recieve(SOCKET* socket);
     bool Close();
+
+    inline SOCKET* GetClientSocket() { return &mConnectSocket; };
     
 private:
     SOCKET mConnectSocket = {};
     
-    bool ConnectServer(sockaddr_in& clientService);
 };

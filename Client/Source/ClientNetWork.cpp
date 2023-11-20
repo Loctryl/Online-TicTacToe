@@ -1,4 +1,6 @@
 #include "Headers/ClientNetWork.h"
+#include "Ressources/framework.h"
+#include "Headers/MessageWindow.h"
 
 
 ClientNetWork::ClientNetWork() : Network() { }
@@ -9,16 +11,17 @@ bool ClientNetWork::Init()
 {
     Network::Init(mConnectSocket);
 
-    sockaddr_in clientService = SettingProtocol();
-
-    if (!ConnectServer(clientService))
+    if (!ConnectServer())
         return false;
+
+    WSAAsyncSelect(mConnectSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     return true;
 }
 
-bool ClientNetWork::ConnectServer(sockaddr_in& clientService)
+bool ClientNetWork::ConnectServer()
 {
+    sockaddr_in clientService = SettingProtocol();
     if (connect(mConnectSocket, (SOCKADDR*)&clientService, sizeof(clientService)))
     {
         printf("Erreur connect() %d\n", WSAGetLastError());
@@ -30,9 +33,9 @@ bool ClientNetWork::ConnectServer(sockaddr_in& clientService)
     return true;
 }
 
-bool ClientNetWork::SendRequest(std::string data)
+bool ClientNetWork::SendRequest(std::string data, SOCKET* socket)
 {
-    bool result = Network::SendRequest(mConnectSocket, data);
+    bool result = Network::SendRequest(*socket, data);
 
     if (!result)
         Close();
@@ -40,12 +43,9 @@ bool ClientNetWork::SendRequest(std::string data)
     return result;
 }
 
-std::string ClientNetWork::Recieve()
+std::string ClientNetWork::Recieve(SOCKET* socket)
 {
-    std::string result = Network::Receive(mConnectSocket);
-
-    if (result == "")
-        Close();
+    std::string result = Network::Receive(&mConnectSocket);
 
     return result;
 }

@@ -1,12 +1,21 @@
 #include "Headers/ServApp.h"
 #include "Headers/ServerRequestManager.h"
+#include "Headers/MessageWindow.h"
+#include "Headers/NetManager.h"
 
 ServApp::ServApp()
 {
-	mRequestManager = new ServerRequestManager();
+	mMessageWindow = new MessageWindow();
+	mMessageWindow->InitWindow();
+	mRequestManager = ServerRequestManager::GetInstance();
+	mNetManager = new NetManager();
 }
 
-ServApp::~ServApp() { }
+ServApp::~ServApp() {
+	delete mMessageWindow;
+	delete mNetManager;
+	//delete mRequestManager;
+}
 
 bool ServApp::Init()
 {
@@ -15,31 +24,35 @@ bool ServApp::Init()
 
 int ServApp::Run()
 {
-	bool endGame = false;
-	bool validation = false;
 
-	std::string Message;
+	MSG msg = { 0 };
 
-	while (!endGame)
+	bool running = true;
+
+	// Boucle de messages principale :
+	while (running)
 	{
-		switch (1)// Evenement
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-		case 1:// Reception Message
-			Message = mRequestManager->Recieve();
-			validation = mRequestManager->ManageMessage(Message);
-			if (!validation) {
-				printf("Error : ManageMessage returned false\n");
-			}
-			break;
-
-		default:
-			break;
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			if (msg.message == WM_QUIT)
+				running = false;
 		}
+
+		Update();
 	}
+
+	return (int)msg.wParam;
 
 	// FERMETURE DU SERVER
 	if (!mRequestManager->Close())
 		return 1;
 
 	return 0;
+}
+
+int ServApp::Update()
+{
+	return 1;
 }

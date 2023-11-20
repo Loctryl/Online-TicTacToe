@@ -1,5 +1,6 @@
 #include "Headers\ServerNetWork.h"
 #include <WS2tcpip.h>
+#include "Headers/MessageWindow.h"
 
 
 
@@ -17,19 +18,7 @@ bool ServerNetWork::Init()
     if (!WaitClients())
         return false;
 
-    for (int i = 0; i < NB_CLIENT; i++)
-    {
-        if (!AcceptClient(i))
-        {
-            for (int j = 0; j <= i; j++)
-                Network::CloseSocket(mAcceptSocket[j]);
-
-            Network::CloseSocket(mListenSocket);
-
-            return false;
-        }
-    }
-
+    WSAAsyncSelect(mListenSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_ACCEPT);
     return true;
 }
 
@@ -86,22 +75,24 @@ bool ServerNetWork::WaitClients()
     return true;
 }
 
-bool ServerNetWork::AcceptClient(int &numClient)
+bool ServerNetWork::AcceptClient(SOCKET* socket)
 {
-    mAcceptSocket[numClient] = accept(mListenSocket, NULL, NULL);
-    if (mAcceptSocket[numClient] == INVALID_SOCKET)
+    *socket = accept(mListenSocket, NULL, NULL);
+    if (*socket == INVALID_SOCKET)
     {
-        printf("Erreur accept() socket numero %d : %d\n", numClient, WSAGetLastError());
+        printf("Erreur accept() socket : %d\n", WSAGetLastError());
         return false;
     }
-    
+
+    WSAAsyncSelect(*socket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
+
     printf("Client connecte\n");
     return true;
 }
 
-bool ServerNetWork::SendRequest(std::string data)
+bool ServerNetWork::SendRequest(std::string data, SOCKET* socket)
 {
-    bool result = Network::SendRequest(mAcceptSocket[mActualClient], data);
+    bool result = Network::SendRequest(*socket, data);
 
     if (!result)
         Close();
@@ -109,12 +100,9 @@ bool ServerNetWork::SendRequest(std::string data)
     return result;
 }
 
-std::string ServerNetWork::Recieve()
+std::string ServerNetWork::Recieve(SOCKET* socket)
 {
-    std::string result = Network::Receive(mAcceptSocket[mActualClient]);
-
-    if (result == "")
-        Close();
+    std::string result = Network::Receive(socket);
 
     return result;
 }
@@ -122,12 +110,6 @@ std::string ServerNetWork::Recieve()
 bool ServerNetWork::Close()
 {
     bool closeSuccess = true;
-
-    for (int i = 0; i < NB_CLIENT; i++)
-    {
-        if (!Network::CloseSocket(mAcceptSocket[i]))
-            closeSuccess = false;
-    }
 
     if (!Network::CloseSocket(mListenSocket))
         closeSuccess = false;

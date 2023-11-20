@@ -1,8 +1,6 @@
 #pragma once
-#pragma comment(lib, "Ws2_32.lib")
-#pragma comment (lib, "TicTacToe.lib")
-
-#include "Network/Network.h"
+#include "framework.h"
+#include "Utility/Network/Network.h"
 
 #define NB_CLIENT 2
 
@@ -15,8 +13,9 @@ public:
     bool Init();
     bool WebInit();
 
-    bool SendRequest(std::string data);
-    std::string Recieve();
+    bool SendRequest(std::string data, SOCKET* socket);
+    bool AcceptClient(SOCKET* socket);
+    std::string Recieve(SOCKET* socket);
 
     bool Close();
 
@@ -31,5 +30,4 @@ private:
     bool Bind(sockaddr_in& serviceServer, SOCKET* socket);// Associe une adresse IP et un numero de port à un socket
     bool ConnectServer(sockaddr_in& serviceServer);
     bool WaitClients();
-    bool AcceptClient(int& numClient);
 };
