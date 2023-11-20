@@ -1,8 +1,6 @@
-﻿#pragma comment(lib, "Ws2_32.lib")
-
-#pragma once
+﻿#pragma once
 #include <string>
-#include <WinSock2.h>
+#include "Resources/framework.h"
 
 class Network
 {
@@ -15,8 +13,8 @@ public:
 
     virtual bool Init() = 0;
 
-    virtual bool SendRequest(std::string data) = 0;
-    virtual std::string Recieve() = 0;
+    virtual bool SendRequest(std::string data, SOCKET* socket) = 0;
+    virtual std::string Recieve(SOCKET* socket) = 0;
 
     
     bool CloseSocket(SOCKET &sock);
@@ -26,7 +24,7 @@ protected:
     sockaddr_in SettingProtocol();
 
     bool SendRequest(SOCKET& sock, std::string data);
-    std::string Receive(SOCKET& sock);
+    std::string Receive(SOCKET* sock);
 
 private:
     bool SettingSocket();

@@ -89,8 +89,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (lParam)
         {
         case FD_READ:
-            message = requestManager->Recieve();
-            requestManager->ManageMessage(message);
+            message = requestManager->Recieve(&socket);
+            if (!message.empty())
+                requestManager->ManageMessage(message);
             break;
 
         case FD_CLOSE:

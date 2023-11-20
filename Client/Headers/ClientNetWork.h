@@ -11,9 +11,11 @@ public:
     bool Init();
     bool ConnectServer();
 
-    bool SendRequest(std::string data);
-    std::string Recieve();
+    bool SendRequest(std::string data, SOCKET* socket);
+    std::string Recieve(SOCKET* socket);
     bool Close();
+
+    inline SOCKET* GetClientSocket() { return &mConnectSocket; };
     
 private:
     SOCKET mConnectSocket = {};

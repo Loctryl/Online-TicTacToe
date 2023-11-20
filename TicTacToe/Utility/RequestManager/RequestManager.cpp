@@ -24,7 +24,7 @@ int RequestManager::EventToInt(std::string event)
         return connection;
 }
 
-bool RequestManager::SendRequestPlay(int coord[2]) const
+bool RequestManager::SendRequestPlay(int coord[2], SOCKET* socket) const
 {
     json data = {
         {"type", "play"},
@@ -32,12 +32,12 @@ bool RequestManager::SendRequestPlay(int coord[2]) const
         {"y", coord[1]}
     };
 
-    return mNetWork->SendRequest(data.dump());
+    return mNetWork->SendRequest(data.dump(), socket);
 }
 
-std::string RequestManager::Recieve()
+std::string RequestManager::Recieve(SOCKET* socket)
 {
-    return mNetWork->Recieve();
+    return mNetWork->Recieve(socket);
 }
 
 bool RequestManager::Close() const

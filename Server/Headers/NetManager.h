@@ -23,6 +23,9 @@ public:
     Grid* GetGameByPlayerId(int id) const;
     int GetPlayerBySocket(SOCKET* sock) const;
 
+    Player* GetEnemyPlayer(SOCKET* sock);
+    Player* GetEnemyPlayer(int id);
+
 private:
     static NetManager* mInstance;
 

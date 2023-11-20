@@ -12,9 +12,9 @@ public:
 
     bool Init();
 
-    bool SendRequest(std::string data);
+    bool SendRequest(std::string data, SOCKET* socket);
     bool AcceptClient(SOCKET* socket);
-    std::string Recieve();
+    std::string Recieve(SOCKET* socket);
 
     bool Close();
 

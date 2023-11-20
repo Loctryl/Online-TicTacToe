@@ -13,7 +13,7 @@ public:
     bool Init();
     void NextClient() const;
 
-    bool ManageMessage(std::string Message);
+    bool ManageMessage(std::string Message, SOCKET* socket);
 
     inline ServerNetWork* GetNetWork() { return (ServerNetWork*)mNetWork; };
 
@@ -22,5 +22,5 @@ private:
 
     ServerRequestManager();
 
-    bool SendRequestValidation(bool validation) const;
+    bool SendRequestValidation(bool validation, SOCKET* socket) const;
 };

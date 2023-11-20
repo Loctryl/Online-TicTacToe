@@ -61,9 +61,9 @@ bool ServerNetWork::AcceptClient(SOCKET* socket)
     return true;
 }
 
-bool ServerNetWork::SendRequest(std::string data)
+bool ServerNetWork::SendRequest(std::string data, SOCKET* socket)
 {
-    bool result = Network::SendRequest(mAcceptSocket[mActualClient], data);
+    bool result = Network::SendRequest(*socket, data);
 
     if (!result)
         Close();
@@ -71,12 +71,9 @@ bool ServerNetWork::SendRequest(std::string data)
     return result;
 }
 
-std::string ServerNetWork::Recieve()
+std::string ServerNetWork::Recieve(SOCKET* socket)
 {
-    std::string result = Network::Receive(mAcceptSocket[mActualClient]);
-
-    if (result == "")
-        Close();
+    std::string result = Network::Receive(socket);
 
     return result;
 }
@@ -84,12 +81,6 @@ std::string ServerNetWork::Recieve()
 bool ServerNetWork::Close()
 {
     bool closeSuccess = true;
-
-    for (int i = 0; i < NB_CLIENT; i++)
-    {
-        if (!Network::CloseSocket(mAcceptSocket[i]))
-            closeSuccess = false;
-    }
 
     if (!Network::CloseSocket(mListenSocket))
         closeSuccess = false;

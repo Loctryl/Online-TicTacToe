@@ -1,5 +1,6 @@
 #include "Headers/ServerRequestManager.h"
 #include "Headers/ServerNetWork.h"
+#include "Headers/NetManager.h"
 
 ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 
@@ -21,20 +22,23 @@ bool ServerRequestManager::Init()
     return ((ServerNetWork*)mNetWork)->Init();
 }
 
-bool ServerRequestManager::SendRequestValidation(bool validation) const
+bool ServerRequestManager::SendRequestValidation(bool validation, SOCKET* socket) const
 {
     json data = {
         {"type", "validation"},
         {"answer", validation}
     };
 
-    return mNetWork->SendRequest(data.dump());
+    return mNetWork->SendRequest(data.dump(), socket);
 }
 
-bool ServerRequestManager::ManageMessage(std::string Message)
+bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
 {
     json parsedMessage = json::parse(Message);
     std::string MessageType = parsedMessage["type"];
+
+    NetManager* netManager = NetManager::GetInstance();
+
 
     switch (EventToInt(MessageType))
     {
@@ -44,7 +48,7 @@ bool ServerRequestManager::ManageMessage(std::string Message)
             int Coords[2] = { parsedMessage["x"], parsedMessage["y"] };
             bool validation = true;//game.TestChoice(Coords[0], Coords[1])
             
-            if (!SendRequestValidation(validation))
+            if (!SendRequestValidation(validation, socket))
                 return false;
 
             if (validation)

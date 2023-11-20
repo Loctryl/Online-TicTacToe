@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "Resources/framework.h"
 #include "Utility/json.hpp"
 
 using json = nlohmann::json;
@@ -20,9 +21,9 @@ public:
 
     virtual bool Init() = 0;
 
-    bool SendRequestPlay(int coord[2]) const;
+    bool SendRequestPlay(int coord[2], SOCKET* socket) const;
 
-    std::string Recieve();
+    std::string Recieve(SOCKET* socket);
     bool Close() const;
 
 protected:

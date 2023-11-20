@@ -27,7 +27,7 @@ void ClientRequestManager::Play(int coord[2])
     mMyChoice[0] = coord[0];
     mMyChoice[1] = coord[1];
 
-    SendRequestPlay(mMyChoice);
+    SendRequestPlay(mMyChoice, ((ClientNetWork*)mNetWork)->GetClientSocket());
 }
 
 bool ClientRequestManager::Init()

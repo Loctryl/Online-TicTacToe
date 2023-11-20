@@ -220,6 +220,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid\Grid.h" />
     <ClInclude Include="Grid\Player.h" />
+    <ClInclude Include="Resources\framework.h" />
     <ClInclude Include="Resources\utilities.h" />
     <ClInclude Include="Resources\SfmlIncluder.h" />
     <ClInclude Include="Utility\json.hpp" />
