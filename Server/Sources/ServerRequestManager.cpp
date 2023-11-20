@@ -39,8 +39,6 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
     json parsedMessage = json::parse(Message);
     std::string MessageType = parsedMessage["type"];
 
-    cout << "read socket : " << socket << endl;
-
     NetManager* net = NetManager::GetInstance();
 
     Player* player = net->GetPlayerBySocket(socket);
@@ -63,7 +61,7 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
 
         if (validation)
         {
-            grid->mMainGrid[Coords[0]][Coords[1]] = player->mInGameId;
+            grid->Play(Coords[0],Coords[1]);
 
             if (!SendRequestPlay(Coords, NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket))
                 return false;

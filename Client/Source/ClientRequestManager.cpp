@@ -49,13 +49,16 @@ bool ClientRequestManager::ManageMessage(std::string Message)
     {
     case play:// Le client recoit le coup de l'autre joueur
         mGrid->Play(parsedMessage["x"], parsedMessage["y"]);
+        mGrid->mTurnPlayer = (mGrid->mTurnPlayer + 1) % 2;
         mIsMyTurn = true;
+
         break;
 
     case validation:// Le client recoit la réponse du serveur concernant son coup
         if (parsedMessage["answer"])// Si le coup est valide
         {
             mGrid->Play(mMyChoice[0], mMyChoice[1]);
+            mGrid->mTurnPlayer = (mGrid->mTurnPlayer + 1) % 2;
             mIsMyTurn = false;
         }
         break;
