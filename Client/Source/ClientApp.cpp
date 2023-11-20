@@ -61,7 +61,8 @@ void ClientApp::Update()
 
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
 		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
-			mGame->Play(x, y);
+			int tab[2] = { x,y };
+			mRequestManager->Play(tab);
 		}
 	}
 }
