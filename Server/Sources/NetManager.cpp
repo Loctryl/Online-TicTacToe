@@ -26,6 +26,7 @@ void NetManager::CreatePlayer(SOCKET* sock, std::string name)
 {
     Player* p = new Player();
     p->mSocket = sock;
+    p->mId = SetNewID();
     p->mNickName = name;
     if(mWaitingGame)
     AddPlayerToGame(p);
@@ -62,20 +63,36 @@ Grid* NetManager::GetGameByPlayerId(int id) const
 {
     for(auto game : mGames)
     {
-        if(game->mPlayers[0]->mInGameId == id || game->mPlayers[1]->mInGameId == id)
+        if(game->mPlayers[0]->mId == id || game->mPlayers[1]->mId == id)
             return game;
     }
     return nullptr;
 }
 
-int NetManager::GetPlayerBySocket(SOCKET* sock) const
+Player* NetManager::GetPlayerBySocket(SOCKET* sock) const
 {
     for(auto player : mPlayers)
     {
         if(player->mSocket == sock)
-            return player->mId;
+            return player;
     }
-    return -1;
+    return nullptr;
+}
+
+Player* NetManager::GetPlayerById(int id) const
+{
+    for (auto player : mPlayers)
+    {
+        if (player->mId == id)
+            return player;
+    }
+    return nullptr;
+}
+
+int NetManager::SetNewID()
+{
+    mCurrentId++;
+    return mCurrentId;
 }
 
 

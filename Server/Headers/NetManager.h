@@ -21,10 +21,13 @@ public:
     void AddPlayerToGame(Player* p);
 
     Grid* GetGameByPlayerId(int id) const;
-    int GetPlayerBySocket(SOCKET* sock) const;
+    Player* GetPlayerBySocket(SOCKET* sock) const;
+    Player* GetPlayerById(int id) const;
 
     Player* GetEnemyPlayer(SOCKET* sock);
     Player* GetEnemyPlayer(int id);
+
+    int SetNewID();
 
 private:
     static NetManager* mInstance;
@@ -33,4 +36,6 @@ private:
 
     std::vector<Grid*> mGames;
     std::vector<Player*> mPlayers;
+
+    int mCurrentId = 0;
 };
