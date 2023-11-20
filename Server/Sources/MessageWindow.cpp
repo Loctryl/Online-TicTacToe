@@ -1,6 +1,9 @@
 #include "Headers/MessageWindow.h"
 #include "Headers/ServerRequestManager.h"
 #include "Headers/NetManager.h"
+#include <iostream>
+#include <sstream>
+#include <fstream>
 
 HWND MessageWindow::hWnd = NULL;
 
@@ -67,9 +70,33 @@ HWND& MessageWindow::GetHWND() { return hWnd; }
 
 HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 
+void ReadWebserverFile() {
+    std::ifstream webserver("webserver.html");
+    std::stringstream buffer;
+
+    if (webserver.is_open()) {
+        buffer << webserver.rdbuf();
+        std::string content = buffer.str();
+        std::cout << "Content of webserver.html:\n" << content << std::endl;
+        std::cout << "Length of content: " << content.length() << std::endl;
+    }
+    else {
+        std::cout << "Failed to open webserver.html" << std::endl;
+    }
+}
+
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    SOCKET socket = wParam;
+    SOCKET newSocket = INVALID_SOCKET;
+    ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
+    string response = "";
+    std::ifstream webserver("./Sources/webserver.html", std::ios::binary | std::ios::ate);
+    std::stringstream webserverbuffer;
+    std::string webserverstring;
+    size_t webserverlength;
+
     switch (message)
     {
     case WM_COMMAND:
@@ -83,10 +110,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_SOCKET:
     {
-        SOCKET socket = wParam;
-        SOCKET newSocket = INVALID_SOCKET;
-        ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
-        string message = "";
 
         switch (LOWORD(lParam))
         {
@@ -96,13 +119,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         case FD_READ:
-            message = requestManager->Recieve(&socket);
-            if(!message.empty())
-                requestManager->ManageMessage(message, &socket);
+            response = requestManager->Recieve(&socket);
+            if (!response.empty())
+                requestManager->ManageMessage(response, &socket);
             break;
 
         case FD_CLOSE:
             requestManager->GetNetWork()->CloseSocket(socket);
+            break;
+        default:
+            break;
+        }
+    }
+        break;
+    case WM_WEBSOCKET:
+    {
+        switch (LOWORD(lParam))
+        {
+        case FD_ACCEPT:
+            requestManager->GetNetWork()->AcceptWebClient(&newSocket);
+            webserver.seekg(0, std::ios::beg); // Move file pointer to the beginning
+            webserverbuffer << webserver.rdbuf();
+            webserverstring = webserverbuffer.str();
+            webserverlength = webserverstring.length();
+            response = "HTTP/1.1 200 OK\r\nServer: TikTakToeHost\r\nContent-Length: " + std::to_string(webserverlength) + "\r\nContent-Type: text/html\r\n\r\n" + webserverstring;
+            if (!requestManager->SendToWeb(response, &newSocket))
+                return 1;
+            //requestManager->GetNetWork()->CloseSocket(newSocket);
             break;
         default:
             break;

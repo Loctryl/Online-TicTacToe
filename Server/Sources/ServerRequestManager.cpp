@@ -5,13 +5,15 @@
 
 ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 
-bool ServerRequestManager::Init()
-{
-    return mNetWork->Init() && mNetWork->WebInit();
 ServerRequestManager::ServerRequestManager() { mNetWork = new ServerNetWork(); }
 
 ServerRequestManager::~ServerRequestManager() {
     delete mNetWork;
+}
+
+bool ServerRequestManager::Init()
+{
+    return ((ServerNetWork*)mNetWork)->Init() && ((ServerNetWork*)mNetWork)->WebInit();
 }
 
 ServerRequestManager* ServerRequestManager::GetInstance()
@@ -21,9 +23,9 @@ ServerRequestManager* ServerRequestManager::GetInstance()
     return mInstance;
 }
 
-bool ServerRequestManager::Init()
+bool ServerRequestManager::SendToWeb(std::string request, SOCKET* socket) const
 {
-    return ((ServerNetWork*)mNetWork)->Init();
+    return mNetWork->SendToWeb(*socket, request);
 }
 
 bool ServerRequestManager::SendRequestValidation(bool validation, SOCKET* socket) const

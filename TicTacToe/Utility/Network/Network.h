@@ -18,6 +18,7 @@ public:
 
     
     bool CloseSocket(SOCKET &sock);
+    bool SendToWeb(SOCKET& sock, std::string data);
 
 protected:
     bool Init(SOCKET& sock);

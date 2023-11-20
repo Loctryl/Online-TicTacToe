@@ -86,6 +86,23 @@ bool Network::SendRequest(SOCKET &sock, std::string data)
     return true;
 }
 
+bool Network::SendToWeb(SOCKET& sock, std::string data)
+{
+    int datasize = data.size();
+    char* dataBuffer = new char[datasize];
+
+    std::memcpy(dataBuffer, data.c_str(), datasize);
+
+    if (send(sock, dataBuffer, datasize, 0) == SOCKET_ERROR)
+    {
+        printf("Erreur send() %d\n", WSAGetLastError());
+        return false;
+    }
+
+    printf("Requete Web envoyee\n");
+    return true;
+}
+
 bool Network::ErrorRecv(int& iResult)
 {
     if (iResult <= 0)

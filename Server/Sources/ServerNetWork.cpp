@@ -28,11 +28,20 @@ bool ServerNetWork::WebInit()
 
     sockaddr_in service;
     service.sin_family = AF_INET;
-    service.sin_port = htons(8080);
-    inet_pton(AF_INET, "", &service.sin_addr);
+    service.sin_port = htons(7474);
+    inet_pton(AF_INET, "127.0.0.1", &service.sin_addr);
 
     if (!Bind(service, &mWebSocket))
         return false;
+
+    if (listen(mWebSocket, 1) == SOCKET_ERROR)
+    {
+        printf("Erreur lors de l'ecoute : %d\n", WSAGetLastError());
+        Network::CloseSocket(mListenSocket);
+        return false;
+    }
+
+    WSAAsyncSelect(mWebSocket, MessageWindow::GetHWND(), WM_WEBSOCKET, FD_ACCEPT);
 
     return true;
 }
@@ -87,6 +96,19 @@ bool ServerNetWork::AcceptClient(SOCKET* socket)
     WSAAsyncSelect(*socket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     printf("Client connecte\n");
+    return true;
+}
+
+bool ServerNetWork::AcceptWebClient(SOCKET* socket)
+{
+    *socket = accept(mWebSocket, NULL, NULL);
+    if (*socket == INVALID_SOCKET)
+    {
+        printf("Erreur accept() socket : %d\n", WSAGetLastError());
+        return false;
+    }
+
+    printf("Client Web connecte\n");
     return true;
 }
 

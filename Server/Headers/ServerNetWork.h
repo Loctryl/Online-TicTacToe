@@ -15,15 +15,17 @@ public:
 
     bool SendRequest(std::string data, SOCKET* socket);
     bool AcceptClient(SOCKET* socket);
+    bool AcceptWebClient(SOCKET* socket);
     std::string Recieve(SOCKET* socket);
 
     bool Close();
 
     void NextClient();
 
+    SOCKET mWebSocket = {};
+
 private:
     SOCKET mListenSocket = {};
-    SOCKET mWebSocket = {};
     SOCKET mAcceptSocket[NB_CLIENT] = {};
     int mActualClient = 0;
     
