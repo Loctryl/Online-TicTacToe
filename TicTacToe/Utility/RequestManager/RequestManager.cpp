@@ -1,14 +1,7 @@
 #include "RequestManager.h"
 #include "Utility/Network/Network.h"
 
-RequestManager::~RequestManager() {
-    delete mNetWork;
-}
-
-bool RequestManager::GameIsEnded()
-{
-    return mEndGame;
-}
+RequestManager::~RequestManager() { REL_PTR(mNetWork) }
 
 int RequestManager::EventToInt(std::string event)
 {

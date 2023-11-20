@@ -37,8 +37,8 @@ bool ClientNetWork::SendRequest(std::string data, SOCKET* socket)
 {
     bool result = Network::SendRequest(*socket, data);
 
-    if (!result)
-        Close();
+    //if (!result)
+    //    Close();
 
     return result;
 }

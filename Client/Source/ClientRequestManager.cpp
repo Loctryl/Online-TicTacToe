@@ -1,13 +1,18 @@
 #include "Headers/ClientRequestManager.h"
 #include "Headers/ClientNetWork.h"
+#include "Grid/Grid.h"
 
 ClientRequestManager* ClientRequestManager::mInstance = nullptr;
 
-ClientRequestManager::ClientRequestManager() { mNetWork = new ClientNetWork(); }
+ClientRequestManager::ClientRequestManager()
+{
+    mNetWork = new ClientNetWork();
+    mGrid = new Grid();
+}
 
 ClientRequestManager::~ClientRequestManager()
 {
-    delete mNetWork;
+    REL_PTR(mNetWork)
 }
 
 ClientRequestManager* ClientRequestManager::GetInstance()
@@ -48,7 +53,7 @@ bool ClientRequestManager::ManageMessage(std::string Message)
         mIsMyTurn = true;
         break;
 
-    case validation:// Le client recoit la réponse du serveur concernant son coup
+    case validation:// Le client recoit la rÃ©ponse du serveur concernant son coup
         if (parsedMessage["answer"])// Si le coup est valide
         {
             //game.Play(mMyChoice[0], mMyChoice[1])

@@ -9,7 +9,7 @@ ClientApp::ClientApp()
 	mMessageWindow = new MessageWindow();
 	mMessageWindow->InitWindow();
 	mRequestManager = ClientRequestManager::GetInstance();
-	mGame = new GameManager();
+	mGame = new GameManager(mRequestManager->mGrid);
 }
 
 ClientApp::~ClientApp() {

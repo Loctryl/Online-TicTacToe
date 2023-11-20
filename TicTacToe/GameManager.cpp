@@ -2,6 +2,7 @@
 #include <Window/SFMLWindow.h>
 #include "Grid/Grid.h"
 #include "GameManager.h"
+#include "Windows.h"
 
 GameManager::GameManager(Grid* grid, int gridSize)
 {
@@ -45,6 +46,9 @@ bool GameManager::IsMouseClick(const Event* e) const { return (e->type == Event:
 bool GameManager::IsMove(int* x, int* y) const
 {
     const Vector2i mousePos = Mouse::getPosition();
+    POINT pos = { mousePos.x, mousePos.y };
+    ScreenToClient(mWindow->GetWindow()->getSystemHandle(), &pos);
+
     if(mousePos.x >= mMarginLeft
         && mousePos.x <= mMarginLeft + mTileSize * mGrid->GetGridSize()
         && mousePos.y >= mTileSize
@@ -53,7 +57,8 @@ bool GameManager::IsMove(int* x, int* y) const
     {
         *x = (mousePos.x - mMarginLeft) / mTileSize;
         *y = (mousePos.y - mTileSize) / mTileSize;
-        return true;
+        if(mGrid->mMainGrid[*x][*y] == -1)
+            return true;
     }
     return false;
 }
