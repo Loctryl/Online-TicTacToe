@@ -22,8 +22,8 @@ bool ClientApp::Init()
 	if (!mRequestManager->Init())
 		return false;
 
-	//if (!CreateThreadEvent())
-		//return false;
+	if (!CreateThreadEvent())
+		return false;
 
 	if (!CreateThreadGame())
 		return false;
@@ -35,11 +35,11 @@ int ClientApp::Run()
 {
 	printf("Run client\n");
 
-	/*if (ResumeThread(mThreadEvent) == -1)
+	if (ResumeThread(mThreadEvent) == -1)
 	{
 		printf("Erreur thread event\n");
 		return 1;
-	}*/
+	}
 
 	if (ResumeThread(mThreadGame) == -1)
 	{
@@ -47,8 +47,12 @@ int ClientApp::Run()
 		return 1;
 	}
 
-	while (/*WaitForSingleObject(mThreadEvent, INFINITE) != WAIT_OBJECT_0 &&*/ WaitForSingleObject(mThreadGame, INFINITE) != WAIT_OBJECT_0)
+	while (WaitForSingleObject(mThreadEvent, 0) != WAIT_OBJECT_0 && WaitForSingleObject(mThreadGame, 0) != WAIT_OBJECT_0)
 		continue;
+
+	CloseHandle(mThreadEvent);
+	CloseHandle(mThreadGame);
+
 
 	// FERMETURE DU CLIENT
 	if (!mRequestManager->Close())
@@ -96,8 +100,11 @@ bool ClientApp::CreateThreadGame()
 	if (dtg == NULL)
 		return false;
 
-	dtg->gameManager = mGame;
 	dtg->requestManager = mRequestManager;
+	dtg->gameManager = mGame;
+
+
+	dtg->gameManager->mWindow->GetWindow()->setActive(false);
 
 	mThreadGame = CreateThread(
 		NULL,                   // default security attributes
@@ -139,22 +146,20 @@ DWORD WINAPI ClientApp::ThreadGameFunction(LPVOID lpParam)
 
 	DataThreadGame* dtg = (DataThreadGame*)lpParam;
 
-	printf("Test 1\n");
+	//CRITICAL_SECTION mutex;
+	//InitializeCriticalSection(&mutex);// pour créer la critical section
+	//EnterCriticalSection(&mutex);// pour bloquer un bloc d'instructions
 
-	CRITICAL_SECTION mutex;
-	InitializeCriticalSection(&mutex);// pour créer la critical section
-	EnterCriticalSection(&mutex);// pour bloquer un bloc d'instructions
+	//LeaveCriticalSection(&mutex);// pour libérer le bloc
+	//DeleteCriticalSection(&mutex);// quand c'est fini
+
+	dtg->gameManager->mWindow->GetWindow()->setActive(true);
 
 	while (!dtg->requestManager->GameIsEnded())
 	{
 		Update(dtg->gameManager, dtg->requestManager);
 		dtg->gameManager->RenderGame();
 	}
-
-	LeaveCriticalSection(&mutex);// pour libérer le bloc
-	DeleteCriticalSection(&mutex);// quand c'est fini
-
-	printf("Test 2\n");
 
 	printf("Sortie thread game\n");
 

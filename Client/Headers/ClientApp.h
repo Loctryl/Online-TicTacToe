@@ -28,7 +28,6 @@ public:
 private:
 	HANDLE mThreadEvent;
 	HANDLE mThreadGame;
-	bool mRunning = true;
 
 	bool CreateThreadEvent();
 	bool CreateThreadGame();
