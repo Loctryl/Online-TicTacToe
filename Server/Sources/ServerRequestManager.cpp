@@ -39,7 +39,11 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
     json parsedMessage = json::parse(Message);
     std::string MessageType = parsedMessage["type"];
 
-    Player* player = NetManager::GetInstance()->GetPlayerBySocket(socket);
+    cout << "read socket : " << socket << endl;
+
+    NetManager* net = NetManager::GetInstance();
+
+    Player* player = net->GetPlayerBySocket(socket);
     Grid* grid = player->mCurrentGame;
 
     switch (EventToInt(MessageType))

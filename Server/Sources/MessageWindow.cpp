@@ -84,21 +84,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_SOCKET:
     {
         SOCKET socket = wParam;
-        SOCKET newSocket = INVALID_SOCKET;
+        SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
         ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
         string message = "";
 
         switch (LOWORD(lParam))
         {
         case FD_ACCEPT:
-            requestManager->GetNetWork()->AcceptClient(&newSocket);
-            NetManager::GetInstance()->CreatePlayer(&socket);
+            requestManager->GetNetWork()->AcceptClient(newSocket);
+            cout << "connect socket : " << *newSocket << endl;
+            NetManager::GetInstance()->CreatePlayer(newSocket);
             break;
 
         case FD_READ:
             message = requestManager->Recieve(&socket);
-            if(!message.empty())
+            if (!message.empty()) {
                 requestManager->ManageMessage(message, &socket);
+            }
             break;
 
         case FD_CLOSE:

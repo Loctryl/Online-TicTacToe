@@ -73,7 +73,7 @@ Player* NetManager::GetPlayerBySocket(SOCKET* sock) const
 {
     for(auto player : mPlayers)
     {
-        if(player->mSocket == sock)
+        if(*player->mSocket == *sock)
             return player;
     }
     return nullptr;
