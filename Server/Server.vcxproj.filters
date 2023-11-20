@@ -53,7 +53,7 @@
     <ClInclude Include="Headers\MessageWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\NetManager.h">
+    <ClInclude Include="Headers\NetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-﻿#include "NetManager.h"
+﻿#include "Headers/NetManager.h"
 #include "Grid/Grid.h"
 #include "Grid/Player.h"
 

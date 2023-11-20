@@ -1,6 +1,5 @@
-#pragma comment(lib, "Ws2_32.lib")
-
 #pragma once
+#include "../Ressources/framework.h"
 #include "Utility/Network/Network.h"
 
 class ClientNetWork : public Network

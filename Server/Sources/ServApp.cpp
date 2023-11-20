@@ -1,16 +1,19 @@
 #include "Headers/ServApp.h"
 #include "Headers/ServerRequestManager.h"
 #include "Headers/MessageWindow.h"
+#include "Headers/NetManager.h"
 
 ServApp::ServApp()
 {
 	mMessageWindow = new MessageWindow();
 	mMessageWindow->InitWindow();
 	mRequestManager = ServerRequestManager::GetInstance();
+	mNetManager = new NetManager();
 }
 
 ServApp::~ServApp() {
 	delete mMessageWindow;
+	delete mNetManager;
 	//delete mRequestManager;
 }
 

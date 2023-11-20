@@ -1,7 +1,7 @@
 ﻿#pragma once
+#include "framework.h"
 #include <vector>
 #include <string>
-#include <winsock2.h>
 
 class Grid;
 class Player;

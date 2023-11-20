@@ -4,7 +4,8 @@
 #pragma comment(lib, "sfml-system.lib")
 #pragma comment(lib, "sfml-window.lib")
 
-#pragma comment (lib, "TicTacToe.lib")
+#pragma comment(lib, "Ws2_32.lib")
+#include <WinSock2.h>
 
 #include <windows.h>
 #include <iostream>

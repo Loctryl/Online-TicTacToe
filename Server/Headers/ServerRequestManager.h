@@ -1,5 +1,4 @@
 #pragma once
-#pragma comment (lib, "TicTacToe.lib")
 
 #include "Utility/RequestManager/RequestManager.h"
 
