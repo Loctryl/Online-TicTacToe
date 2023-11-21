@@ -9,7 +9,7 @@ ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 ServerRequestManager::ServerRequestManager() { mNetWork = new ServerNetWork(); }
 
 ServerRequestManager::~ServerRequestManager() {
-    delete mNetWork;
+    REL_PTR(mNetWork)
 }
 
 ServerRequestManager* ServerRequestManager::GetInstance()
@@ -29,6 +29,16 @@ bool ServerRequestManager::SendRequestValidation(bool validation, SOCKET* socket
     json data = {
         {"type", "validation"},
         {"answer", validation}
+    };
+
+    return mNetWork->SendRequest(data.dump(), socket);
+}
+
+bool ServerRequestManager::SendRequestWinner(int winner, SOCKET* socket) const
+{
+    json data = {
+        {"type", "winner"},
+        {"winner", winner}
     };
 
     return mNetWork->SendRequest(data.dump(), socket);
@@ -66,12 +76,13 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
             if (!SendRequestPlay(Coords, NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket))
                 return false;
         }
-
-        if (grid->IsWinner() != -1) {
-            cout << "Game over !\nThe winner is player : " << grid->mTurnPlayer << endl;
-        }
-
-        grid->mTurnPlayer = (grid->mTurnPlayer + 1) % 2;
+        int win = grid->IsWinner();
+        if (win != -1) {
+            SendRequestWinner(win,socket);
+            SendRequestWinner(win,NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket);
+            cout << "Game over ! The winner is player : " << grid->mTurnPlayer << endl;
+        } else
+            grid->mTurnPlayer = (grid->mTurnPlayer + 1) % 2;
     }
         break;
     default:

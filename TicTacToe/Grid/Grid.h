@@ -12,6 +12,7 @@ public:
 
     Player* mPlayers[2];
     int mTurnPlayer = 0;
+    int mWinner = -1;
     
     Grid(int gridSize = 3);
     ~Grid();

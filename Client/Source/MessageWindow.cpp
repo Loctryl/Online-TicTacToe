@@ -26,11 +26,9 @@ bool MessageWindow::InitWindow()
 
 BOOL MessageWindow::InitInstance()
 {
-    bool fullscreen = false;
-
     hWnd = CreateWindowW(szWindowClass, L"",
-        fullscreen ? WS_POPUP : WS_OVERLAPPEDWINDOW,
-        100, 100, 1600, 900,
+        WS_OVERLAPPEDWINDOW,
+        0, 0, 120, 80,
         nullptr, nullptr, hInst, nullptr);
 
     if (!hWnd)
@@ -83,7 +81,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_SOCKET:
     {
         SOCKET socket = wParam;
-        ClientRequestManager* requestManager = ClientRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ? non.
+        ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
         string message = "";
 
         switch (lParam)
@@ -95,8 +93,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         case FD_CLOSE:
-            break;
             requestManager->GetNetWork()->CloseSocket(socket);
+            break;
         default:
             break;
         }
