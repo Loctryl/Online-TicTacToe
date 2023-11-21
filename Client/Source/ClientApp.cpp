@@ -1,8 +1,8 @@
-#include "Headers/ClientApp.h"
+
 #include "GameManager.h"
 #include "Headers/ClientRequestManager.h"
 #include "Headers/MessageWindow.h"
-
+#include "Headers/ClientApp.h"
 
 ClientApp::ClientApp() 
 {
@@ -19,31 +19,27 @@ ClientApp::~ClientApp() {
 
 bool ClientApp::Init() 
 {
+	if (!CreateSocketThread())
+		return false;
+
 	mGame->InitWindow();
 	return mRequestManager->Init();
 }
 
 int ClientApp::Run() 
 {
-	MSG msg = { 0 };
-
-	bool running = true;
+	if (ResumeThread(mSocketThread) == -1)
+	{
+		printf("Erreur thread socket\n");
+		return 1;
+	}
 
 	// Boucle de messages principale :
-	while (running && !mRequestManager->GameIsEnded())
+	while (WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 && !mRequestManager->GameIsEnded())
 	{
-		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (msg.message == WM_QUIT)
-				running = false;
-		}
-
 		Update();
 		mGame->RenderGame();
 	}
-
 
 	// FERMETURE DU CLIENT
 	if (!mRequestManager->Close())
@@ -67,3 +63,33 @@ void ClientApp::Update()
 		}
 	}
 }
+
+bool ClientApp::CreateSocketThread()
+{
+	mSocketThread = CreateThread(
+		NULL,                   // default security attributes
+		0,                      // use default stack size  
+		SocketThreadFunction,	// thread function name
+		NULL,					// argument to thread function 
+		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour exécuter le thread
+		NULL);					// returns the thread identifier 
+
+	return true;
+}
+
+DWORD WINAPI ClientApp::SocketThreadFunction(LPVOID lpParam)
+{
+	//ClientApp* pApp = (ClientApp*)lpParam;
+	MSG msg = { 0 };
+
+	while (GetMessage(&msg, nullptr, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		if (msg.message == WM_QUIT)
+			break;
+	}
+
+	return 0;
+}
+

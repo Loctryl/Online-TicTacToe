@@ -1,7 +1,7 @@
-#include "Headers/ServApp.h"
 #include "Headers/ServerRequestManager.h"
 #include "Headers/MessageWindow.h"
 #include "Headers/NetManager.h"
+#include "Headers/ServApp.h"
 
 ServApp::ServApp()
 {
