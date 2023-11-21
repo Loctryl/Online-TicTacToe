@@ -4,15 +4,12 @@
 #include "GameManager.h"
 #include "Windows.h"
 
-GameManager::GameManager(Grid* grid, int gridSize)
+GameManager::GameManager()
 {
     mEvent = new Event();
     mWindow = new SFMLWindow();
-    if (grid)
-        mGrid = grid;
-    else
-        mGrid = new Grid(gridSize);
-    mTileSize = 100;
+    mGrid = nullptr;
+    mTileSize = 0;
     mMarginLeft = 0;
 }
 
@@ -22,9 +19,17 @@ GameManager::~GameManager()
     REL_PTR(mGrid)
 }
 
-void GameManager::InitWindow()
+void GameManager::InitWindow() const
 {
     mWindow->InitWindow();
+}
+
+void GameManager::InitGrid(Grid* grid, int gridSize)
+{
+    if (grid)
+        mGrid = grid;
+    else
+        mGrid = new Grid(gridSize);
     mTileSize = mWindow->GetVideoMode()->height/(mGrid->mSize+2);
     mMarginLeft = ((float)mWindow->GetVideoMode()->width/2.f)-((float)mTileSize*((float)mGrid->mSize/2.f));
 }

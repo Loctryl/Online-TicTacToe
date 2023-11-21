@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Utility/RequestManager/RequestManager.h"
 #include "Headers/ServerNetWork.h"
 
@@ -16,7 +15,7 @@ public:
 
     bool SendToWeb(std::string request, SOCKET* socket) const;
 
-    inline ServerNetWork* GetNetWork() { return (ServerNetWork*)mNetWork; };
+    inline ServerNetWork* GetNetWork() { return (ServerNetWork*)mNetWork; }
 
 private:
     static ServerRequestManager* mInstance;

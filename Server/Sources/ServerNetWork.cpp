@@ -1,8 +1,6 @@
 #include "Headers\ServerNetWork.h"
 #include "Headers/MessageWindow.h"
 
-
-
 ServerNetWork::ServerNetWork() { }
 
 bool ServerNetWork::Init()

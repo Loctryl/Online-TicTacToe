@@ -21,7 +21,7 @@ ClientApp::~ClientApp() {
 bool ClientApp::Init() 
 {
 	mRequestManager = ClientRequestManager::GetInstance();
-	mGame = new GameManager(mRequestManager->mGrid);
+	mGame = new GameManager();
 	mGame->InitWindow();
 	return mRequestManager->Init();
 }
@@ -46,8 +46,7 @@ int ClientApp::Run()
 		Update();
 		mGame->RenderGame();
 	}
-
-
+	
 	// FERMETURE DU CLIENT
 	if (!mRequestManager->Close())
 		return 1;

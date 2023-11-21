@@ -9,8 +9,7 @@ public:
     ~Network() = default;
 
     virtual bool Close() = 0;
-
-
+    
     virtual bool Init() = 0;
 
     virtual bool SendRequest(std::string data, SOCKET* socket) = 0;

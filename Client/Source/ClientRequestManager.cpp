@@ -7,12 +7,13 @@ ClientRequestManager* ClientRequestManager::mInstance = nullptr;
 ClientRequestManager::ClientRequestManager()
 {
     mNetWork = new ClientNetWork();
-    mGrid = new Grid();
+    mGrid = nullptr;
 }
 
 ClientRequestManager::~ClientRequestManager()
 {
     REL_PTR(mNetWork)
+    mGrid = nullptr;
 }
 
 ClientRequestManager* ClientRequestManager::GetInstance()

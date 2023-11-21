@@ -15,10 +15,12 @@ public:
     int mTileSize;
     float mMarginLeft;
     
-    GameManager(Grid* grid = nullptr, int gridSize = 3);
+    GameManager();
     ~GameManager();
 
-    void InitWindow();
+    void InitWindow() const;
+
+    void InitGrid(Grid* grid, int gridSize);
 
     bool IsWindowOpened() const;
 
