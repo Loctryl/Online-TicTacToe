@@ -17,10 +17,7 @@ ServApp::~ServApp() {
 	//delete mRequestManager;
 }
 
-bool ServApp::Init()
-{
-	return mRequestManager->Init();
-}
+bool ServApp::Init() { return mRequestManager->Init(); }
 
 int ServApp::Run()
 {
