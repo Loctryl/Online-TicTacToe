@@ -27,10 +27,10 @@ bool ClientRequestManager::IsMyTurn() const
     return mIsMyTurn;
 }
 
-void ClientRequestManager::Play(int coord[2])
+void ClientRequestManager::Play(int x, int y)
 {
-    mMyChoice[0] = coord[0];
-    mMyChoice[1] = coord[1];
+    mMyChoice[0] = x;
+    mMyChoice[1] = y;
 
     SendRequestPlay(mMyChoice, ((ClientNetWork*)mNetWork)->GetClientSocket());
 }

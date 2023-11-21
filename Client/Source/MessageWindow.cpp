@@ -11,12 +11,12 @@ MessageWindow::MessageWindow()
     nCmdShow = SW_SHOW;
 }
 
-bool MessageWindow::InitWindow()
+bool MessageWindow::InitWindow(CRITICAL_SECTION* mutex)
 {
     MyRegisterClass();
 
     // Perform application initialization:
-    if (!InitInstance())
+    if (!InitInstance(mutex))
     {
         return FALSE;
     }
@@ -24,14 +24,14 @@ bool MessageWindow::InitWindow()
     return TRUE;
 }
 
-BOOL MessageWindow::InitInstance()
+BOOL MessageWindow::InitInstance(CRITICAL_SECTION* mutex)
 {
     bool fullscreen = false;
 
     hWnd = CreateWindowW(szWindowClass, L"",
         fullscreen ? WS_POPUP : WS_OVERLAPPEDWINDOW,
         100, 100, 1600, 900,
-        nullptr, nullptr, hInst, nullptr);
+        nullptr, nullptr, hInst, mutex);
 
     if (!hWnd)
     {
@@ -71,6 +71,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_CREATE:
+    {
+        // Sauvegarde le mutex passé dans CreateWindow
+        LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+        
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+        break;
+
     case WM_COMMAND:
     {
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -83,8 +93,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_SOCKET:
     {
         SOCKET socket = wParam;
-        ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
         string message = "";
+
+        CRITICAL_SECTION* mutex = reinterpret_cast<CRITICAL_SECTION*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));// Récupération du mutex passé dans CreateWindow
+        EnterCriticalSection(mutex);// pour bloquer un bloc d'instructions
+
+        ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
 
         switch (lParam)
         {
@@ -100,6 +114,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         default:
             break;
         }
+
+        LeaveCriticalSection(mutex);// pour libérer le bloc
     }
         break;
 

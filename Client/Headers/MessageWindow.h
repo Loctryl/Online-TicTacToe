@@ -12,7 +12,7 @@ class MessageWindow
 	LPWSTR lpCmdLine = 0;
 	int nCmdShow = SW_SHOW;
 
-	BOOL InitInstance();
+	BOOL InitInstance(CRITICAL_SECTION* mutex);
 
 	ATOM MyRegisterClass();
 
@@ -21,7 +21,7 @@ public:
 	MessageWindow();
 	~MessageWindow() = default;
 
-	bool InitWindow();
+	bool InitWindow(CRITICAL_SECTION* mutex);
 
 	static HWND& GetHWND();
 

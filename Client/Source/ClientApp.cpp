@@ -6,6 +6,10 @@
 
 ClientApp::ClientApp() 
 {
+	InitializeCriticalSection(&mMutex);// pour créer la critical section
+
+	mMessageWindow = new MessageWindow();
+	mMessageWindow->InitWindow(&mMutex);
 	mRequestManager = ClientRequestManager::GetInstance();
 	mGame = new GameManager(mRequestManager->mGrid);
 }
@@ -19,10 +23,13 @@ bool ClientApp::Init()
 {
 	mGame->InitWindow();
 
+	if (!mRequestManager->Init())
+		return false;
+
 	if (!CreateSocketThread())
 		return false;
-	else
-		return true;
+	
+	return true;
 }
 
 int ClientApp::Run() 
@@ -34,11 +41,20 @@ int ClientApp::Run()
 	}
 
 	// Boucle de messages principale :
-	while (/*WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 &&*/ !mRequestManager->GameIsEnded())
+	bool endGame = false;
+	do
 	{
 		Update();
+
+		EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions
+		endGame = mRequestManager->GameIsEnded();
+		LeaveCriticalSection(&mMutex);// pour libérer le bloc
+
 		mGame->RenderGame();
-	}
+	} while (WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 && !endGame);
+
+	
+	DeleteCriticalSection(&mMutex);// quand c'est fini
 
 	CloseHandle(mSocketThread);
 
@@ -56,11 +72,17 @@ void ClientApp::Update()
 	{
 		int x, y = -1;
 
-		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
-		if (mRequestManager->IsMyTurn() && mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
-			mRequestManager->mMyChoice[0] = x;
-			mRequestManager->mMyChoice[1] = y;
-			mRequestManager->Play(mRequestManager->mMyChoice);
+		if (mGame->IsPressEsc(event))
+			mGame->mWindow->GetWindow()->close();
+
+		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y))
+		{
+			EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions
+
+			if (mRequestManager->IsMyTurn())
+				mRequestManager->Play(x, y);
+
+			LeaveCriticalSection(&mMutex);// pour libérer le bloc
 		}
 	}
 }
@@ -81,11 +103,6 @@ bool ClientApp::CreateSocketThread()
 DWORD WINAPI ClientApp::SocketThreadFunction(LPVOID lpParam)
 {
 	ClientApp* pApp = (ClientApp*)lpParam;
-
-	pApp->mMessageWindow = new MessageWindow();
-	pApp->mMessageWindow->InitWindow();
-
-	pApp->mRequestManager->Init();
 
 	MSG msg = { 0 };
 

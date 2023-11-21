@@ -13,7 +13,7 @@ public:
 
     bool IsMyTurn() const;
 
-    void Play(int coord[2]);
+    void Play(int x, int y);
 
     bool Init() override;
 

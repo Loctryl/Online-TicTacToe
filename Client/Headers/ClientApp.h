@@ -23,6 +23,7 @@ public:
 private:
 	// Thread
 	HANDLE mSocketThread;
+	CRITICAL_SECTION mMutex;
 
 	bool CreateSocketThread();
 	static DWORD WINAPI SocketThreadFunction(LPVOID lpParam);
