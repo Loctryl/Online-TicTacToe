@@ -174,7 +174,6 @@
     <None Include="Sources\webserverheader.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Sources\webserverbody.txt" />
     <Text Include="Sources\webserverfooter.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

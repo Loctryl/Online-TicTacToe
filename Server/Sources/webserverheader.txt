@@ -5,4 +5,5 @@
     <meta http-equiv="refresh" content="2" />
     <title>TikTakToe</title>
 </head>
-<body>
+<body style="background-color: #F9C182">
+

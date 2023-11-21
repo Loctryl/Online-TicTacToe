@@ -13,5 +13,7 @@ public:
 
 private:
 	static WebManager* mInstance;
+
+	std::string CreateGridElement(int size, int value);
 };
 

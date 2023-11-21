@@ -68,6 +68,5 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Sources\webserverfooter.txt" />
-    <Text Include="Sources\webserverbody.txt" />
   </ItemGroup>
 </Project>
