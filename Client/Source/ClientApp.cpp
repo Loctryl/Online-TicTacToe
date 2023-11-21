@@ -6,8 +6,6 @@
 
 ClientApp::ClientApp() 
 {
-	mMessageWindow = new MessageWindow();
-	mMessageWindow->InitWindow();
 	mRequestManager = ClientRequestManager::GetInstance();
 	mGame = new GameManager(mRequestManager->mGrid);
 }
@@ -19,11 +17,12 @@ ClientApp::~ClientApp() {
 
 bool ClientApp::Init() 
 {
+	mGame->InitWindow();
+
 	if (!CreateSocketThread())
 		return false;
-
-	mGame->InitWindow();
-	return mRequestManager->Init();
+	else
+		return true;
 }
 
 int ClientApp::Run() 
@@ -35,11 +34,13 @@ int ClientApp::Run()
 	}
 
 	// Boucle de messages principale :
-	while (WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 && !mRequestManager->GameIsEnded())
+	while (/*WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 &&*/ !mRequestManager->GameIsEnded())
 	{
 		Update();
 		mGame->RenderGame();
 	}
+
+	CloseHandle(mSocketThread);
 
 	// FERMETURE DU CLIENT
 	if (!mRequestManager->Close())
@@ -70,7 +71,7 @@ bool ClientApp::CreateSocketThread()
 		NULL,                   // default security attributes
 		0,                      // use default stack size  
 		SocketThreadFunction,	// thread function name
-		NULL,					// argument to thread function 
+		this,					// argument to thread function 
 		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour exécuter le thread
 		NULL);					// returns the thread identifier 
 
@@ -79,7 +80,13 @@ bool ClientApp::CreateSocketThread()
 
 DWORD WINAPI ClientApp::SocketThreadFunction(LPVOID lpParam)
 {
-	//ClientApp* pApp = (ClientApp*)lpParam;
+	ClientApp* pApp = (ClientApp*)lpParam;
+
+	pApp->mMessageWindow = new MessageWindow();
+	pApp->mMessageWindow->InitWindow();
+
+	pApp->mRequestManager->Init();
+
 	MSG msg = { 0 };
 
 	while (GetMessage(&msg, nullptr, 0, 0))
