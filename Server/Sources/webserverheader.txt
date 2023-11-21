@@ -1,0 +1,8 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="GENERATOR" content="Microsoft Visual Studio">
+    <meta http-equiv="refresh" content="2" />
+    <title>TikTakToe</title>
+</head>
+<body>

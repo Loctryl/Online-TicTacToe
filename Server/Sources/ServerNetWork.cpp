@@ -1,5 +1,4 @@
 #include "Headers\ServerNetWork.h"
-#include <WS2tcpip.h>
 #include "Headers/MessageWindow.h"
 
 
@@ -26,10 +25,7 @@ bool ServerNetWork::WebInit()
 {
     Network::Init(mWebSocket);
 
-    sockaddr_in service;
-    service.sin_family = AF_INET;
-    service.sin_port = htons(7474);
-    inet_pton(AF_INET, "127.0.0.1", &service.sin_addr);
+    sockaddr_in service = SettingWebProtocol();
 
     if (!Bind(service, &mWebSocket))
         return false;

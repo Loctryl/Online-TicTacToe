@@ -23,6 +23,7 @@ public:
 protected:
     bool Init(SOCKET& sock);
     sockaddr_in SettingProtocol();
+    sockaddr_in SettingWebProtocol();
 
     bool SendRequest(SOCKET& sock, std::string data);
     std::string Receive(SOCKET* sock);

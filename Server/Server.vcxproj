@@ -153,6 +153,7 @@
     <ClCompile Include="Sources\ServerNetWork.cpp" />
     <ClCompile Include="Sources\ServerRequestManager.cpp" />
     <ClCompile Include="Sources\server.cpp" />
+    <ClCompile Include="Sources\WebManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\framework.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Headers\ServerRequestManager.h" />
     <ClInclude Include="Headers\MessageWindow.h" />
     <ClInclude Include="Headers\NetManager.h" />
+    <ClInclude Include="Headers\WebManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TicTacToe\TicTacToe.vcxproj">
@@ -169,7 +171,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Sources\webserver.html" />
+    <None Include="Sources\webserverheader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Sources\webserverbody.txt" />
+    <Text Include="Sources\webserverfooter.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

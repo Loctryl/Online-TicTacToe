@@ -60,6 +60,16 @@ sockaddr_in Network::SettingProtocol()
     return service;
 }
 
+sockaddr_in Network::SettingWebProtocol()
+{
+    sockaddr_in service;
+    service.sin_family = AF_INET;
+    service.sin_port = htons(7474);
+    inet_pton(AF_INET, "127.0.0.1", &service.sin_addr);
+
+    return service;
+}
+
 // Sends data from a socket
 bool Network::SendRequest(SOCKET &sock, std::string data)
 {
