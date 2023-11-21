@@ -31,7 +31,7 @@ void GameManager::InitWindow()
 
 bool GameManager::IsWindowOpened() const { return mWindow->GetWindow()->isOpen(); }
 
-bool GameManager::IsPressEsc(const Event* e) const { return (e->type==Event::Closed||e->key.code==Keyboard::Escape); }
+bool GameManager::IsPressEsc(const Event* e) const { return (e->type==Event::Closed /*|| e->key.code==Keyboard::Escape*/); }
 
 bool GameManager::IsMouseClick(const Event* e) const
 {
@@ -77,7 +77,8 @@ void GameManager::RenderGame() const
                 });
             rect->setOutlineThickness(1);
             rect->setOutlineColor(Color(12, 80, 138, 255));
-            if (x%2==0&&y%2!=0||x%2!=0&&y%2==0)
+            
+            if (x%2==0 && y%2!=0 || x%2!=0 && y%2==0)
                 rect->setFillColor(Color(20, 20, 20, 255));
             else
                 rect->setFillColor(Color(70, 70, 70, 255));
