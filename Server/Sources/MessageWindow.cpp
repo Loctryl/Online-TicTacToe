@@ -71,7 +71,7 @@ HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     SOCKET socket = wParam;
-    SOCKET newSocket = INVALID_SOCKET;
+    SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
     ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
     WebManager* webManager = WebManager::GetInstance();
     string response = "";
@@ -93,8 +93,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (LOWORD(lParam))
         {
         case FD_ACCEPT:
-            requestManager->GetNetWork()->AcceptClient(&newSocket);
-            NetManager::GetInstance()->CreatePlayer(&socket);
+            requestManager->GetNetWork()->AcceptClient(newSocket);
+            NetManager::GetInstance()->CreatePlayer(newSocket);
             break;
 
         case FD_READ:
@@ -116,9 +116,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (LOWORD(lParam))
         {
         case FD_ACCEPT:
-            requestManager->GetNetWork()->AcceptWebClient(&newSocket);
+            requestManager->GetNetWork()->AcceptWebClient(newSocket);
             response = webManager->BuildWebsite();
-            if (!requestManager->SendToWeb(response, &newSocket))
+            if (!requestManager->SendToWeb(response, newSocket))
                 return 1;
             //requestManager->GetNetWork()->CloseSocket(newSocket);
             break;

@@ -27,8 +27,7 @@ void NetManager::CreatePlayer(SOCKET* sock, std::string name)
     Player* p = new Player();
     p->mSocket = sock;
     p->mId = SetNewID();
-    p->mNickName = name;
-    if(mWaitingGame)
+    p->mNickName = name + to_string(mCurrentId);
     AddPlayerToGame(p);
     mPlayers.push_back(p);
 }
@@ -48,14 +47,16 @@ void NetManager::AddPlayerToGame(Player* p)
     {
         mWaitingGame->mPlayers[1] = p;
         p->mInGameId = 1;
+        p->mCurrentGame = mWaitingGame;
+        mWaitingGame = nullptr;
     }
     else
     {
         mWaitingGame = CreateGame();
         mWaitingGame->mPlayers[0] = p;
         p->mInGameId = 0;
+        p->mCurrentGame = mWaitingGame;
     }
-    p->mCurrentGame = mWaitingGame;
 }
 
 
@@ -73,7 +74,7 @@ Player* NetManager::GetPlayerBySocket(SOCKET* sock) const
 {
     for(auto player : mPlayers)
     {
-        if(player->mSocket == sock)
+        if(*player->mSocket == *sock)
             return player;
     }
     return nullptr;

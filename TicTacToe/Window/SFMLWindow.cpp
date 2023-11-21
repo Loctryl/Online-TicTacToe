@@ -7,8 +7,8 @@ SFMLWindow::~SFMLWindow() { delete this->mWindow; }
 void SFMLWindow::InitWindow()
 {
     mVMode = VideoMode::getDesktopMode();
-    mVMode.width = 1280;
-    mVMode.height = 720;
+    mVMode.width = 640;
+    mVMode.height = 480;
     mWindow = new RenderWindow(
         mVMode,
         "Classic TICTACTOOOOOOOOOOOOEE",

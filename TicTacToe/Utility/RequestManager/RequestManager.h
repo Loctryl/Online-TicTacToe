@@ -1,7 +1,10 @@
 #pragma once
 #include <string>
+
 #include "Resources/framework.h"
 #include "Utility/json.hpp"
+#include "Resources/utilities.h"
+
 
 using json = nlohmann::json;
 
@@ -9,15 +12,15 @@ class Network;
 
 enum EventMessage
 {
-    choice, play, validation, notif, player, connection
+    choice, play, validation, notif, player, connection, winner
 };
 
 class RequestManager
 {
 public:
-    ~RequestManager();
+    virtual ~RequestManager();
 
-    bool GameIsEnded();
+    inline bool GameIsEnded() const { return mEndGame; }
 
     virtual bool Init() = 0;
 

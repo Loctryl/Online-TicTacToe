@@ -17,5 +17,5 @@ public:
 	bool Init();
 
 	int Run();
-	void Update();
+	void Update() const;
 };

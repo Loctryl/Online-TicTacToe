@@ -136,8 +136,3 @@ bool ServerNetWork::Close()
 
     return closeSuccess;
 }
-
-void ServerNetWork::NextClient()
-{
-    mActualClient = (mActualClient + 1) % NB_CLIENT;
-}

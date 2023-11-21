@@ -2,10 +2,12 @@
 #include "Utility/RequestManager/RequestManager.h"
 #include "ClientNetWork.h"
 
+class Grid;
+
 class ClientRequestManager : public RequestManager
 {
 public:
-    ~ClientRequestManager();
+    ~ClientRequestManager() override;
 
     static ClientRequestManager* GetInstance();
 
@@ -13,17 +15,19 @@ public:
 
     void Play(int coord[2]);
 
-    bool Init();
+    bool Init() override;
 
     bool ManageMessage(std::string Message);
 
-    inline ClientNetWork* GetNetWork() { return (ClientNetWork*)mNetWork; };
+    inline ClientNetWork* GetNetWork() const { return (ClientNetWork*)mNetWork; }
+
+    int mMyChoice[2] = {};
+    Grid* mGrid;
 
 private:
-   static ClientRequestManager* mInstance;
+    static ClientRequestManager* mInstance;
 
-   bool mIsMyTurn = false;
-   int mMyChoice[2] = {};
+    bool mIsMyTurn = true;
 
     ClientRequestManager();
 };

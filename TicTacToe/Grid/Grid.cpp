@@ -27,5 +27,51 @@ bool Grid::TestChoice(int x, int y) const
 void Grid::Play(int x, int y)
 {
     mMainGrid[x][y] = mTurnPlayer;
-    mTurnPlayer = (mTurnPlayer + 1) % 2;
+}
+
+int Grid::IsWinner() 
+{
+    int countDown;
+
+    for (int j = 0; j < mSize; j++) {
+        countDown = 0;
+        for (int i = 0; i < mSize; i++) {
+            if (mMainGrid[j][i] != mTurnPlayer)
+                break;
+            countDown++;
+        }
+        if (countDown == mSize)
+            mWinner = mTurnPlayer;   
+    }
+
+    for (int j = 0; j < mSize; j++) {
+        countDown = 0;
+        for (int i = 0; i < mSize; i++) {
+            if (mMainGrid[i][j] != mTurnPlayer)
+                break;
+            countDown++;
+        }
+        if (countDown == mSize)
+            mWinner = mTurnPlayer;   
+    }
+
+    countDown = 0;
+    for (int i = 0; i < mSize; i++) {
+        if (mMainGrid[i][i] != mTurnPlayer)
+            break;
+        countDown++;
+    }
+    if (countDown == mSize)
+        mWinner = mTurnPlayer;
+
+    countDown = 0;
+    for (int i = mSize-1; i > 0 ; i--) {
+        if (mMainGrid[i][i] != mTurnPlayer)
+            break;
+        countDown++;
+    }
+    if (countDown == mSize)
+        mWinner = mTurnPlayer;
+
+    return mWinner;
 }

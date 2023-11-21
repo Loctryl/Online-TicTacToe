@@ -11,7 +11,6 @@ public:
     static ServerRequestManager* GetInstance();
 
     bool Init();
-    void NextClient() const;
 
     bool ManageMessage(std::string Message, SOCKET* socket);
 
@@ -25,4 +24,6 @@ private:
     ServerRequestManager();
 
     bool SendRequestValidation(bool validation, SOCKET* socket) const;
+
+    bool SendRequestWinner(int winner, SOCKET* socket) const;
 };

@@ -1,4 +1,7 @@
 #include "Headers/ClientApp.h"
+
+#include <Grid/Grid.h>
+
 #include "GameManager.h"
 #include "Headers/ClientRequestManager.h"
 #include "Headers/MessageWindow.h"
@@ -8,8 +11,6 @@ ClientApp::ClientApp()
 {
 	mMessageWindow = new MessageWindow();
 	mMessageWindow->InitWindow();
-	mRequestManager = ClientRequestManager::GetInstance();
-	mGame = new GameManager();
 }
 
 ClientApp::~ClientApp() {
@@ -19,6 +20,8 @@ ClientApp::~ClientApp() {
 
 bool ClientApp::Init() 
 {
+	mRequestManager = ClientRequestManager::GetInstance();
+	mGame = new GameManager(mRequestManager->mGrid);
 	mGame->InitWindow();
 	return mRequestManager->Init();
 }
@@ -52,17 +55,22 @@ int ClientApp::Run()
 	return 0;
 }
 
-void ClientApp::Update()
+void ClientApp::Update() const
 {
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
+		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
+		
+		if(mGame->mGrid->mWinner != -1)
+			continue;
+		
 		int x, y = -1;
 
-		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
-		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
-			int tab[2] = { x,y };
-			mRequestManager->Play(tab);
+		if (mRequestManager->IsMyTurn() && mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
+			mRequestManager->mMyChoice[0] = x;
+			mRequestManager->mMyChoice[1] = y;
+			mRequestManager->Play(mRequestManager->mMyChoice);
 		}
 	}
 }
