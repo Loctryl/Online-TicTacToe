@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "framework.h"
-#include <vector>
 #include <string>
+#include <vector>
+#include "framework.h"
 
 class Grid;
 class Player;
@@ -15,7 +15,7 @@ public:
     static NetManager* GetInstance();
 
     Grid* CreateGame();
-    void DeleteGame(int gameId) const;
+    void DeleteGame(int gameId);
     void CreatePlayer(SOCKET* sock, std::string name = "");
     void SetPlayerNickname(SOCKET* sock, std::string name) const;
 

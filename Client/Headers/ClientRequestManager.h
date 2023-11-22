@@ -2,7 +2,7 @@
 #include "Utility/RequestManager/RequestManager.h"
 #include "ClientNetWork.h"
 
-class Grid;
+class GameManager;
 
 class ClientRequestManager : public RequestManager
 {
@@ -25,12 +25,12 @@ public:
     inline ClientNetWork* GetNetWork() const { return (ClientNetWork*)mNetWork; }
 
     int mMyChoice[2] = {};
-    Grid* mGrid;
+    GameManager* mGame;
 
 private:
     static ClientRequestManager* mInstance;
 
-    bool mIsMyTurn = true;
+    bool mIsMyTurn = false;
 
     ClientRequestManager();
 };

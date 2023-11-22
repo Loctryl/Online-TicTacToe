@@ -1,3 +1,4 @@
+#include "GameManager.h"
 #include "Headers/ClientRequestManager.h"
 #include "Headers/ClientNetWork.h"
 #include "Grid/Grid.h"
@@ -8,13 +9,13 @@ ClientRequestManager* ClientRequestManager::mInstance = nullptr;
 ClientRequestManager::ClientRequestManager()
 {
     mNetWork = new ClientNetWork();
-    mGrid = nullptr;
+    mGame = nullptr;
 }
 
 ClientRequestManager::~ClientRequestManager()
 {
     REL_PTR(mNetWork)
-    mGrid = nullptr;
+    mGame = nullptr;
 }
 
 ClientRequestManager* ClientRequestManager::GetInstance()
@@ -62,8 +63,8 @@ bool ClientRequestManager::ManageMessage(std::string Message)
     {
     case play:
         // Le client recoit le coup de l'autre joueur
-        mGrid->Play(parsedMessage["x"], parsedMessage["y"]);
-        mGrid->mTurnPlayer = (mGrid->mTurnPlayer + 1) % 2;
+        mGame->mGrid->Play(parsedMessage["x"], parsedMessage["y"]);
+        mGame->mGrid->mTurnPlayer = (mGame->mGrid->mTurnPlayer + 1) % 2;
         mIsMyTurn = true;
         break;
 
@@ -71,24 +72,28 @@ bool ClientRequestManager::ManageMessage(std::string Message)
         // Le client recoit la réponse du serveur concernant son coup
         if (parsedMessage["answer"])// Si le coup est valide
             {
-            mGrid->Play(mMyChoice[0], mMyChoice[1]);
-            mGrid->mTurnPlayer = (mGrid->mTurnPlayer + 1) % 2;
+            mGame->mGrid->Play(mMyChoice[0], mMyChoice[1]);
+            mGame->mGrid->mTurnPlayer = (mGame->mGrid->mTurnPlayer + 1) % 2;
             mIsMyTurn = false;
             }
         break;
         
     case winner:
-        mGrid->mTurnPlayer = (mGrid->mTurnPlayer + 1) % 2;
+        mGame->mGrid->mTurnPlayer = (mGame->mGrid->mTurnPlayer + 1) % 2;
         mIsMyTurn = false;
-        mGrid->IsWinner();
+        mGame->mGrid->IsWinner();
+        mGame->mState = GAME_OVER;
         break;
 
     case join:
-        mGrid = new Grid();
+        mGame->InitGrid(nullptr);
+        mGame->mState = IN_GAME;
+        mIsMyTurn = true;
         break;
 
     case leave:
-        mGrid = nullptr;
+        mGame->mGrid = nullptr;
+        mGame->mState = LOBBY;
         break;
     default:
         break;

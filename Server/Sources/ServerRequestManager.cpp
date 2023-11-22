@@ -94,17 +94,20 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
             break;
         }
         case join:
+        {
             NetManager::GetInstance()->AddPlayerToGame(player);
             SendRequestJoin(socket);
             break;
-
+        }
         case leave:
+        {
             grid->mPlayers[player->mInGameId] = nullptr;
             player->mCurrentGame = nullptr;
             if(!grid->mPlayers[0] && !grid->mPlayers[1])
                 NetManager::GetInstance()->DeleteGame(grid->mGameId);
             SendRequestLeave(socket);
             break;
+        }
         default:
             printf("Reception event incorrect : EventMessage %s\n", MessageType);
             break;

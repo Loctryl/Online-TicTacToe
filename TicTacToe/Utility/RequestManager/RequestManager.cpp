@@ -14,6 +14,8 @@ int RequestManager::EventToInt(std::string event)
         return winner;
     if (event == "join")
         return join;
+    if(event == "leave")
+        return leave;
    /* else if (event == "notif")
         return notif;
     else if (event == "player")

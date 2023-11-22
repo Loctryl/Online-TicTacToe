@@ -1,7 +1,5 @@
 ﻿#include "Headers/NetManager.h"
-
 #include <Resources/utilities.h>
-
 #include "Grid/Grid.h"
 #include "Grid/Player.h"
 
@@ -26,11 +24,15 @@ Grid* NetManager::CreateGame()
     return game;
 }
 
-void NetManager::DeleteGame(int gameId) const
+void NetManager::DeleteGame(int gameId)
 {
-    for(auto game : mGames)
-        if(game->mGameId == gameId)
-            REL_PTR(game)
+    for(int i = 0; i < mGames.size(); i++)
+        if(mGames[i]->mGameId == gameId)
+        {
+            REL_PTR(mGames[i])
+            mGames.erase(mGames.begin() + i);
+        }
+    
 }
 
 
@@ -75,7 +77,7 @@ Grid* NetManager::GetGameByPlayerId(int id) const
 {
     for(auto game : mGames)
     {
-        if(game->mPlayers[0]->mId == id || game->mPlayers[1]->mId == id)
+        if((game->mPlayers[0] && game->mPlayers[0]->mId == id) || (game->mPlayers[1] && game->mPlayers[1]->mId == id))
             return game;
     }
     return nullptr;
