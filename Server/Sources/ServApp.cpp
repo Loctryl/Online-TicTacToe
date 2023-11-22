@@ -10,6 +10,7 @@ ServApp::ServApp()
 
 	mMessageWindow = new NetworkMessageWindow(this);
 	mMessageWindow->InitWindow();
+
 	mMessageWebWindow = new WebMessageWindow(this);
 	mMessageWebWindow->InitWindow();
 

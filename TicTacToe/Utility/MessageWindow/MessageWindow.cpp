@@ -31,7 +31,6 @@ BOOL MessageWindow::InitInstance()
 		fullscreen ? WS_POPUP : WS_OVERLAPPEDWINDOW,
 		100, 100, 1600, 900,
 		nullptr, nullptr, hInst, this);
-
 	if (!hWnd)
 	{
 		return FALSE;
@@ -65,7 +64,6 @@ HWND& MessageWindow::GetHWND() { return hWnd; }
 
 HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 
-
 LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	MessageWindow* messageWindow = nullptr;
@@ -77,16 +75,16 @@ LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 		// Sauvegarde du l'instance de MessageWindow dans la window
 		LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
-
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		break;
 	}
 
 	default:
 	{
 		messageWindow = reinterpret_cast<MessageWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-		return messageWindow->WndInstanceProc(hWnd, message, wParam, lParam);
+		if(messageWindow)
+			return messageWindow->WndInstanceProc(hWnd, message, wParam, lParam);
 	}
 	}
 
-	return 0;
+	return DefWindowProc(hWnd, message, wParam, lParam);
 }
