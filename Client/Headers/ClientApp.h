@@ -20,7 +20,7 @@ public:
 	int Run();
 
 private:
-	void Update() const;
+	void Update();
 
 	// Thread
 	HANDLE mSocketThread;

@@ -1,4 +1,4 @@
-
+#include "Grid/Grid.h"
 #include "GameManager.h"
 #include "Headers/ClientRequestManager.h"
 #include "Headers/MessageWindow.h"
@@ -67,12 +67,13 @@ int ClientApp::Run()
 	return 0;
 }
 
-void ClientApp::Update() const
+void ClientApp::Update()
 {
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
-		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
+		if (mGame->IsPressEsc(event))
+			mGame->mWindow->GetWindow()->close();
 		
 		if(mGame->mGrid->mWinner != -1)
 			continue;
