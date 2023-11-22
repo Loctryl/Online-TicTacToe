@@ -1,5 +1,5 @@
 #include "Headers/ServerNetWork.h"
-#include "Headers/NetWorkMessageWindow.h"
+#include "Headers/ServerNetworkMessageWindow.h"
 #include "Headers/WebMessageWindow.h"
 
 ServerNetWork::ServerNetWork() { }
@@ -16,7 +16,7 @@ bool ServerNetWork::Init()
     if (!WaitClients())
         return false;
 
-    WSAAsyncSelect(mListenSocket, NetworkMessageWindow::GetHWND(), WM_SOCKET, FD_ACCEPT);
+    WSAAsyncSelect(mListenSocket, ServerNetworkMessageWindow::GetHWND(), WM_SOCKET, FD_ACCEPT);
     return true;
 }
 
@@ -54,7 +54,7 @@ bool ServerNetWork::AcceptClient(SOCKET* socket)
         return false;
     }
 
-    WSAAsyncSelect(*socket, NetworkMessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
+    WSAAsyncSelect(*socket, ServerNetworkMessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     printf("Client connecte\n");
     return true;

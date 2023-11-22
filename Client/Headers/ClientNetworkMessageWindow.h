@@ -5,13 +5,13 @@
 class ClientApp;
 
 // Handles the Windows window
-class NetWorkMessageWindow : public MessageWindow
+class ClientNetworkMessageWindow : public MessageWindow
 {
 	ClientApp* mClientApp;
 
 public:
-	NetWorkMessageWindow(ClientApp* clientApp);
-	~NetWorkMessageWindow() = default;
+	ClientNetworkMessageWindow(ClientApp* clientApp);
+	~ClientNetworkMessageWindow() = default;
 
 	LRESULT WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };

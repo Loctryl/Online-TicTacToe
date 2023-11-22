@@ -1,13 +1,13 @@
-#include "Headers/NetWorkMessageWindow.h"
+#include "Headers/ClientNetworkMessageWindow.h"
 #include "Headers/ClientRequestManager.h"
 #include "Headers/ClientApp.h"
 
-NetWorkMessageWindow::NetWorkMessageWindow(ClientApp* clientApp) : MessageWindow()
+ClientNetworkMessageWindow::ClientNetworkMessageWindow(ClientApp* clientApp) : MessageWindow()
 {
 	mClientApp = clientApp;
 }
 
-LRESULT NetWorkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT ClientNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{

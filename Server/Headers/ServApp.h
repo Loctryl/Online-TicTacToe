@@ -2,7 +2,7 @@
 #include "framework.h"
 
 class ServerRequestManager;
-class NetworkMessageWindow;
+class ServerNetworkMessageWindow;
 class WebMessageWindow;
 class NetManager;
 //class GameManager;
@@ -10,7 +10,7 @@ class NetManager;
 class ServApp
 {
 	ServerRequestManager* mRequestManager;
-	NetworkMessageWindow* mMessageWindow;
+	ServerNetworkMessageWindow* mMessageWindow;
 	WebMessageWindow* mMessageWebWindow;
 	NetManager* mNetManager;
 

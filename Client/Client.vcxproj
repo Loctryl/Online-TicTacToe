@@ -151,7 +151,7 @@
     <ClCompile Include="Source\client.cpp" />
     <ClCompile Include="Source\ClientNetWork.cpp" />
     <ClCompile Include="Source\ClientRequestManager.cpp" />
-    <ClCompile Include="Source\NetWorkMessageWindow.cpp" />
+    <ClCompile Include="Source\ClientNetworkMessageWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\ClientApp.h" />
@@ -159,7 +159,7 @@
     <ClInclude Include="Headers\ClientRequestManager.h" />
     <ClInclude Include="Headers\json.hpp" />
     <ClInclude Include="Ressources\framework.h" />
-    <ClInclude Include="Headers\NetWorkMessageWindow.h" />
+    <ClInclude Include="Headers\ClientNetworkMessageWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TicTacToe\TicTacToe.vcxproj">

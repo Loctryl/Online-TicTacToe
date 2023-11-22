@@ -10,8 +10,9 @@ MessageWindow::MessageWindow()
 	nCmdShow = SW_SHOW;
 }
 
-bool MessageWindow::InitWindow()
+bool MessageWindow::InitWindow(LPCWSTR windowName)
 {
+	szWindowClass = windowName;
 	MyRegisterClass();
 
 	// Perform application initialization:
@@ -25,11 +26,9 @@ bool MessageWindow::InitWindow()
 
 BOOL MessageWindow::InitInstance()
 {
-	bool fullscreen = false;
-
 	hWnd = CreateWindowW(szWindowClass, L"",
-		fullscreen ? WS_POPUP : WS_OVERLAPPEDWINDOW,
-		100, 100, 1600, 900,
+		WS_OVERLAPPEDWINDOW,
+		0, 0, 100, 100,
 		nullptr, nullptr, hInst, this);
 	if (!hWnd)
 	{
@@ -72,6 +71,8 @@ LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	{
 	case WM_CREATE:
 	{
+		std::cout << "aled2" << endl;
+
 		// Sauvegarde du l'instance de MessageWindow dans la window
 		LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
@@ -81,8 +82,11 @@ LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	default:
 	{
 		messageWindow = reinterpret_cast<MessageWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		std::cout << messageWindow << endl;
 		if(messageWindow)
+		{
 			return messageWindow->WndInstanceProc(hWnd, message, wParam, lParam);
+		}
 	}
 	}
 

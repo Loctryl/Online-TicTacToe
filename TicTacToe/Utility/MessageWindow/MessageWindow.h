@@ -6,7 +6,7 @@ class MessageWindow
 {
 	static HWND hWnd;
 	HINSTANCE hInst; // current instance
-	WCHAR szWindowClass[100] = L"MessageWindow";
+	LPCWSTR szWindowClass;
 
 	HINSTANCE hPrevInstance = 0;
 	LPWSTR lpCmdLine = 0;
@@ -20,7 +20,7 @@ public:
 	MessageWindow();
 	virtual ~MessageWindow() = default;
 
-	bool InitWindow();
+	bool InitWindow(LPCWSTR windowName);
 
 	static HWND& GetHWND();
 

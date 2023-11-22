@@ -5,13 +5,13 @@
 class ServApp;
 
 // Handles the Windows window
-class NetworkMessageWindow : public MessageWindow
+class ServerNetworkMessageWindow : public MessageWindow
 {
 	ServApp* mServerApp;
 public:
 
-	NetworkMessageWindow(ServApp* serverApp);
-	~NetworkMessageWindow() = default;
+	ServerNetworkMessageWindow(ServApp* serverApp);
+	~ServerNetworkMessageWindow() = default;
 
 	LRESULT WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };

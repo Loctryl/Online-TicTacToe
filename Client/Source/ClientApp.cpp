@@ -1,15 +1,15 @@
 #include "Grid/Grid.h"
 #include "GameManager.h"
 #include "Headers/ClientRequestManager.h"
-#include "Headers/NetWorkMessageWindow.h"
+#include "Headers/ClientNetworkMessageWindow.h"
 #include "Headers/ClientApp.h"
 
 ClientApp::ClientApp() 
 {
 	InitializeCriticalSection(&mMutex);// pour creer la critical section
 
-	mMessageWindow = new NetWorkMessageWindow(this);
-	mMessageWindow->InitWindow();
+	mMessageWindow = new ClientNetworkMessageWindow(this);
+	mMessageWindow->InitWindow(L"MyWin32Wnd");
 	mRequestManager = ClientRequestManager::GetInstance();
 }
 

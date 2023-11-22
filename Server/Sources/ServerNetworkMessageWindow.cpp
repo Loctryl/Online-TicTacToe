@@ -1,15 +1,15 @@
-#include "Headers/NetworkMessageWindow.h"
+#include "Headers/ServerNetworkMessageWindow.h"
 #include "Headers/ServerRequestManager.h"
 #include "Headers/NetManager.h"
 #include "Headers/WebManager.h"
 #include "Headers/ServApp.h"
 
-NetworkMessageWindow::NetworkMessageWindow(ServApp* serverApp) : MessageWindow()
+ServerNetworkMessageWindow::ServerNetworkMessageWindow(ServApp* serverApp) : MessageWindow()
 {
 	mServerApp = serverApp;
 }
 
-LRESULT NetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+LRESULT ServerNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	std::cout << "NetworkMessageWindow\n";
 	SOCKET socket = wParam;
 	SOCKET* newSocket = new SOCKET(INVALID_SOCKET);

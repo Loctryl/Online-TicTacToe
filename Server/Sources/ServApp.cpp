@@ -1,5 +1,5 @@
 #include "Headers/ServerRequestManager.h"
-#include "Headers/NetWorkMessageWindow.h"
+#include "Headers/ServerNetworkMessageWindow.h"
 #include "Headers/WebMessageWindow.h"
 #include "Headers/NetManager.h"
 #include "Headers/ServApp.h"
@@ -8,11 +8,11 @@ ServApp::ServApp()
 {
 	InitializeCriticalSection(&mMutex);// pour creer la critical section
 
-	mMessageWindow = new NetworkMessageWindow(this);
-	mMessageWindow->InitWindow();
+	mMessageWindow = new ServerNetworkMessageWindow(this);
+	mMessageWindow->InitWindow(L"NetworkMessageWindow");
 
 	mMessageWebWindow = new WebMessageWindow(this);
-	mMessageWebWindow->InitWindow();
+	mMessageWebWindow->InitWindow(L"WebMessageWindow");
 
 	mRequestManager = ServerRequestManager::GetInstance();
 	mNetManager = new NetManager();
