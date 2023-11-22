@@ -11,7 +11,6 @@ ClientApp::ClientApp()
 	mMessageWindow = new NetWorkMessageWindow(this);
 	mMessageWindow->InitWindow();
 	mRequestManager = ClientRequestManager::GetInstance();
-	mGame = new GameManager(mRequestManager->mGrid);
 }
 
 ClientApp::~ClientApp() {
@@ -106,7 +105,7 @@ void ClientApp::UpdateInLobby() const
 	}
 }
 
-void ClientApp::UpdateInGame() const
+void ClientApp::UpdateInGame()
 {
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))

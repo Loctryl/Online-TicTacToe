@@ -30,7 +30,7 @@ LRESULT WebMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam
 			mServerApp->EnterMutex();
 
 			ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
-			requestManager->GetNetWork()->AcceptWebClient(newSocket);
+			requestManager->GetWebNetWork()->AcceptWebClient(newSocket);
 			response = webManager->BuildWebsite();
 			if (!requestManager->SendToWeb(response, newSocket))
 			{
