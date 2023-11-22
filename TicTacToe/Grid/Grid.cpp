@@ -65,8 +65,8 @@ int Grid::IsWinner()
         mWinner = mTurnPlayer;
 
     countDown = 0;
-    for (int i = mSize-1; i > 0 ; i--) {
-        if (mMainGrid[i][i] != mTurnPlayer)
+    for (int i = 0; i < mSize; i++) {
+        if (mMainGrid[i][mSize - 1 - i] != mTurnPlayer)
             break;
         countDown++;
     }
