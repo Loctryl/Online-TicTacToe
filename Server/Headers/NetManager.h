@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "framework.h"
-#include <vector>
 #include <string>
+#include <vector>
+#include "framework.h"
 
 class Grid;
 class Player;
@@ -15,8 +15,9 @@ public:
     static NetManager* GetInstance();
 
     Grid* CreateGame();
+    void DeleteGame(int gameId);
     void CreatePlayer(SOCKET* sock, std::string name = "");
-    void SetPlayerNickname(SOCKET* sock, std::string name);
+    void SetPlayerNickname(SOCKET* sock, std::string name) const;
 
     void AddPlayerToGame(Player* p);
 
@@ -25,11 +26,12 @@ public:
     Player* GetPlayerById(int id) const;
 
     Player* GetEnemyPlayer(SOCKET* sock);
-    Player* GetEnemyPlayer(int id);
+    Player* GetEnemyPlayer(int id) const;
 
     std::vector<Grid*> GetGames();
 
-    int SetNewID();
+    int SetNewPlayerID();
+    int SetNewGameID();
 
 private:
     static NetManager* mInstance;
@@ -39,5 +41,6 @@ private:
     std::vector<Grid*> mGames;
     std::vector<Player*> mPlayers;
 
-    int mCurrentId = 0;
+    int mPlayerMaxId = 0;
+    int mGameMaxId = 0;
 };

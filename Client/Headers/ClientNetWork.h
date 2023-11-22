@@ -8,14 +8,14 @@ public:
     ClientNetWork();
     ~ClientNetWork();
 
-    bool Init();
+    bool Init() override;
     bool ConnectServer();
 
     bool SendRequest(std::string data, SOCKET* socket);
     std::string Recieve(SOCKET* socket);
     bool Close();
 
-    inline SOCKET* GetClientSocket() { return &mConnectSocket; };
+    inline SOCKET* GetClientSocket() { return &mConnectSocket; }
     
 private:
     SOCKET mConnectSocket = {};
