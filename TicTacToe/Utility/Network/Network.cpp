@@ -49,14 +49,27 @@ bool Network::CreateSocket(SOCKET &sock)
     return true;
 }
 
-sockaddr_in Network::SettingProtocol()
+sockaddr_in Network::SettingServerProtocol()
 {
     sockaddr_in service;
     service.sin_family = AF_INET;
     service.sin_port = htons(PORT);
-    inet_pton(AF_INET, ADRESSE, &service.sin_addr);
+    service.sin_addr.s_addr = htonl(INADDR_ANY);
     
     // Convertit une adresse reseau IPv4 ou IPv6 en une forme binaire numerique
+    return service;
+}
+
+sockaddr_in Network::SettingClientProtocol()
+{
+    sockaddr_in service;
+    service.sin_family = AF_INET;
+    service.sin_port = htons(PORT);
+    char IPBuffer[100];
+    std::cout << "Saisir l'adresse IP de connexion :";
+    std::cin >> IPBuffer;
+    inet_pton(AF_INET, IPBuffer, &service.sin_addr);
+
     return service;
 }
 
@@ -65,7 +78,7 @@ sockaddr_in Network::SettingWebProtocol()
     sockaddr_in service;
     service.sin_family = AF_INET;
     service.sin_port = htons(7474);
-    inet_pton(AF_INET, "127.0.0.1", &service.sin_addr);
+    inet_pton(AF_INET, ADRESSE, &service.sin_addr);
 
     return service;
 }

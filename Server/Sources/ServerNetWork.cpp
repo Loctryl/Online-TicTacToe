@@ -9,7 +9,7 @@ bool ServerNetWork::Init()
 {
     Network::Init(mListenSocket);
 
-    sockaddr_in serviceServer = SettingProtocol();
+    sockaddr_in serviceServer = SettingServerProtocol();
 
     if (!Bind(serviceServer, &mListenSocket))
         return false;
