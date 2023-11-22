@@ -1,12 +1,12 @@
 #pragma once
-#include "../Ressources/framework.h"
+#include "Headers/framework.h"
 
-class ClientApp;
+class ServApp;
 
 // Handles the Windows window
 class MessageWebWindow
 {
-	ClientApp* mClientApp;
+	ServApp* mServerApp;
 
 	static HWND hWnd;
 	HINSTANCE hInst; // current instance
@@ -20,9 +20,8 @@ class MessageWebWindow
 
 	ATOM MyRegisterClass();
 
-
 public:
-	MessageWebWindow(ClientApp* clientApp);
+	MessageWebWindow(ServApp* serverApp);
 	~MessageWebWindow() = default;
 
 	bool InitWindow();
@@ -32,7 +31,5 @@ public:
 	HINSTANCE& GetHInstance();
 
 	LRESULT WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
-

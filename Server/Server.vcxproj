@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\MessageWebWindow.cpp" />
     <ClCompile Include="Sources\MessageWindow.cpp" />
     <ClCompile Include="Sources\NetManager.cpp" />
     <ClCompile Include="Sources\ServApp.cpp" />
@@ -158,10 +159,11 @@
   <ItemGroup>
     <ClInclude Include="Headers\framework.h" />
     <ClInclude Include="Headers\json.hpp" />
+    <ClInclude Include="Headers\MessageWindow.h" />
     <ClInclude Include="Headers\ServApp.h" />
     <ClInclude Include="Headers\ServerNetWork.h" />
     <ClInclude Include="Headers\ServerRequestManager.h" />
-    <ClInclude Include="Headers\MessageWindow.h" />
+    <ClInclude Include="Headers\MessageWebWindow.h" />
     <ClInclude Include="Headers\NetManager.h" />
     <ClInclude Include="Headers\WebManager.h" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 #include "Headers/ServerRequestManager.h"
 #include "Headers/MessageWindow.h"
+#include "Headers/MessageWebWindow.h"
 #include "Headers/NetManager.h"
 #include "Headers/ServApp.h"
 
@@ -7,12 +8,15 @@ ServApp::ServApp()
 {
 	mMessageWindow = new MessageWindow(this);
 	mMessageWindow->InitWindow();
+	mMessageWebWindow = new MessageWebWindow(this);
+	mMessageWebWindow->InitWindow();
 	mRequestManager = ServerRequestManager::GetInstance();
 	mNetManager = new NetManager();
 }
 
 ServApp::~ServApp() {
 	delete mMessageWindow;
+	delete mMessageWebWindow;
 	delete mNetManager;
 	//delete mRequestManager;
 }

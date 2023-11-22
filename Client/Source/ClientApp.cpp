@@ -8,7 +8,7 @@ ClientApp::ClientApp()
 {
 	InitializeCriticalSection(&mMutex);// pour cr�er la critical section
 
-	mMessageWindow = new MessageWindow(this);
+	mMessageWindow = new MessageWebWindow(this);
 	mMessageWindow->InitWindow();
 	mRequestManager = ClientRequestManager::GetInstance();
 	mGame = new GameManager(mRequestManager->mGrid);

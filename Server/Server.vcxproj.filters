@@ -27,13 +27,16 @@
     <ClCompile Include="Sources\ServerRequestManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\MessageWindow.cpp">
+    <ClCompile Include="Sources\MessageWebWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\NetManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\WebManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MessageWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,13 +56,16 @@
     <ClInclude Include="Headers\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\MessageWindow.h">
+    <ClInclude Include="Headers\MessageWebWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\NetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\WebManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\MessageWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

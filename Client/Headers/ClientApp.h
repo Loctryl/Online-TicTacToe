@@ -2,13 +2,13 @@
 #include "Ressources/framework.h"
 
 class ClientRequestManager;
-class MessageWindow;
+class MessageWebWindow;
 class GameManager;
 
 class ClientApp
 {
 	ClientRequestManager* mRequestManager;
-	MessageWindow* mMessageWindow;
+	MessageWebWindow* mMessageWindow;
 
 	GameManager* mGame;
 public:

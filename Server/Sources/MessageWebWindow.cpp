@@ -1,11 +1,11 @@
-#include "Headers/MessageWindow.h"
+#include "Headers/MessageWebWindow.h"
 #include "Headers/ServerRequestManager.h"
 #include "Headers/NetManager.h"
 #include "Headers/WebManager.h"
 
-HWND MessageWindow::hWnd = NULL;
+HWND MessageWebWindow::hWnd = NULL;
 
-MessageWindow::MessageWebWindow(ServApp* serverApp)
+MessageWebWindow::MessageWebWindow(ServApp* serverApp)
 {
 	hInst = GetModuleHandle(0);
 	hPrevInstance = 0;
@@ -14,7 +14,7 @@ MessageWindow::MessageWebWindow(ServApp* serverApp)
 	mServerApp = serverApp;
 }
 
-bool MessageWindow::InitWindow()
+bool MessageWebWindow::InitWindow()
 {
 	MyRegisterClass();
 
@@ -27,7 +27,7 @@ bool MessageWindow::InitWindow()
 	return TRUE;
 }
 
-BOOL MessageWindow::InitInstance()
+BOOL MessageWebWindow::InitInstance()
 {
 	bool fullscreen = false;
 
@@ -44,7 +44,7 @@ BOOL MessageWindow::InitInstance()
 	return TRUE;
 }
 
-ATOM MessageWindow::MyRegisterClass()
+ATOM MessageWebWindow::MyRegisterClass()
 {
 	WNDCLASSEXW wcex;
 
@@ -65,11 +65,11 @@ ATOM MessageWindow::MyRegisterClass()
 	return RegisterClassExW(&wcex);
 }
 
-HWND& MessageWindow::GetHWND() { return hWnd; }
+HWND& MessageWebWindow::GetHWND() { return hWnd; }
 
-HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
+HINSTANCE& MessageWebWindow::GetHInstance() { return hInst; }
 
-LRESULT MessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+LRESULT MessageWebWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	SOCKET socket = wParam;
 	SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
 	ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
@@ -81,37 +81,30 @@ LRESULT MessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, L
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
-
-	case WM_SOCKET:
+	case WM_WEBSOCKET:
 	{
 		switch (LOWORD(lParam))
 		{
 		case FD_ACCEPT:
-			requestManager->GetNetWork()->AcceptClient(newSocket);
-			NetManager::GetInstance()->CreatePlayer(newSocket);
-			break;
-
-		case FD_READ:
-			response = requestManager->Recieve(&socket);
-			if (!response.empty())
-				requestManager->ManageMessage(response, &socket);
-			break;
-
-		case FD_CLOSE:
-			requestManager->GetNetWork()->CloseSocket(socket);
+			requestManager->GetNetWork()->AcceptWebClient(newSocket);
+			response = webManager->BuildWebsite();
+			if (!requestManager->SendToWeb(response, newSocket))
+				return 1;
+			//requestManager->GetNetWork()->CloseSocket(newSocket);
 			break;
 		default:
 			break;
 		}
 	}
 	break;
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
 }
 
-LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MessageWebWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
@@ -123,7 +116,7 @@ LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 		return DefWindowProc(hWnd, message, wParam, lParam);
 
 	default:
-		MessageWindow* messageWindow = reinterpret_cast<MessageWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		MessageWebWindow* messageWindow = reinterpret_cast<MessageWebWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 		return messageWindow->WndInstanceProc(hWnd, message, wParam, lParam);
 	}
 

@@ -2,9 +2,9 @@
 #include "Headers/ClientRequestManager.h"
 #include "Headers/ClientApp.h"
 
-HWND MessageWindow::hWnd = NULL;
+HWND MessageWebWindow::hWnd = NULL;
 
-MessageWindow::MessageWindow(ClientApp* clientApp)
+MessageWebWindow::MessageWebWindow(ClientApp* clientApp)
 {
 	hInst = GetModuleHandle(0);
 	hPrevInstance = 0;
@@ -13,7 +13,7 @@ MessageWindow::MessageWindow(ClientApp* clientApp)
 	mClientApp = clientApp;
 }
 
-bool MessageWindow::InitWindow()
+bool MessageWebWindow::InitWindow()
 {
 	MyRegisterClass();
 
@@ -26,7 +26,7 @@ bool MessageWindow::InitWindow()
 	return TRUE;
 }
 
-BOOL MessageWindow::InitInstance()
+BOOL MessageWebWindow::InitInstance()
 {
 	hWnd = CreateWindowW(szWindowClass, L"",
 		WS_OVERLAPPEDWINDOW,
@@ -41,7 +41,7 @@ BOOL MessageWindow::InitInstance()
 	return TRUE;
 }
 
-ATOM MessageWindow::MyRegisterClass()
+ATOM MessageWebWindow::MyRegisterClass()
 {
 	WNDCLASSEXW wcex;
 
@@ -62,13 +62,13 @@ ATOM MessageWindow::MyRegisterClass()
 	return RegisterClassExW(&wcex);
 }
 
-HWND& MessageWindow::GetHWND() { return hWnd; }
+HWND& MessageWebWindow::GetHWND() { return hWnd; }
 
-HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
+HINSTANCE& MessageWebWindow::GetHInstance() { return hInst; }
 
 
 
-LRESULT MessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT MessageWebWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
@@ -110,7 +110,7 @@ LRESULT MessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, L
 	}
 }
 
-LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MessageWebWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
@@ -122,7 +122,7 @@ LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 		return DefWindowProc(hWnd, message, wParam, lParam);
 
 	default:
-		MessageWindow* messageWindow = reinterpret_cast<MessageWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		MessageWebWindow* messageWindow = reinterpret_cast<MessageWebWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 		return messageWindow->WndInstanceProc(hWnd, message, wParam, lParam);
 	}
 }
