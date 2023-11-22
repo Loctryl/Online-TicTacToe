@@ -89,7 +89,7 @@ void GameManager::Render() const
 
 void GameManager::RenderLobby() const
 {
-    mWindow->GetWindow()->clear();
+    mWindow->GetWindow()->clear(Color(249, 193, 130, 255));
     
     auto* rect = new RectangleShape();
 
@@ -103,7 +103,7 @@ void GameManager::RenderLobby() const
 
 void GameManager::RenderGame() const
 {
-    mWindow->GetWindow()->clear();
+    mWindow->GetWindow()->clear(Color(249, 193, 130, 255));
     
     auto* rect = new RectangleShape();
     auto* circ = new CircleShape();
@@ -119,22 +119,22 @@ void GameManager::RenderGame() const
                     static_cast<float>(x*mTileSize+mMarginLeft),
                     static_cast<float>(y*mTileSize+mTileSize)
                 });
-            rect->setOutlineThickness(1);
-            rect->setOutlineColor(Color(12, 80, 138, 255));
+            rect->setOutlineThickness(2.f);
+            rect->setOutlineColor(Color(130, 128, 126, 255));
             
             if (x%2==0 && y%2!=0 || x%2!=0 && y%2==0)
-                rect->setFillColor(Color(20, 20, 20, 255));
+                rect->setFillColor(Color(156, 152, 147, 255));
             else
-                rect->setFillColor(Color(70, 70, 70, 255));
+                rect->setFillColor(Color(206, 202, 197, 255));
 
             mWindow->GetWindow()->draw(*rect);
 
             if (mGrid->mMainGrid[x][y]!=-1)
             {
                 if (mGrid->mMainGrid[x][y]==0)
-                    circ->setFillColor(Color(240, 245, 185, 255));
+                    circ->setFillColor(Color(173, 58, 35, 255));
                 else if (mGrid->mMainGrid[x][y]==1)
-                    circ->setFillColor(Color(145, 50, 1, 255));
+                    circ->setFillColor(Color(35, 173, 139, 255));
 
                 circ->setRadius(mTileSize/2.5);
                 circ->setPosition({
@@ -153,9 +153,9 @@ void GameManager::RenderGame() const
         circ->setPosition({50.f, 50.f});
     
         if (mGrid->mWinner==0)
-            circ->setFillColor(Color(240, 245, 185, 255));
+            circ->setFillColor(Color(173, 58, 35, 255));
         else if (mGrid->mWinner==1)
-            circ->setFillColor(Color(145, 50, 1, 255));
+            circ->setFillColor(Color(35, 173, 139, 255));
 
         circ->setOutlineColor(Color(255, 20, 20, 255));
         circ->setOutlineThickness(2.f);
