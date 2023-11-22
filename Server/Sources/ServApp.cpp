@@ -6,10 +6,13 @@
 
 ServApp::ServApp()
 {
+	InitializeCriticalSection(&mMutex);// pour creer la critical section
+
 	mMessageWindow = new NetworkMessageWindow(this);
 	mMessageWindow->InitWindow();
 	mMessageWebWindow = new WebMessageWindow(this);
 	mMessageWebWindow->InitWindow();
+
 	mRequestManager = ServerRequestManager::GetInstance();
 	mNetManager = new NetManager();
 }
@@ -23,31 +26,46 @@ ServApp::~ServApp() {
 
 bool ServApp::Init()
 {
-	return mRequestManager->Init();
+	if (!mRequestManager->Init())
+		return false;
+
+	if (!CreateSocketThread())
+		return false;
+
+	if (!CreateWebThread())
+		return false;
+
+	return true;
 }
 
 int ServApp::Run()
 {
+	if (ResumeThread(mSocketThread) == -1)
+	{
+		printf("Erreur thread socket\n");
+		return 1;
+	}
+
+	if (ResumeThread(mWebThread) == -1)
+	{
+		printf("Erreur thread socket\n");
+		return 1;
+	}
 
 	MSG msg = { 0 };
 
 	bool running = true;
 
 	// Boucle de messages principale :
-	while (running)
+	do
 	{
-		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (msg.message == WM_QUIT)
-				running = false;
-		}
-
 		Update();
-	}
+	} while (WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 && WaitForSingleObject(mWebThread, 0) != WAIT_OBJECT_0);
 
-	return (int)msg.wParam;
+	DeleteCriticalSection(&mMutex);// quand c'est fini
+
+	CloseHandle(mSocketThread);
+	CloseHandle(mWebThread);
 
 	// FERMETURE DU SERVER
 	if (!mRequestManager->Close())
@@ -59,4 +77,75 @@ int ServApp::Run()
 int ServApp::Update()
 {
 	return 1;
+}
+
+void ServApp::EnterMutex()
+{
+	EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions
+}
+
+void ServApp::LeaveMutex()
+{
+	LeaveCriticalSection(&mMutex);// pour liberer le bloc
+}
+
+bool ServApp::CreateSocketThread()
+{
+	mSocketThread = CreateThread(
+		NULL,                   // default security attributes
+		0,                      // use default stack size  
+		SocketThreadFunction,	// thread function name
+		this,					// argument to thread function 
+		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour executer le thread
+		NULL);					// returns the thread identifier 
+
+	return true;
+}
+
+bool ServApp::CreateWebThread()
+{
+	mWebThread = CreateThread(
+		NULL,                   // default security attributes
+		0,                      // use default stack size  
+		WebThreadFunction,	// thread function name
+		this,					// argument to thread function 
+		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour executer le thread
+		NULL);					// returns the thread identifier 
+
+	return true;
+}
+
+
+DWORD WINAPI ServApp::SocketThreadFunction(LPVOID lpParam)
+{
+	ServApp* pApp = (ServApp*)lpParam;
+
+	MSG msg = { 0 };
+
+	while (GetMessage(&msg, nullptr, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		if (msg.message == WM_QUIT)
+			break;
+	}
+
+	return 0;
+}
+
+DWORD WINAPI ServApp::WebThreadFunction(LPVOID lpParam)
+{
+	ServApp* pApp = (ServApp*)lpParam;
+
+	MSG msg = { 0 };
+
+	while (GetMessage(&msg, nullptr, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		if (msg.message == WM_QUIT)
+			break;
+	}
+
+	return 0;
 }

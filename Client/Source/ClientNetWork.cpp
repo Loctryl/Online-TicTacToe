@@ -14,7 +14,7 @@ bool ClientNetWork::Init()
     if (!ConnectServer())
         return false;
 
-    WSAAsyncSelect(mConnectSocket, MessageWebWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
+    WSAAsyncSelect(mConnectSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     return true;
 }

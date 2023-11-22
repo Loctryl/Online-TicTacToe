@@ -6,9 +6,9 @@
 
 ClientApp::ClientApp() 
 {
-	InitializeCriticalSection(&mMutex);// pour cr�er la critical section
+	InitializeCriticalSection(&mMutex);// pour creer la critical section
 
-	mMessageWindow = new MessageWebWindow(this);
+	mMessageWindow = new MessageWindow(this);
 	mMessageWindow->InitWindow();
 	mRequestManager = ClientRequestManager::GetInstance();
 	mGame = new GameManager(mRequestManager->mGrid);
@@ -48,9 +48,9 @@ int ClientApp::Run()
 	{
 		Update();
 
-		EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions
+		EnterMutex();
 		endGame = mRequestManager->GameIsEnded();
-		LeaveCriticalSection(&mMutex);// pour lib�rer le bloc
+		LeaveMutex();
 
 		mGame->RenderGame();
 	} while (WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 && !endGame);
@@ -65,6 +65,16 @@ int ClientApp::Run()
 		return 1;
 
 	return 0;
+}
+
+void ClientApp::EnterMutex()
+{
+	EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions
+}
+
+void ClientApp::LeaveMutex()
+{
+	LeaveCriticalSection(&mMutex);// pour lib�rer le bloc
 }
 
 void ClientApp::Update()
@@ -85,12 +95,12 @@ void ClientApp::Update()
 
 		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y))
 		{
-			EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions
+			EnterMutex();
 
 			if (mRequestManager->IsMyTurn())
 				mRequestManager->Play(x, y);
 
-			LeaveCriticalSection(&mMutex);// pour lib�rer le bloc
+			LeaveMutex();
 		}
 	}
 }
