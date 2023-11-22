@@ -57,7 +57,10 @@ std::string WebManager::BuildBody()
 				CreateGridElement(3, -1);
 		}
 
-		body += R"(</div><div style = "padding: 0% 10% 5% 10%">)";
+		body +=
+			R"(</div><div style = "padding: 0% 10% 5% 10%"><p style : "font-size: 20px; text-align: center">game id :)" +
+			std::to_string(game->mGameId) +
+			R"(</p>)";
 
 
 		for (int i = 0; i < game->mSize; i++) {
