@@ -2,6 +2,7 @@
 #include "Headers/ServerRequestManager.h"
 #include "Headers/NetManager.h"
 #include "Headers/WebManager.h"
+#include "Headers/ServApp.h"
 
 NetworkMessageWindow::NetworkMessageWindow(ServApp* serverApp) : MessageWindow()
 {
@@ -9,9 +10,9 @@ NetworkMessageWindow::NetworkMessageWindow(ServApp* serverApp) : MessageWindow()
 }
 
 LRESULT NetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	std::cout << "NetworkMessageWindow\n";
 	SOCKET socket = wParam;
 	SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
-	ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
 	WebManager* webManager = WebManager::GetInstance();
 	string response = "";
 
@@ -23,25 +24,30 @@ LRESULT NetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wP
 
 	case WM_SOCKET:
 	{
+		mServerApp->EnterMutex();
+		ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
+
 		switch (LOWORD(lParam))
 		{
-		case FD_ACCEPT:
-			requestManager->GetNetWork()->AcceptClient(newSocket);
-			NetManager::GetInstance()->CreatePlayer(newSocket);
-			break;
+			case FD_ACCEPT:
+				requestManager->GetNetWork()->AcceptClient(newSocket);
+				NetManager::GetInstance()->CreatePlayer(newSocket);
+				break;
 
-		case FD_READ:
-			response = requestManager->Recieve(&socket);
-			if (!response.empty())
-				requestManager->ManageMessage(response, &socket);
-			break;
+			case FD_READ:
+				response = requestManager->Recieve(&socket);
+				if (!response.empty())
+					requestManager->ManageMessage(response, &socket);
+				break;
 
-		case FD_CLOSE:
-			requestManager->GetNetWork()->CloseSocket(socket);
-			break;
-		default:
-			break;
+			case FD_CLOSE:
+				requestManager->GetNetWork()->CloseSocket(socket);
+				break;
+			default:
+				break;
 		}
+
+		mServerApp->EnterMutex();
 	}
 	break;
 	default:

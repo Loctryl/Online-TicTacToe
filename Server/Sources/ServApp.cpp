@@ -49,13 +49,9 @@ int ServApp::Run()
 
 	if (ResumeThread(mWebThread) == -1)
 	{
-		printf("Erreur thread socket\n");
+		printf("Erreur thread web\n");
 		return 1;
 	}
-
-	MSG msg = { 0 };
-
-	bool running = true;
 
 	// Boucle de messages principale :
 	do
@@ -123,7 +119,7 @@ DWORD WINAPI ServApp::SocketThreadFunction(LPVOID lpParam)
 
 	MSG msg = { 0 };
 
-	while (GetMessage(&msg, nullptr, 0, 0))
+	while (GetMessage(&msg, pApp->mMessageWindow->GetHWND(), 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
@@ -140,7 +136,7 @@ DWORD WINAPI ServApp::WebThreadFunction(LPVOID lpParam)
 
 	MSG msg = { 0 };
 
-	while (GetMessage(&msg, nullptr, 0, 0))
+	while (GetMessage(&msg, pApp->mMessageWebWindow->GetHWND(), 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
