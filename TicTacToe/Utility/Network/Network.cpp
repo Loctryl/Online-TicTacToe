@@ -60,6 +60,16 @@ sockaddr_in Network::SettingProtocol()
     return service;
 }
 
+sockaddr_in Network::SettingWebProtocol()
+{
+    sockaddr_in service;
+    service.sin_family = AF_INET;
+    service.sin_port = htons(7474);
+    inet_pton(AF_INET, "127.0.0.1", &service.sin_addr);
+
+    return service;
+}
+
 // Sends data from a socket
 bool Network::SendRequest(SOCKET &sock, std::string data)
 {
@@ -83,6 +93,23 @@ bool Network::SendRequest(SOCKET &sock, std::string data)
     }
 
     printf("Requete envoyee\n");
+    return true;
+}
+
+bool Network::SendToWeb(SOCKET& sock, std::string data)
+{
+    int datasize = data.size();
+    char* dataBuffer = new char[datasize];
+
+    std::memcpy(dataBuffer, data.c_str(), datasize);
+
+    if (send(sock, dataBuffer, datasize, 0) == SOCKET_ERROR)
+    {
+        printf("Erreur send() %d\n", WSAGetLastError());
+        return false;
+    }
+
+    printf("Requete Web envoyee\n");
     return true;
 }
 

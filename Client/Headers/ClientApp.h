@@ -18,9 +18,10 @@ public:
 	bool Init();
 
 	int Run();
-	void Update();
 
 private:
+	void Update() const;
+
 	// Thread
 	HANDLE mSocketThread;
 	CRITICAL_SECTION mMutex;

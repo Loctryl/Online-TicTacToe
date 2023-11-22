@@ -12,7 +12,7 @@ class Network;
 
 enum EventMessage
 {
-    choice, play, validation, notif, player, connection
+    choice, play, validation, notif, player, connection, winner
 };
 
 class RequestManager

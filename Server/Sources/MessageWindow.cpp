@@ -1,6 +1,7 @@
 #include "Headers/MessageWindow.h"
 #include "Headers/ServerRequestManager.h"
 #include "Headers/NetManager.h"
+#include "Headers/WebManager.h"
 
 HWND MessageWindow::hWnd = NULL;
 
@@ -67,9 +68,14 @@ HWND& MessageWindow::GetHWND() { return hWnd; }
 
 HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    SOCKET socket = wParam;
+    SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
+    ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
+    WebManager* webManager = WebManager::GetInstance();
+    string response = "";
+
     switch (message)
     {
     case WM_COMMAND:
@@ -83,28 +89,38 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_SOCKET:
     {
-        SOCKET socket = wParam;
-        SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
-        ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
-        string message = "";
 
         switch (LOWORD(lParam))
         {
         case FD_ACCEPT:
             requestManager->GetNetWork()->AcceptClient(newSocket);
-            cout << "connect socket : " << *newSocket << endl;
             NetManager::GetInstance()->CreatePlayer(newSocket);
             break;
 
         case FD_READ:
-            message = requestManager->Recieve(&socket);
-            if (!message.empty()) {
-                requestManager->ManageMessage(message, &socket);
-            }
+            response = requestManager->Recieve(&socket);
+            if (!response.empty())
+                requestManager->ManageMessage(response, &socket);
             break;
 
         case FD_CLOSE:
             requestManager->GetNetWork()->CloseSocket(socket);
+            break;
+        default:
+            break;
+        }
+    }
+        break;
+    case WM_WEBSOCKET:
+    {
+        switch (LOWORD(lParam))
+        {
+        case FD_ACCEPT:
+            requestManager->GetNetWork()->AcceptWebClient(newSocket);
+            response = webManager->BuildWebsite();
+            if (!requestManager->SendToWeb(response, newSocket))
+                return 1;
+            //requestManager->GetNetWork()->CloseSocket(newSocket);
             break;
         default:
             break;

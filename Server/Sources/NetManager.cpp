@@ -105,6 +105,11 @@ Player* NetManager::GetEnemyPlayer(int id)
     }
 }
 
+std::vector<Grid*> NetManager::GetGames()
+{
+    return mGames;
+}
+
 int NetManager::SetNewID()
 {
     mCurrentId++;

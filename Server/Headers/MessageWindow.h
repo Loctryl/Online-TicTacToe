@@ -16,7 +16,6 @@ class MessageWindow
 
 	ATOM MyRegisterClass();
 
-
 public:
 	MessageWindow();
 	~MessageWindow() = default;

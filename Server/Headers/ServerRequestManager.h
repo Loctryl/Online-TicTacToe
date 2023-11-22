@@ -14,6 +14,8 @@ public:
 
     bool ManageMessage(std::string Message, SOCKET* socket);
 
+    bool SendToWeb(std::string request, SOCKET* socket) const;
+
     inline ServerNetWork* GetNetWork() { return (ServerNetWork*)mNetWork; };
 
 private:
@@ -22,4 +24,6 @@ private:
     ServerRequestManager();
 
     bool SendRequestValidation(bool validation, SOCKET* socket) const;
+
+    bool SendRequestWinner(int winner, SOCKET* socket) const;
 };

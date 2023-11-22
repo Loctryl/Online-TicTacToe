@@ -27,6 +27,8 @@ public:
     Player* GetEnemyPlayer(SOCKET* sock);
     Player* GetEnemyPlayer(int id);
 
+    std::vector<Grid*> GetGames();
+
     int SetNewID();
 
 private:

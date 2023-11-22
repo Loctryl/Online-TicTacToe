@@ -26,11 +26,9 @@ bool MessageWindow::InitWindow(CRITICAL_SECTION* mutex)
 
 BOOL MessageWindow::InitInstance(CRITICAL_SECTION* mutex)
 {
-    bool fullscreen = false;
-
     hWnd = CreateWindowW(szWindowClass, L"",
-        fullscreen ? WS_POPUP : WS_OVERLAPPEDWINDOW,
-        100, 100, 1600, 900,
+        WS_OVERLAPPEDWINDOW,
+        0, 0, 120, 80,
         nullptr, nullptr, hInst, mutex);
 
     if (!hWnd)
@@ -73,7 +71,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_CREATE:
     {
-        // Sauvegarde le mutex passé dans CreateWindow
+        // Sauvegarde le mutex passï¿½ dans CreateWindow
         LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
         SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
         
@@ -95,7 +93,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         SOCKET socket = wParam;
         string message = "";
 
-        CRITICAL_SECTION* mutex = reinterpret_cast<CRITICAL_SECTION*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));// Récupération du mutex passé dans CreateWindow
+        CRITICAL_SECTION* mutex = reinterpret_cast<CRITICAL_SECTION*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));// Rï¿½cupï¿½ration du mutex passï¿½ dans CreateWindow
         EnterCriticalSection(mutex);// pour bloquer un bloc d'instructions
 
         ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
@@ -109,13 +107,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         case FD_CLOSE:
-            break;
             requestManager->GetNetWork()->CloseSocket(socket);
+            break;
         default:
             break;
         }
 
-        LeaveCriticalSection(mutex);// pour libérer le bloc
+        LeaveCriticalSection(mutex);// pour libï¿½rer le bloc
     }
         break;
 

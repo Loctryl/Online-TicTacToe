@@ -6,7 +6,7 @@
 
 ClientApp::ClientApp() 
 {
-	InitializeCriticalSection(&mMutex);// pour créer la critical section
+	InitializeCriticalSection(&mMutex);// pour crï¿½er la critical section
 
 	mMessageWindow = new MessageWindow();
 	mMessageWindow->InitWindow(&mMutex);
@@ -21,6 +21,8 @@ ClientApp::~ClientApp() {
 
 bool ClientApp::Init() 
 {
+	mRequestManager = ClientRequestManager::GetInstance();
+	mGame = new GameManager(mRequestManager->mGrid);
 	mGame->InitWindow();
 
 	if (!mRequestManager->Init())
@@ -48,7 +50,7 @@ int ClientApp::Run()
 
 		EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions
 		endGame = mRequestManager->GameIsEnded();
-		LeaveCriticalSection(&mMutex);// pour libérer le bloc
+		LeaveCriticalSection(&mMutex);// pour libï¿½rer le bloc
 
 		mGame->RenderGame();
 	} while (WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 && !endGame);
@@ -65,11 +67,16 @@ int ClientApp::Run()
 	return 0;
 }
 
-void ClientApp::Update()
+void ClientApp::Update() const
 {
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
+		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
+		
+		if(mGame->mGrid->mWinner != -1)
+			continue;
+		
 		int x, y = -1;
 
 		if (mGame->IsPressEsc(event))
@@ -82,7 +89,7 @@ void ClientApp::Update()
 			if (mRequestManager->IsMyTurn())
 				mRequestManager->Play(x, y);
 
-			LeaveCriticalSection(&mMutex);// pour libérer le bloc
+			LeaveCriticalSection(&mMutex);// pour libï¿½rer le bloc
 		}
 	}
 }
@@ -94,7 +101,7 @@ bool ClientApp::CreateSocketThread()
 		0,                      // use default stack size  
 		SocketThreadFunction,	// thread function name
 		this,					// argument to thread function 
-		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour exécuter le thread
+		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour exï¿½cuter le thread
 		NULL);					// returns the thread identifier 
 
 	return true;

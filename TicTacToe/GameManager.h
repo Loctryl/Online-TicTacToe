@@ -29,6 +29,6 @@ public:
     bool IsMove(int* x, int* y) const;
     
     void RenderGame() const;
-
-    inline Event* GetEvent() { return mEvent; };
+    
+    inline Event* GetEvent() { return mEvent; }
 };
