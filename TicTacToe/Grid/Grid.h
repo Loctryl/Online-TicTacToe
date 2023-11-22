@@ -10,6 +10,8 @@ public:
     std::vector<std::vector<int>> mMainGrid;
     int mSize = 3;
 
+    int mGameId;
+
     Player* mPlayers[2];
     int mTurnPlayer = 0;
     int mWinner = -1;

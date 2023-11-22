@@ -2,6 +2,10 @@
 #include <Window/SFMLWindow.h>
 #include "Grid/Grid.h"
 #include "GameManager.h"
+
+#include <iostream>
+#include <Utility/RequestManager/RequestManager.h>
+
 #include "Windows.h"
 
 GameManager::GameManager()
@@ -24,12 +28,13 @@ void GameManager::InitWindow() const
     mWindow->InitWindow();
 }
 
-void GameManager::InitGrid(Grid* grid, int gridSize)
+void GameManager::InitGrid(Grid* grid)
 {
     if (grid)
         mGrid = grid;
     else
-        mGrid = new Grid(gridSize);
+        mGrid = new Grid();
+
     mTileSize = mWindow->GetVideoMode()->height/(mGrid->mSize+2);
     mMarginLeft = ((float)mWindow->GetVideoMode()->width/2.f)-((float)mTileSize*((float)mGrid->mSize/2.f));
 }
@@ -63,9 +68,43 @@ bool GameManager::IsMove(int* x, int* y) const
     return false;
 }
 
+void GameManager::Render() const
+{
+    switch (mState)
+    {
+        case LOBBY:
+            RenderLobby();
+            break;
+        
+        case IN_GAME:
+            if(mGrid)
+                RenderGame();
+            break;
+        case GAME_OVER:    
+            RenderGame();
+            break;
+    }
+}
+
+
+void GameManager::RenderLobby() const
+{
+    mWindow->GetWindow()->clear();
+    
+    auto* rect = new RectangleShape();
+
+    rect->setPosition(mWindow->GetVideoMode()->width / 2, mWindow->GetVideoMode()->height / 2);
+    rect->setSize({100,100});
+    rect->setFillColor(Color(200,200,200,255));
+    mWindow->GetWindow()->draw(*rect);
+
+    mWindow->GetWindow()->display();
+}
 
 void GameManager::RenderGame() const
 {
+    mWindow->GetWindow()->clear();
+    
     auto* rect = new RectangleShape();
     auto* circ = new CircleShape();
 
@@ -126,5 +165,6 @@ void GameManager::RenderGame() const
 
     REL_PTR(rect)
     REL_PTR(circ)
+
     mWindow->GetWindow()->display();
 }

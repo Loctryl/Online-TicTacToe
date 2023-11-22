@@ -1,12 +1,15 @@
 ﻿#include "Headers/NetManager.h"
+
+#include <Resources/utilities.h>
+
 #include "Grid/Grid.h"
 #include "Grid/Player.h"
 
 NetManager* NetManager::mInstance = nullptr;
 
-NetManager::NetManager() {  }
+NetManager::NetManager() { mWaitingGame = nullptr; }
 
-NetManager::~NetManager() {  }
+NetManager::~NetManager() { REL_PTR(mWaitingGame)  }
 
 NetManager* NetManager::GetInstance()
 {
@@ -17,22 +20,30 @@ NetManager* NetManager::GetInstance()
 
 Grid* NetManager::CreateGame()
 {
-    Grid* game = new Grid;
+    Grid* game = new Grid();
+    game->mGameId = SetNewGameID();
     mGames.push_back(game);
     return game;
 }
+
+void NetManager::DeleteGame(int gameId) const
+{
+    for(auto game : mGames)
+        if(game->mGameId == gameId)
+            REL_PTR(game)
+}
+
 
 void NetManager::CreatePlayer(SOCKET* sock, std::string name)
 {
     Player* p = new Player();
     p->mSocket = sock;
-    p->mId = SetNewID();
-    p->mNickName = name + to_string(mCurrentId);
-    AddPlayerToGame(p);
+    p->mId = SetNewPlayerID();
+    p->mNickName = name + to_string(mPlayerMaxId);
     mPlayers.push_back(p);
 }
 
-void NetManager::SetPlayerNickname(SOCKET* sock, std::string name)
+void NetManager::SetPlayerNickname(SOCKET* sock, std::string name) const
 {
     for (auto player : mPlayers)
     {
@@ -96,13 +107,14 @@ Player* NetManager::GetEnemyPlayer(SOCKET* sock)
     return GetEnemyPlayer(player->mId);
 }
 
-Player* NetManager::GetEnemyPlayer(int id)
+Player* NetManager::GetEnemyPlayer(int id) const
 {
     Grid* game = GetGameByPlayerId(id);
     for (auto player : game->mPlayers) {
         if (player->mId != id)
             return player;
     }
+    return nullptr;
 }
 
 std::vector<Grid*> NetManager::GetGames()
@@ -110,10 +122,16 @@ std::vector<Grid*> NetManager::GetGames()
     return mGames;
 }
 
-int NetManager::SetNewID()
+int NetManager::SetNewPlayerID()
 {
-    mCurrentId++;
-    return mCurrentId;
+    mPlayerMaxId++;
+    return mPlayerMaxId;
+}
+
+int NetManager::SetNewGameID()
+{
+    mGameMaxId++;
+    return mGameMaxId;
 }
 
 

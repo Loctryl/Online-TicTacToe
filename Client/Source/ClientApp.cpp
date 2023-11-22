@@ -44,32 +44,81 @@ int ClientApp::Run()
 		}
 
 		Update();
-		mGame->RenderGame();
+		mGame->Render();
 	}
 	
 	// FERMETURE DU CLIENT
 	if (!mRequestManager->Close())
 		return 1;
 
-	return 0;
+	return 0; 
 }
 
 void ClientApp::Update() const
 {
+	switch (mGame->mState)
+	{
+		case LOBBY:
+			UpdateInLobby();
+		break;
+		case IN_GAME:
+			if(mGame->mGrid)
+				UpdateInGame();
+			else if (mRequestManager->mGrid) {
+				mGame->InitGrid(mRequestManager->mGrid);
+			}
+		break;
+		case GAME_OVER:
+			UpdateGameOver();
+		break;
+	}
+}
+
+void ClientApp::UpdateInLobby() const
+{
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
-		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
+		if (mGame->IsPressEsc(event)) { mGame->mWindow->GetWindow()->close(); bool hr = mRequestManager->Close(); }
+		if (mGame->IsMouseClick(event)) {
+			mRequestManager->JoinGame();
+			mGame->mState = IN_GAME;
+		}
+	}
+}
+
+void ClientApp::UpdateInGame() const
+{
+	auto event = mGame->GetEvent();
+	while (mGame->mWindow->GetWindow()->pollEvent(*event))
+	{
+		if (mGame->IsPressEsc(event)) { mGame->mWindow->GetWindow()->close(); bool hr = mRequestManager->Close(); }
 		
 		if(mGame->mGrid->mWinner != -1)
+		{
+			mGame->mState = GAME_OVER;
 			continue;
+		}
 		
 		int x, y = -1;
 
 		if (mRequestManager->IsMyTurn() && mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
-			mRequestManager->mMyChoice[0] = x;
-			mRequestManager->mMyChoice[1] = y;
-			mRequestManager->Play(mRequestManager->mMyChoice);
+			int coord[2] = {x, y};
+			mRequestManager->Play(coord);
+		}
+	}
+}
+
+void ClientApp::UpdateGameOver() const
+{
+	auto event = mGame->GetEvent();
+	while (mGame->mWindow->GetWindow()->pollEvent(*event))
+	{
+		if (mGame->IsPressEsc(event)) { mGame->mWindow->GetWindow()->close(); bool hr = mRequestManager->Close(); }
+
+		if (mGame->IsMouseClick(event)) {
+			mRequestManager->LeaveGame();
+			mGame->mState = LOBBY;
 		}
 	}
 }

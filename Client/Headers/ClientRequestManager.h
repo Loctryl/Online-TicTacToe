@@ -10,13 +10,16 @@ public:
     ~ClientRequestManager() override;
 
     static ClientRequestManager* GetInstance();
+    bool Init() override;
 
     bool IsMyTurn() const;
 
     void Play(int coord[2]);
 
-    bool Init() override;
+    void JoinGame() const;
 
+    void LeaveGame() const;
+    
     bool ManageMessage(std::string Message);
 
     inline ClientNetWork* GetNetWork() const { return (ClientNetWork*)mNetWork; }

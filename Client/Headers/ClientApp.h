@@ -18,4 +18,8 @@ public:
 
 	int Run();
 	void Update() const;
+
+	void UpdateInLobby() const;
+	void UpdateInGame() const;
+	void UpdateGameOver() const;
 };

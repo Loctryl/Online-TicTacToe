@@ -3,6 +3,7 @@
 #include "Headers/NetManager.h"
 #include "Grid/Player.h"
 #include "Grid/Grid.h"
+#include "Resources/utilities.h"
 
 ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 
@@ -61,39 +62,51 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
 
     switch (EventToInt(MessageType))
     {
-    case play: 
-    { // Le serveur recoit le coup d'un joueur
-        if (grid->mPlayers[1] == nullptr || player->mInGameId != grid->mTurnPlayer)
+        case play:
+        {
+            // Le serveur recoit le coup d'un joueur
+            if (grid->mPlayers[1] == nullptr || player->mInGameId != grid->mTurnPlayer)
+                break;
+
+            printf("Coordonnee Recue\n");
+            int Coords[2] = { parsedMessage["x"], parsedMessage["y"] };
+
+            bool validation = (grid->GetValue(Coords[0], Coords[1]) == -1);
+
+            if (!SendRequestValidation(validation, socket))
+                return false;
+
+            if (validation)
+            {
+                grid->Play(Coords[0],Coords[1]);
+
+                if (!SendRequestPlay(Coords, NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket))
+                    return false;
+            }
+            int win = grid->IsWinner();
+            if (win != -1) {
+                SendRequestWinner(win,socket);
+                SendRequestWinner(win,NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket);
+                cout << "Game over ! The winner is player : " << grid->mTurnPlayer << endl;
+            } else
+                grid->mTurnPlayer = (grid->mTurnPlayer + 1) % 2;
+            
+            break;
+        }
+        case join:
+            NetManager::GetInstance()->AddPlayerToGame(player);
+            SendRequestJoin(socket);
             break;
 
-        printf("Coordonnee Recue\n");
-        int Coords[2] = { parsedMessage["x"], parsedMessage["y"] };
-
-        bool validation = (grid->GetValue(Coords[0], Coords[1]) == -1);
-
-        if (!SendRequestValidation(validation, socket))
-            return false;
-
-        if (validation)
-        {
-            grid->Play(Coords[0],Coords[1]);
-
-            if (!SendRequestPlay(Coords, NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket))
-                return false;
-        }
-        int win = grid->IsWinner();
-        if (win != -1) {
-            SendRequestWinner(win,socket);
-            SendRequestWinner(win,NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket);
-            cout << "Game over ! The winner is player : " << grid->mTurnPlayer << endl;
-        } else
-            grid->mTurnPlayer = (grid->mTurnPlayer + 1) % 2;
+        case leave:
+            grid->mPlayers[player->mInGameId] = nullptr;
+            if(!grid->mPlayers[0] && !grid->mPlayers[1])
+                NetManager::GetInstance()->DeleteGame(grid->mGameId);
+            SendRequestLeave(socket);
+            break;
+        default:
+            printf("Reception event incorrect : EventMessage %s\n", MessageType);
+            break;
     }
-        break;
-    default:
-        printf("Reception event incorrect : EventMessage %s\n", MessageType);
-        break;
-    }
-
     return true;
 }

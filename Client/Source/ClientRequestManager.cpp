@@ -1,6 +1,7 @@
 #include "Headers/ClientRequestManager.h"
 #include "Headers/ClientNetWork.h"
 #include "Grid/Grid.h"
+#include "Resources/utilities.h"
 
 ClientRequestManager* ClientRequestManager::mInstance = nullptr;
 
@@ -28,6 +29,11 @@ bool ClientRequestManager::IsMyTurn() const
     return mIsMyTurn;
 }
 
+void ClientRequestManager::JoinGame() const
+{
+    SendRequestJoin(((ClientNetWork*)mNetWork)->GetClientSocket());
+}
+
 void ClientRequestManager::Play(int coord[2])
 {
     mMyChoice[0] = coord[0];
@@ -35,6 +41,12 @@ void ClientRequestManager::Play(int coord[2])
 
     SendRequestPlay(mMyChoice, ((ClientNetWork*)mNetWork)->GetClientSocket());
 }
+
+void ClientRequestManager::LeaveGame() const
+{
+    SendRequestLeave(((ClientNetWork*)mNetWork)->GetClientSocket());
+}
+
 
 bool ClientRequestManager::Init()
 {
@@ -64,10 +76,19 @@ bool ClientRequestManager::ManageMessage(std::string Message)
             mIsMyTurn = false;
             }
         break;
+        
     case winner:
         mGrid->mTurnPlayer = (mGrid->mTurnPlayer + 1) % 2;
         mIsMyTurn = false;
         mGrid->IsWinner();
+        break;
+
+    case join:
+        mGrid = new Grid();
+        break;
+
+    case leave:
+        mGrid = nullptr;
         break;
     default:
         break;
