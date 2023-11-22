@@ -42,15 +42,25 @@ std::string WebManager::BuildBody()
 
 	for (auto game : Games) {
 
-		if (game->mPlayers[1] == nullptr)
-			continue;
+		body +=
+			R"(<div><div style="display: flex; justify-content: center;"><div>)";
+
+		if (game->mPlayers[0] != nullptr) {
+
+			body += R"(<p style : "font-size: 20px">)" +
+				game->mPlayers[0]->mNickName +
+				R"(</p>)" +
+				CreateGridElement(3, game->mPlayers[0]->mInGameId);
+		}
+		else {
+			body += R"(<p style : "font-size: 20px"> NONE </p>)" +
+				CreateGridElement(3, -1);
+		}
 
 		body +=
-			R"(<div><div style="display: flex; justify-content: center;"><div> <p style:"font-size: 20px">)" +
-			game->mPlayers[0]->mNickName +
-			R"(</p>)" +
-			CreateGridElement(3, game->mPlayers[0]->mInGameId) +
-			R"(</div> <div style="padding: 0% 10% 5% 10%">)";
+			R"(</div><div style = "padding: 0% 10% 5% 10%"><p style : "font-size: 20px; text-align: center">game id :)" +
+			std::to_string(game->mGameId) +
+			R"(</p>)";
 
 
 		for (int i = 0; i < game->mSize; i++) {
@@ -62,11 +72,23 @@ std::string WebManager::BuildBody()
 		}
 
 		body +=
-			R"(</div><div><p style:"font-size: 20px">)" +
-			game->mPlayers[1]->mNickName +
-			R"( </p>)" +
-			CreateGridElement(3, game->mPlayers[1]->mInGameId) +
-			R"(</div></div></div>)";
+			R"(</div><div>)";
+
+		if (game->mPlayers[1] != nullptr) {
+
+
+			body +=
+				R"(<p style:"font-size: 20px">)" +
+				game->mPlayers[1]->mNickName +
+				R"( </p>)" +
+				CreateGridElement(3, game->mPlayers[1]->mInGameId);
+		}
+		else {
+			body += R"(<p style : "font-size: 20px"> NONE </p>)" +
+				CreateGridElement(3, -1);
+		}
+
+		body += R"(</div></div></div>)";
 	}
 	return body;
 }
@@ -100,7 +122,7 @@ std::string WebManager::CreateGridElement(int size, int value)
 		break;
 	}
 
-	message += "width: "+ std::to_string(size) + "vw; height: " + std::to_string(size) + "vw; border: solid 2px #82807E; \"> </div>";
+	message += "width: " + std::to_string(size) + "vw; height: " + std::to_string(size) + "vw; border: solid 2px #82807E; \"> </div>";
 
 	return message;
 }

@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <vector>
 
-
 class Player;
 
 class Grid
@@ -9,6 +8,8 @@ class Grid
 public:
     std::vector<std::vector<int>> mMainGrid;
     int mSize = 3;
+
+    int mGameId;
 
     Player* mPlayers[2];
     int mTurnPlayer = 0;

@@ -2,15 +2,13 @@
 #include "Headers/NetWorkMessageWindow.h"
 #include "Headers/WebMessageWindow.h"
 
-
-
 ServerNetWork::ServerNetWork() { }
 
 bool ServerNetWork::Init()
 {
     Network::Init(mListenSocket);
 
-    sockaddr_in serviceServer = SettingProtocol();
+    sockaddr_in serviceServer = SettingServerProtocol();
 
     if (!Bind(serviceServer, &mListenSocket))
         return false;
@@ -19,40 +17,6 @@ bool ServerNetWork::Init()
         return false;
 
     WSAAsyncSelect(mListenSocket, NetworkMessageWindow::GetHWND(), WM_SOCKET, FD_ACCEPT);
-    return true;
-}
-
-bool ServerNetWork::WebInit()
-{
-    Network::Init(mWebSocket);
-
-    sockaddr_in service = SettingWebProtocol();
-
-    if (!Bind(service, &mWebSocket))
-        return false;
-
-    if (listen(mWebSocket, 1) == SOCKET_ERROR)
-    {
-        printf("Erreur lors de l'ecoute : %d\n", WSAGetLastError());
-        Network::CloseSocket(mListenSocket);
-        return false;
-    }
-
-    WSAAsyncSelect(mWebSocket, WebMessageWindow::GetHWND(), WM_WEBSOCKET, FD_ACCEPT);
-
-    return true;
-}
-
-bool ServerNetWork::ConnectServer(sockaddr_in& clientService)
-{
-    if (connect(mWebSocket, (SOCKADDR*)&clientService, sizeof(clientService)))
-    {
-        printf("Erreur connect() %d\n", WSAGetLastError());
-        Close();
-        return false;
-    }
-
-    printf("connexion au serveur reussite\n");
     return true;
 }
 
@@ -86,26 +50,13 @@ bool ServerNetWork::AcceptClient(SOCKET* socket)
     *socket = accept(mListenSocket, NULL, NULL);
     if (*socket == INVALID_SOCKET)
     {
-        printf("Erreur accept() socket : %d\n", WSAGetLastError());
+        printf("Erreur accept() client socket : %d\n", WSAGetLastError());
         return false;
     }
 
     WSAAsyncSelect(*socket, NetworkMessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     printf("Client connecte\n");
-    return true;
-}
-
-bool ServerNetWork::AcceptWebClient(SOCKET* socket)
-{
-    *socket = accept(mWebSocket, NULL, NULL);
-    if (*socket == INVALID_SOCKET)
-    {
-        printf("Erreur accept() socket : %d\n", WSAGetLastError());
-        return false;
-    }
-
-    printf("Client Web connecte\n");
     return true;
 }
 

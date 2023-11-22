@@ -21,7 +21,7 @@ bool ClientNetWork::Init()
 
 bool ClientNetWork::ConnectServer()
 {
-    sockaddr_in clientService = SettingProtocol();
+    sockaddr_in clientService = SettingClientProtocol();
     if (connect(mConnectSocket, (SOCKADDR*)&clientService, sizeof(clientService)))
     {
         printf("Erreur connect() %d\n", WSAGetLastError());

@@ -155,6 +155,7 @@
     <ClCompile Include="Sources\ServerRequestManager.cpp" />
     <ClCompile Include="Sources\server.cpp" />
     <ClCompile Include="Sources\WebManager.cpp" />
+    <ClCompile Include="Sources\WebNetWork.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\framework.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Headers\WebMessageWindow.h" />
     <ClInclude Include="Headers\NetManager.h" />
     <ClInclude Include="Headers\WebManager.h" />
+    <ClInclude Include="Headers\WebNetWork.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TicTacToe\TicTacToe.vcxproj">

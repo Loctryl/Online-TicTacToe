@@ -31,4 +31,9 @@ private:
 
 	bool CreateSocketThread();
 	static DWORD WINAPI SocketThreadFunction(LPVOID lpParam);
+	void Update() const;
+
+	void UpdateInLobby() const;
+	void UpdateInGame() const;
+	void UpdateGameOver() const;
 };
