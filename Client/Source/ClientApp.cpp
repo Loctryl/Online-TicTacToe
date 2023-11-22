@@ -8,8 +8,8 @@ ClientApp::ClientApp()
 {
 	InitializeCriticalSection(&mMutex);// pour cr�er la critical section
 
-	mMessageWindow = new MessageWindow();
-	mMessageWindow->InitWindow(&mMutex);
+	mMessageWindow = new MessageWindow(this);
+	mMessageWindow->InitWindow();
 	mRequestManager = ClientRequestManager::GetInstance();
 	mGame = new GameManager(mRequestManager->mGrid);
 }

@@ -1,63 +1,65 @@
 #include "Headers/MessageWindow.h"
 #include "Headers/ClientRequestManager.h"
+#include "Headers/ClientApp.h"
 
 HWND MessageWindow::hWnd = NULL;
 
-MessageWindow::MessageWindow()
+MessageWindow::MessageWindow(ClientApp* clientApp)
 {
-    hInst = GetModuleHandle(0);
-    hPrevInstance = 0;
-    lpCmdLine = 0;
-    nCmdShow = SW_SHOW;
+	hInst = GetModuleHandle(0);
+	hPrevInstance = 0;
+	lpCmdLine = 0;
+	nCmdShow = SW_SHOW;
+	mClientApp = clientApp;
 }
 
-bool MessageWindow::InitWindow(CRITICAL_SECTION* mutex)
+bool MessageWindow::InitWindow()
 {
-    MyRegisterClass();
+	MyRegisterClass();
 
-    // Perform application initialization:
-    if (!InitInstance(mutex))
-    {
-        return FALSE;
-    }
+	// Perform application initialization:
+	if (!InitInstance())
+	{
+		return FALSE;
+	}
 
-    return TRUE;
+	return TRUE;
 }
 
-BOOL MessageWindow::InitInstance(CRITICAL_SECTION* mutex)
+BOOL MessageWindow::InitInstance()
 {
-    hWnd = CreateWindowW(szWindowClass, L"",
-        WS_OVERLAPPEDWINDOW,
-        0, 0, 120, 80,
-        nullptr, nullptr, hInst, mutex);
+	hWnd = CreateWindowW(szWindowClass, L"",
+		WS_OVERLAPPEDWINDOW,
+		0, 0, 120, 80,
+		nullptr, nullptr, hInst, this);
 
-    if (!hWnd)
-    {
-        return FALSE;
-    }
+	if (!hWnd)
+	{
+		return FALSE;
+	}
 
-    return TRUE;
+	return TRUE;
 }
 
 ATOM MessageWindow::MyRegisterClass()
 {
-    WNDCLASSEXW wcex;
+	WNDCLASSEXW wcex;
 
-    wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc = WndProc;
-    wcex.cbClsExtra = 0;
-    wcex.cbWndExtra = 0;
-    wcex.hInstance = hInst;
-    wcex.hIcon = nullptr;
-    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wcex.lpszMenuName = nullptr;
-    wcex.lpszClassName = szWindowClass;
-    wcex.hIconSm = nullptr;
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInst;
+	wcex.hIcon = nullptr;
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = nullptr;
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = nullptr;
 
-    return RegisterClassExW(&wcex);
+	return RegisterClassExW(&wcex);
 }
 
 HWND& MessageWindow::GetHWND() { return hWnd; }
@@ -65,60 +67,62 @@ HWND& MessageWindow::GetHWND() { return hWnd; }
 HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+
+LRESULT MessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
-    {
-    case WM_CREATE:
-    {
-        // Sauvegarde le mutex pass� dans CreateWindow
-        LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
-        
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-        break;
+	switch (message)
+	{
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
 
-    case WM_COMMAND:
-    {
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
+	case WM_SOCKET:
+	{
+		SOCKET socket = wParam;
+		string message = "";
 
-    case WM_SOCKET:
-    {
-        SOCKET socket = wParam;
-        string message = "";
+		CRITICAL_SECTION* mutex = reinterpret_cast<CRITICAL_SECTION*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));// R�cup�ration du mutex pass� dans CreateWindow
+		EnterCriticalSection(mutex);// pour bloquer un bloc d'instructions
 
-        CRITICAL_SECTION* mutex = reinterpret_cast<CRITICAL_SECTION*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));// R�cup�ration du mutex pass� dans CreateWindow
-        EnterCriticalSection(mutex);// pour bloquer un bloc d'instructions
+		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
 
-        ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
+		switch (lParam)
+		{
+		case FD_READ:
+			message = requestManager->Recieve(&socket);
+			if (!message.empty())
+				requestManager->ManageMessage(message);
+			break;
 
-        switch (lParam)
-        {
-        case FD_READ:
-            message = requestManager->Recieve(&socket);
-            if (!message.empty())
-                requestManager->ManageMessage(message);
-            break;
+		case FD_CLOSE:
+			requestManager->GetNetWork()->CloseSocket(socket);
+			break;
+		default:
+			break;
+		}
 
-        case FD_CLOSE:
-            requestManager->GetNetWork()->CloseSocket(socket);
-            break;
-        default:
-            break;
-        }
+		LeaveCriticalSection(mutex);// pour lib�rer le bloc
+	}
+	break;
 
-        LeaveCriticalSection(mutex);// pour lib�rer le bloc
-    }
-        break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+}
 
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
+LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_CREATE:
+		// Sauvegarde du l'instance de MessageWindow dans la window
+		LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+
+		return DefWindowProc(hWnd, message, wParam, lParam);
+
+	default:
+		MessageWindow* messageWindow = reinterpret_cast<MessageWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		return messageWindow->WndInstanceProc(hWnd, message, wParam, lParam);
+	}
 }
