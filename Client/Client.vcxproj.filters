@@ -27,7 +27,7 @@
     <ClCompile Include="Source\ClientRequestManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MessageWindow.cpp">
+    <ClCompile Include="Source\NetWorkMessageWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,7 +56,7 @@
     <ClInclude Include="Headers\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\MessageWindow.h">
+    <ClInclude Include="Headers\NetWorkMessageWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

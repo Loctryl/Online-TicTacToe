@@ -1,6 +1,6 @@
 #include "Headers/ClientNetWork.h"
 #include "Ressources/framework.h"
-#include "Headers/MessageWindow.h"
+#include "Headers/NetWorkMessageWindow.h"
 
 
 ClientNetWork::ClientNetWork() : Network() { }
@@ -14,7 +14,7 @@ bool ClientNetWork::Init()
     if (!ConnectServer())
         return false;
 
-    WSAAsyncSelect(mConnectSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
+    WSAAsyncSelect(mConnectSocket, NetWorkMessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     return true;
 }

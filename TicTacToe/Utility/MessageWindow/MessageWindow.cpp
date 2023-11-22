@@ -68,18 +68,24 @@ HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 
 LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	MessageWindow* messageWindow = nullptr;
+
 	switch (message)
 	{
 	case WM_CREATE:
+	{
 		// Sauvegarde du l'instance de MessageWindow dans la window
 		LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
 
 		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
 
 	default:
-		MessageWindow* messageWindow = reinterpret_cast<MessageWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	{
+		messageWindow = reinterpret_cast<MessageWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 		return messageWindow->WndInstanceProc(hWnd, message, wParam, lParam);
+	}
 	}
 
 	return 0;

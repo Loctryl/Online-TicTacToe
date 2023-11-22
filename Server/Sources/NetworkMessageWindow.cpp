@@ -3,8 +3,6 @@
 #include "Headers/NetManager.h"
 #include "Headers/WebManager.h"
 
-HWND NetworkMessageWindow::hWnd = NULL;
-
 NetworkMessageWindow::NetworkMessageWindow(ServApp* serverApp) : MessageWindow()
 {
 	mServerApp = serverApp;

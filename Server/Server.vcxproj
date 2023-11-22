@@ -148,7 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sources\WebMessageWindow.cpp" />
-    <ClCompile Include="Sources\MessageWindowNetwork.cpp" />
+    <ClCompile Include="Sources\NetworkMessageWindow.cpp" />
     <ClCompile Include="Sources\NetManager.cpp" />
     <ClCompile Include="Sources\ServApp.cpp" />
     <ClCompile Include="Sources\ServerNetWork.cpp" />

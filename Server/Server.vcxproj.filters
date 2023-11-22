@@ -36,7 +36,7 @@
     <ClCompile Include="Sources\WebManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\MessageWindowNetwork.cpp">
+    <ClCompile Include="Sources\NetworkMessageWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
