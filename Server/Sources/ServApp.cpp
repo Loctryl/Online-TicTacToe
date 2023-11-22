@@ -1,14 +1,14 @@
 #include "Headers/ServerRequestManager.h"
-#include "Headers/MessageWindow.h"
-#include "Headers/MessageWebWindow.h"
+#include "Headers/NetWorkMessageWindow.h"
+#include "Headers/WebMessageWindow.h"
 #include "Headers/NetManager.h"
 #include "Headers/ServApp.h"
 
 ServApp::ServApp()
 {
-	mMessageWindow = new MessageWindow(this);
+	mMessageWindow = new NetworkMessageWindow(this);
 	mMessageWindow->InitWindow();
-	mMessageWebWindow = new MessageWebWindow(this);
+	mMessageWebWindow = new WebMessageWindow(this);
 	mMessageWebWindow->InitWindow();
 	mRequestManager = ServerRequestManager::GetInstance();
 	mNetManager = new NetManager();

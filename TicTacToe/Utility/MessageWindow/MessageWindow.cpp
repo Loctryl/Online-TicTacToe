@@ -1,17 +1,13 @@
-#include "Headers/MessageWindow.h"
-#include "Headers/ServerRequestManager.h"
-#include "Headers/NetManager.h"
-#include "Headers/WebManager.h"
+#include "MessageWindow.h"
 
 HWND MessageWindow::hWnd = NULL;
 
-MessageWindow::MessageWebWindow(ServApp* serverApp)
+MessageWindow::MessageWindow()
 {
 	hInst = GetModuleHandle(0);
 	hPrevInstance = 0;
 	lpCmdLine = 0;
 	nCmdShow = SW_SHOW;
-	mServerApp = serverApp;
 }
 
 bool MessageWindow::InitWindow()
@@ -69,47 +65,6 @@ HWND& MessageWindow::GetHWND() { return hWnd; }
 
 HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 
-LRESULT MessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-	SOCKET socket = wParam;
-	SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
-	ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
-	WebManager* webManager = WebManager::GetInstance();
-	string response = "";
-
-	switch (message)
-	{
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-
-	case WM_SOCKET:
-	{
-		switch (LOWORD(lParam))
-		{
-		case FD_ACCEPT:
-			requestManager->GetNetWork()->AcceptClient(newSocket);
-			NetManager::GetInstance()->CreatePlayer(newSocket);
-			break;
-
-		case FD_READ:
-			response = requestManager->Recieve(&socket);
-			if (!response.empty())
-				requestManager->ManageMessage(response, &socket);
-			break;
-
-		case FD_CLOSE:
-			requestManager->GetNetWork()->CloseSocket(socket);
-			break;
-		default:
-			break;
-		}
-	}
-	break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-	}
-	return 0;
-}
 
 LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

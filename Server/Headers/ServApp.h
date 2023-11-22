@@ -1,16 +1,16 @@
 #pragma once
 
 class ServerRequestManager;
-class MessageWindow;
-class MessageWebWindow;
+class NetworkMessageWindow;
+class WebMessageWindow;
 class NetManager;
 //class GameManager;
 
 class ServApp
 {
 	ServerRequestManager* mRequestManager;
-	MessageWindow* mMessageWindow;
-	MessageWebWindow* mMessageWebWindow;
+	NetworkMessageWindow* mMessageWindow;
+	WebMessageWindow* mMessageWebWindow;
 	NetManager* mNetManager;
 
 public:
