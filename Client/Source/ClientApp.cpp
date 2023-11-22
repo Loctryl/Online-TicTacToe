@@ -52,7 +52,9 @@ int ClientApp::Run()
 		endGame = mRequestManager->GameIsEnded();
 		LeaveMutex();
 
-		mGame->RenderGame();
+		mGame->Render();
+
+		bool test2 = true;
 	} while (WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 && !endGame);
 
 	
@@ -93,14 +95,17 @@ void ClientApp::Update()
 	}
 }
 
-void ClientApp::UpdateInLobby() const
+void ClientApp::UpdateInLobby()
 {
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
-		if (mGame->IsMouseClick(event)) {
+		if (mGame->IsMouseClick(event))
+		{
+			EnterMutex();
 			mRequestManager->JoinGame();
+			LeaveMutex();
 		}
 	}
 }
@@ -126,15 +131,20 @@ void ClientApp::UpdateInGame()
 	}
 }
 
-void ClientApp::UpdateGameOver() const
+void ClientApp::UpdateGameOver()
 {
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
 
-		if (mGame->IsMouseClick(event)) {
+		if (mGame->IsMouseClick(event))
+		{
+			EnterMutex();
+
 			mRequestManager->LeaveGame();
+
+			LeaveMutex();
 		}
 	}
 }

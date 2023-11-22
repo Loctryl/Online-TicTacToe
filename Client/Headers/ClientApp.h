@@ -32,7 +32,7 @@ private:
 	bool CreateSocketThread();
 	static DWORD WINAPI SocketThreadFunction(LPVOID lpParam);
 
-	void UpdateInLobby() const;
+	void UpdateInLobby();
 	void UpdateInGame();
-	void UpdateGameOver() const;
+	void UpdateGameOver();
 };
