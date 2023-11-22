@@ -119,6 +119,7 @@ void ClientApp::UpdateGameOver() const
 		if (mGame->IsMouseClick(event)) {
 			mRequestManager->LeaveGame();
 			mGame->mState = LOBBY;
+			mGame->mGrid = nullptr;
 		}
 	}
 }
