@@ -56,7 +56,6 @@ sockaddr_in Network::SettingServerProtocol()
     service.sin_port = htons(PORT);
     service.sin_addr.s_addr = htonl(INADDR_ANY);
     
-    // Convertit une adresse reseau IPv4 ou IPv6 en une forme binaire numerique
     return service;
 }
 

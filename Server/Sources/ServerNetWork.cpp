@@ -21,40 +21,6 @@ bool ServerNetWork::Init()
     return true;
 }
 
-bool ServerNetWork::WebInit()
-{
-    Network::Init(mWebSocket);
-
-    sockaddr_in service = SettingWebProtocol();
-
-    if (!Bind(service, &mWebSocket))
-        return false;
-
-    if (listen(mWebSocket, 1) == SOCKET_ERROR)
-    {
-        printf("Erreur lors de l'ecoute : %d\n", WSAGetLastError());
-        Network::CloseSocket(mListenSocket);
-        return false;
-    }
-
-    WSAAsyncSelect(mWebSocket, MessageWindow::GetHWND(), WM_WEBSOCKET, FD_ACCEPT);
-
-    return true;
-}
-
-bool ServerNetWork::ConnectServer(sockaddr_in& clientService)
-{
-    if (connect(mWebSocket, (SOCKADDR*)&clientService, sizeof(clientService)))
-    {
-        printf("Erreur connect() %d\n", WSAGetLastError());
-        Close();
-        return false;
-    }
-
-    printf("connexion au serveur reussite\n");
-    return true;
-}
-
 bool ServerNetWork::Bind(sockaddr_in& serviceServer, SOCKET* socket)
 {
     if (bind(*socket, (SOCKADDR*)&serviceServer, sizeof(serviceServer)) == SOCKET_ERROR)// Associe l'adresse locale au socket
@@ -85,26 +51,13 @@ bool ServerNetWork::AcceptClient(SOCKET* socket)
     *socket = accept(mListenSocket, NULL, NULL);
     if (*socket == INVALID_SOCKET)
     {
-        printf("Erreur accept() socket : %d\n", WSAGetLastError());
+        printf("Erreur accept() client socket : %d\n", WSAGetLastError());
         return false;
     }
 
     WSAAsyncSelect(*socket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     printf("Client connecte\n");
-    return true;
-}
-
-bool ServerNetWork::AcceptWebClient(SOCKET* socket)
-{
-    *socket = accept(mWebSocket, NULL, NULL);
-    if (*socket == INVALID_SOCKET)
-    {
-        printf("Erreur accept() socket : %d\n", WSAGetLastError());
-        return false;
-    }
-
-    printf("Client Web connecte\n");
     return true;
 }
 

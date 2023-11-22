@@ -116,13 +116,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (LOWORD(lParam))
         {
         case FD_ACCEPT:
-            requestManager->GetNetWork()->AcceptWebClient(newSocket);
+            requestManager->GetWebNetWork()->AcceptWebClient(newSocket);
             response = webManager->BuildWebsite();
             if (!requestManager->SendToWeb(response, newSocket))
                 return 1;
             //requestManager->GetNetWork()->CloseSocket(newSocket);
-            break;
-        default:
             break;
         }
     }

@@ -1,12 +1,13 @@
 #include "Headers/ServerRequestManager.h"
 #include "Headers/ServerNetWork.h"
+#include "Headers/WebNetWork.h"
 #include "Headers/NetManager.h"
 #include "Grid/Player.h"
 #include "Grid/Grid.h"
 
 ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 
-ServerRequestManager::ServerRequestManager() { mNetWork = new ServerNetWork(); }
+ServerRequestManager::ServerRequestManager() { mNetWork = new ServerNetWork(); mWebNetWork = new WebNetWork(); }
 
 ServerRequestManager::~ServerRequestManager() {
     REL_PTR(mNetWork)
@@ -14,7 +15,7 @@ ServerRequestManager::~ServerRequestManager() {
 
 bool ServerRequestManager::Init()
 {
-    return ((ServerNetWork*)mNetWork)->Init() && ((ServerNetWork*)mNetWork)->WebInit();
+    return ((ServerNetWork*)mNetWork)->Init() && ((WebNetWork*)mWebNetWork)->Init();
 }
 
 ServerRequestManager* ServerRequestManager::GetInstance()

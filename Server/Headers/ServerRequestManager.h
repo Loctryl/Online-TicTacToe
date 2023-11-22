@@ -2,6 +2,7 @@
 
 #include "Utility/RequestManager/RequestManager.h"
 #include "Headers/ServerNetWork.h"
+#include "Headers/WebNetWork.h"
 
 class ServerRequestManager : public RequestManager
 {
@@ -17,6 +18,7 @@ public:
     bool SendToWeb(std::string request, SOCKET* socket) const;
 
     inline ServerNetWork* GetNetWork() { return (ServerNetWork*)mNetWork; };
+    inline WebNetWork* GetWebNetWork() { return (WebNetWork*)mWebNetWork; };
 
 private:
     static ServerRequestManager* mInstance;
