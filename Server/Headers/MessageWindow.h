@@ -1,9 +1,13 @@
 #pragma once
 #include "Headers/framework.h"
 
+class ServApp;
+
 // Handles the Windows window
 class MessageWindow
 {
+	ServApp* mServerApp;
+
 	static HWND hWnd;
 	HINSTANCE hInst; // current instance
 	WCHAR szWindowClass[100] = L"MessageWindow";
@@ -17,7 +21,7 @@ class MessageWindow
 	ATOM MyRegisterClass();
 
 public:
-	MessageWindow();
+	MessageWindow(ServApp* serverApp);
 	~MessageWindow() = default;
 
 	bool InitWindow();
@@ -25,6 +29,7 @@ public:
 	static HWND& GetHWND();
 
 	HINSTANCE& GetHInstance();
-};
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	LRESULT WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+};

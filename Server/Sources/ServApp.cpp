@@ -5,7 +5,7 @@
 
 ServApp::ServApp()
 {
-	mMessageWindow = new MessageWindow();
+	mMessageWindow = new MessageWindow(this);
 	mMessageWindow->InitWindow();
 	mRequestManager = ServerRequestManager::GetInstance();
 	mNetManager = new NetManager();
