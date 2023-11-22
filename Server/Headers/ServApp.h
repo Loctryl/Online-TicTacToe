@@ -9,8 +9,10 @@ class NetManager;
 class ServApp
 {
 	ServerRequestManager* mRequestManager;
+
 	MessageWindow* mMessageWindow;
 	MessageWebWindow* mMessageWebWindow;
+
 	NetManager* mNetManager;
 
 public:
@@ -21,4 +23,19 @@ public:
 
 	int Run();
 	int Update();
+
+	void EnterMutex();
+	void LeaveMutex();
+
+private:
+	// Thread
+	HANDLE mSocketThread;
+	HANDLE mWebThread;
+	CRITICAL_SECTION mMutex;
+
+	bool CreateSocketThread();
+	static DWORD WINAPI SocketThreadFunction(LPVOID lpParam);
+
+	bool CreateWebThread();
+	static DWORD WINAPI WebThreadFunction(LPVOID lpParam);
 };

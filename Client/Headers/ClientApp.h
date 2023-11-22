@@ -2,13 +2,13 @@
 #include "Ressources/framework.h"
 
 class ClientRequestManager;
-class MessageWebWindow;
+class MessageWindow;
 class GameManager;
 
 class ClientApp
 {
 	ClientRequestManager* mRequestManager;
-	MessageWebWindow* mMessageWindow;
+	MessageWindow* mMessageWindow;
 
 	GameManager* mGame;
 public:
@@ -18,6 +18,9 @@ public:
 	bool Init();
 
 	int Run();
+
+	void EnterMutex();
+	void LeaveMutex();
 
 private:
 	void Update();

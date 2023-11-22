@@ -4,7 +4,7 @@
 class ClientApp;
 
 // Handles the Windows window
-class MessageWebWindow
+class MessageWindow
 {
 	ClientApp* mClientApp;
 
@@ -22,8 +22,8 @@ class MessageWebWindow
 
 
 public:
-	MessageWebWindow(ClientApp* clientApp);
-	~MessageWebWindow() = default;
+	MessageWindow(ClientApp* clientApp);
+	~MessageWindow() = default;
 
 	bool InitWindow();
 

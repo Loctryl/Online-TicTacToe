@@ -1,5 +1,6 @@
 #include "Headers/MessageWebWindow.h"
 #include "Headers/ServerRequestManager.h"
+#include "Headers/ServApp.h"
 #include "Headers/NetManager.h"
 #include "Headers/WebManager.h"
 
@@ -72,7 +73,7 @@ HINSTANCE& MessageWebWindow::GetHInstance() { return hInst; }
 LRESULT MessageWebWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	SOCKET socket = wParam;
 	SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
-	ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
+	
 	WebManager* webManager = WebManager::GetInstance();
 	string response = "";
 
@@ -86,10 +87,19 @@ LRESULT MessageWebWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam
 		switch (LOWORD(lParam))
 		{
 		case FD_ACCEPT:
-			requestManager->GetNetWork()->AcceptWebClient(newSocket);
 			response = webManager->BuildWebsite();
+
+			mServerApp->EnterMutex();
+
+			ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
+			requestManager->GetNetWork()->AcceptWebClient(newSocket);
 			if (!requestManager->SendToWeb(response, newSocket))
+			{
+				mServerApp->LeaveMutex();
 				return 1;
+			}
+
+			mServerApp->LeaveMutex();
 			//requestManager->GetNetWork()->CloseSocket(newSocket);
 			break;
 		default:

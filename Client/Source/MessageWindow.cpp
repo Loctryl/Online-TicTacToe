@@ -2,9 +2,9 @@
 #include "Headers/ClientRequestManager.h"
 #include "Headers/ClientApp.h"
 
-HWND MessageWebWindow::hWnd = NULL;
+HWND MessageWindow::hWnd = NULL;
 
-MessageWebWindow::MessageWebWindow(ClientApp* clientApp)
+MessageWindow::MessageWindow(ClientApp* clientApp)
 {
 	hInst = GetModuleHandle(0);
 	hPrevInstance = 0;
@@ -13,7 +13,7 @@ MessageWebWindow::MessageWebWindow(ClientApp* clientApp)
 	mClientApp = clientApp;
 }
 
-bool MessageWebWindow::InitWindow()
+bool MessageWindow::InitWindow()
 {
 	MyRegisterClass();
 
@@ -26,7 +26,7 @@ bool MessageWebWindow::InitWindow()
 	return TRUE;
 }
 
-BOOL MessageWebWindow::InitInstance()
+BOOL MessageWindow::InitInstance()
 {
 	hWnd = CreateWindowW(szWindowClass, L"",
 		WS_OVERLAPPEDWINDOW,
@@ -41,7 +41,7 @@ BOOL MessageWebWindow::InitInstance()
 	return TRUE;
 }
 
-ATOM MessageWebWindow::MyRegisterClass()
+ATOM MessageWindow::MyRegisterClass()
 {
 	WNDCLASSEXW wcex;
 
@@ -62,13 +62,13 @@ ATOM MessageWebWindow::MyRegisterClass()
 	return RegisterClassExW(&wcex);
 }
 
-HWND& MessageWebWindow::GetHWND() { return hWnd; }
+HWND& MessageWindow::GetHWND() { return hWnd; }
 
-HINSTANCE& MessageWebWindow::GetHInstance() { return hInst; }
+HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 
 
 
-LRESULT MessageWebWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT MessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
@@ -81,8 +81,7 @@ LRESULT MessageWebWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam
 		SOCKET socket = wParam;
 		string message = "";
 
-		CRITICAL_SECTION* mutex = reinterpret_cast<CRITICAL_SECTION*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));// R�cup�ration du mutex pass� dans CreateWindow
-		EnterCriticalSection(mutex);// pour bloquer un bloc d'instructions
+		mClientApp->EnterMutex();
 
 		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
 
@@ -101,7 +100,7 @@ LRESULT MessageWebWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam
 			break;
 		}
 
-		LeaveCriticalSection(mutex);// pour lib�rer le bloc
+		mClientApp->LeaveMutex();
 	}
 	break;
 
@@ -110,7 +109,7 @@ LRESULT MessageWebWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam
 	}
 }
 
-LRESULT CALLBACK MessageWebWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
@@ -122,7 +121,7 @@ LRESULT CALLBACK MessageWebWindow::WndProc(HWND hWnd, UINT message, WPARAM wPara
 		return DefWindowProc(hWnd, message, wParam, lParam);
 
 	default:
-		MessageWebWindow* messageWindow = reinterpret_cast<MessageWebWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		MessageWindow* messageWindow = reinterpret_cast<MessageWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 		return messageWindow->WndInstanceProc(hWnd, message, wParam, lParam);
 	}
 }

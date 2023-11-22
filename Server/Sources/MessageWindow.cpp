@@ -1,11 +1,11 @@
 #include "Headers/MessageWindow.h"
 #include "Headers/ServerRequestManager.h"
+#include "Headers/ServApp.h"
 #include "Headers/NetManager.h"
-#include "Headers/WebManager.h"
 
 HWND MessageWindow::hWnd = NULL;
 
-MessageWindow::MessageWebWindow(ServApp* serverApp)
+MessageWindow::MessageWindow(ServApp* serverApp)
 {
 	hInst = GetModuleHandle(0);
 	hPrevInstance = 0;
@@ -72,8 +72,6 @@ HINSTANCE& MessageWindow::GetHInstance() { return hInst; }
 LRESULT MessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	SOCKET socket = wParam;
 	SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
-	ServerRequestManager* requestManager = ServerRequestManager::GetInstance();// TO DO : A remplacer par RequestManager*, non ?
-	WebManager* webManager = WebManager::GetInstance();
 	string response = "";
 
 	switch (message)
@@ -87,18 +85,41 @@ LRESULT MessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, L
 		switch (LOWORD(lParam))
 		{
 		case FD_ACCEPT:
+			mServerApp->EnterMutex();
+
+			ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
 			requestManager->GetNetWork()->AcceptClient(newSocket);
+
+			mServerApp->LeaveMutex();
+
 			NetManager::GetInstance()->CreatePlayer(newSocket);
 			break;
 
 		case FD_READ:
+			mServerApp->EnterMutex();
+
+			ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
 			response = requestManager->Recieve(&socket);
+
+			mServerApp->LeaveMutex();
+
 			if (!response.empty())
+			{
+				mServerApp->EnterMutex();
+
 				requestManager->ManageMessage(response, &socket);
+
+				mServerApp->LeaveMutex();
+			}
 			break;
 
 		case FD_CLOSE:
+			mServerApp->EnterMutex();
+
+			ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
 			requestManager->GetNetWork()->CloseSocket(socket);
+
+			mServerApp->LeaveMutex();
 			break;
 		default:
 			break;
