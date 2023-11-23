@@ -28,6 +28,6 @@ void ServerWebThread::ThreadFunction()
 void ServerWebThread::InitWindow()
 {
 	mMessageWindow = new WebMessageWindow(this);
-	mMessageWindow->InitWindow(L"ServerNetworkMessageWindow");
+	mMessageWindow->InitWindow(L"WebMessageWindow");
 	ServerWebRequestManager::GetInstance()->Init(this);
 }

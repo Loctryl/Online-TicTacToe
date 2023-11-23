@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "Window/SFMLWindow.h"
 
-class RequestManager;
 class StateMachine;
 class Grid;
 class SFMLWindow;
@@ -29,6 +28,8 @@ public:
 
     int mTileSize;
     float mMarginLeft;
+
+    bool mConnected;
     
     GameManager();
     ~GameManager();
@@ -49,15 +50,15 @@ public:
 
     bool IsMove(int* x, int* y) const;
 
-    RectangleShape* CreateRect(Vector2f size, Vector2f pos, Color fillColor, Color outlineColor, float outlineThick);
+    RectangleShape* CreateRect(Vector2f size, Vector2f pos, Color fillColor, Color outlineColor, float outlineThick) const;
 
-    void DrawTextW(std::string str, int size, Color color, Vector2f position, Vector2f offset);
+    void DrawTextW(std::string str, int size, Color color, Vector2f position, Vector2f offset) const;
 
-    void Render();
+    void Render() const;
 
-    void RenderLobby();
+    void RenderLobby() const;
     
-    void RenderGame();
+    void RenderGame() const;
     
     inline Event* GetEvent() const { return mEvent; }
 };

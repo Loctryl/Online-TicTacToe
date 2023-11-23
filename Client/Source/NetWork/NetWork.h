@@ -10,7 +10,8 @@ public:
     ~ClientNetWork();
 
     bool Init(ThreadObj* thread) override;
-    bool ConnectServer();
+    bool Init(ThreadObj* thread, PCSTR address);
+    bool ConnectServer(PCSTR address);
 
     bool SendRequest(std::string data, SOCKET* socket);
     std::string Recieve(SOCKET* socket);

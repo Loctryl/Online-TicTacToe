@@ -6,7 +6,6 @@ class ServerWebRequestManager;
 class NetManager;
 class ServerNetWorkThread;
 class ServerWebThread;
-//class GameManager;
 
 class ServApp
 {
@@ -23,7 +22,6 @@ public:
 	bool Init();
 
 	int Run();
-	int Update();
 
 	void EnterMutex();
 	void LeaveMutex();

@@ -12,9 +12,15 @@ ClientNetWorkThread::~ClientNetWorkThread()
 {
 }
 
-DWORD ClientNetWorkThread::Start()
+bool ClientNetWorkThread::Start()
 {
-	return ResumeThread(mThread);
+	if (ResumeThread(mThread) == -1)
+	{
+		printf("Erreur thread socket\n");
+		return false;
+	}
+
+	return true;
 }
 
 void ClientNetWorkThread::ThreadFunction()
@@ -29,19 +35,6 @@ void ClientNetWorkThread::ThreadFunction()
 		DispatchMessage(&msg);
 		if (msg.message == WM_QUIT)
 			break;
-
-		/*switch (mClientApp->GetGameManager()->mState)
-		{
-		case LOBBY:
-			UpdateInLobby();
-			break;
-		case IN_GAME:
-			UpdateInGame();
-			break;
-		case GAME_OVER:
-			UpdateGameOver();
-			break;
-		}*/
 	}
 }
 
@@ -49,17 +42,4 @@ void ClientNetWorkThread::InitWindow()
 {
 	mMessageWindow = new ClientNetworkMessageWindow(this);
 	mMessageWindow->InitWindow(L"ClientNetworkMessageWindow");
-	ClientRequestManager::GetInstance()->Init(this);
-}
-
-void ClientNetWorkThread::UpdateInLobby()
-{
-}
-
-void ClientNetWorkThread::UpdateInGame()
-{
-}
-
-void ClientNetWorkThread::UpdateGameOver()
-{
 }

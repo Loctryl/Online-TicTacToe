@@ -1,5 +1,8 @@
 #include "GameManager.h"
 #include "RequestManager.h"
+
+#include <Grid/Player.h>
+
 #include "NetWork.h"
 #include "Utility/Resources/utilities.h"
 #include "Utility/Thread/Thread.h"
@@ -31,9 +34,9 @@ bool ClientRequestManager::IsMyTurn() const
     return mIsMyTurn;
 }
 
-void ClientRequestManager::JoinGame() const
+void ClientRequestManager::JoinGame(string nickname) const
 {
-    SendRequestJoin(((ClientNetWork*)mNetWork)->GetClientSocket());
+    SendRequestJoin(((ClientNetWork*)mNetWork)->GetClientSocket(), nickname, 0);
 }
 
 void ClientRequestManager::Play(int x, int y)
@@ -52,7 +55,7 @@ void ClientRequestManager::LeaveGame() const
 
 bool ClientRequestManager::Init(ThreadObj* thread)
 {
-    return ((ClientNetWork*)mNetWork)->Init(thread);
+    return ((ClientNetWork*)mNetWork)->Init(thread, mGame->mInfo[1].c_str());
 }
 
 bool ClientRequestManager::ManageMessage(std::string Message)
@@ -87,13 +90,18 @@ bool ClientRequestManager::ManageMessage(std::string Message)
         break;
 
     case join:
-        mGame->InitGrid(nullptr);
-        mGame->mState = IN_GAME;
+        if(!mGame->mGrid)
+        {
+            mGame->InitGrid(nullptr);
+            mGame->mState = IN_GAME;
+        }
+        mGame->mGrid->mPlayers[parsedMessage["player"]] = new Player();
+        mGame->mGrid->mPlayers[parsedMessage["player"]]->mNickName = parsedMessage["nickname"];
         mIsMyTurn = true;
         break;
 
     case leave:
-        mGame->mGrid = nullptr;
+        REL_PTR(mGame->mGrid)
         mGame->mState = LOBBY;
         break;
     default:

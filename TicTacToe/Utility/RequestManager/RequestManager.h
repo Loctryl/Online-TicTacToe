@@ -26,7 +26,7 @@ public:
 
     bool SendRequestPlay(int coord[2], SOCKET* socket) const;
 
-    bool SendRequestJoin(SOCKET* socket) const;
+    bool SendRequestJoin(SOCKET* socket, string nickname, int playerNum) const;
 
     bool SendRequestLeave(SOCKET* socket) const;
     

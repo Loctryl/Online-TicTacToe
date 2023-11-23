@@ -17,11 +17,7 @@ int RequestManager::EventToInt(std::string event)
         return join;
     if(event == "leave")
         return leave;
-   /* else if (event == "notif")
-        return notif;
-    else if (event == "player")
-        return player;*/
-    else// if (event == "connect")
+    else
         return -1;
 }
 
@@ -36,10 +32,12 @@ bool RequestManager::SendRequestPlay(int coord[2], SOCKET* socket) const
     return mNetWork->SendRequest(data.dump(), socket);
 }
 
-bool RequestManager::SendRequestJoin(SOCKET* socket) const
+bool RequestManager::SendRequestJoin(SOCKET* socket, string nickname, int playerNum) const
 {
     json data = {
         {"type", "join"},
+        {"nickname", nickname},
+        {"player", playerNum}
     };
 
     return mNetWork->SendRequest(data.dump(), socket);

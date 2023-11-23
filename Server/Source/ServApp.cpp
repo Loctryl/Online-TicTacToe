@@ -17,7 +17,6 @@ ServApp::ServApp()
 
 ServApp::~ServApp() {
 	delete mNetManager;
-	//delete mRequestManager;
 }
 
 bool ServApp::Init()
@@ -33,23 +32,13 @@ bool ServApp::Init()
 
 int ServApp::Run()
 {
-	if (mNetWorkThread->Start() == -1)
-	{
-		printf("Erreur thread socket\n");
+	if (!mNetWorkThread->Start())
 		return 1;
-	}
 
-	if (mWebThread->Start() == -1)
-	{
-		printf("Erreur thread web\n");
+	if (!mWebThread->Start())
 		return 1;
-	}
 
-	// Boucle de messages principale :
-	do
-	{
-		Update();
-	} while (WaitForSingleObject(mNetWorkThread, 0) != WAIT_OBJECT_0 && WaitForSingleObject(mWebThread, 0) != WAIT_OBJECT_0);
+	while (WaitForSingleObject(mNetWorkThread, 0) != WAIT_OBJECT_0 && WaitForSingleObject(mWebThread, 0) != WAIT_OBJECT_0) {}
 
 	mNetWorkThread->CloseThread();
 	mWebThread->CloseThread();
@@ -59,9 +48,4 @@ int ServApp::Run()
 		return 1;
 
 	return 0;
-}
-
-int ServApp::Update()
-{
-	return 1;
 }

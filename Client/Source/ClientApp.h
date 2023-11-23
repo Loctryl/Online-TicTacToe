@@ -19,12 +19,12 @@ public:
 
 	int Run();
 
-	inline GameManager* GetGameManager() { return mGame; };
+	inline GameManager* GetGameManager() const { return mGame; }
 
 private:
-	void Update();
+	void Update() const;
 
-	void UpdateInLobby();
-	void UpdateInGame();
-	void UpdateGameOver();
+	void UpdateInLobby() const;
+	void UpdateInGame() const;
+	void UpdateGameOver() const;
 };

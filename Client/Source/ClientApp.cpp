@@ -26,11 +26,8 @@ bool ClientApp::Init()
 
 int ClientApp::Run() 
 {
-	if (mThread->Start() == -1)
-	{
-		printf("Erreur thread socket\n");
+	if (!mThread->Start())
 		return 1;
-	}
 
 	// Boucle de messages principale :
 	bool endGame = false;
@@ -57,7 +54,7 @@ int ClientApp::Run()
 }
 
 
-void ClientApp::Update()
+void ClientApp::Update() const
 {
 	switch (mGame->mState)
 	{
@@ -73,9 +70,9 @@ void ClientApp::Update()
 	}
 }
 
-void ClientApp::UpdateInLobby()
+void ClientApp::UpdateInLobby() const
 {
-	auto event = mGame->GetEvent();
+	const auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
@@ -84,21 +81,18 @@ void ClientApp::UpdateInLobby()
 			switch (field)
 			{
 				case 0:
-					cout<< "name"<<endl;
 					mGame->mSelectedField = 0;
 					break;
 				case 1:
-					cout<< "adress IP"<<endl;
 					mGame->mSelectedField = 1;
 					break;
 				case 2:
-					cout << "connect" <<endl;
-					//mRequestManager->Init(mThread);
+					// Message to connect to server
+					PostMessage(mThread->GetWindow()->GetHWND(), WM_USER, 0, 0);
 					break;
 				case 3:
-					mThread->EnterMutex();
-					mRequestManager->JoinGame();
-					mThread->LeaveMutex();
+					// Message to join a party
+					PostMessage(mThread->GetWindow()->GetHWND(), WM_JOIN, 0, 0);
 					break;
 				default: break;
 			}
@@ -106,7 +100,7 @@ void ClientApp::UpdateInLobby()
 		
 		if (event->type == Event::TextEntered)
 		{
-			if(event->text.unicode == 8 && mGame->mInfo[mGame->mSelectedField].size() > 0)
+			if(event->text.unicode == 8 && !mGame->mInfo[mGame->mSelectedField].empty())
 				mGame->mInfo[mGame->mSelectedField].pop_back();
 			else if(event->text.unicode < 128 && mGame->mInfo[mGame->mSelectedField].size() < 12)
 				mGame->mInfo[mGame->mSelectedField] += event->text.unicode;
@@ -115,39 +109,38 @@ void ClientApp::UpdateInLobby()
 	}
 }
 
-void ClientApp::UpdateInGame()
+void ClientApp::UpdateInGame() const
 {
-	auto event = mGame->GetEvent();
+	const auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
 		
-		int x, y = -1;
+		Choice* choice = new Choice();
+		choice->x = -1;
+		choice->y = -1;
 
-		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y))
+		if (mGame->IsMouseClick(event) && mGame->IsMove(&choice->x, &choice->y))
 		{
 			mThread->EnterMutex();
-
-			if (mRequestManager->IsMyTurn())
-				mRequestManager->Play(x, y);
-
+			bool isMyTurn = mRequestManager->IsMyTurn();
 			mThread->LeaveMutex();
+
+			if (isMyTurn)
+				PostMessage(mThread->GetWindow()->GetHWND(), WM_PLAY, (WPARAM)choice, 0);
+
 		}
 	}
 }
 
-void ClientApp::UpdateGameOver()
+void ClientApp::UpdateGameOver() const
 {
-	auto event = mGame->GetEvent();
+	const auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
 
 		if (mGame->IsMouseClick(event))
-		{
-			mThread->EnterMutex();
-			mRequestManager->LeaveGame();
-			mThread->LeaveMutex();
-		}
+			PostMessage(mThread->GetWindow()->GetHWND(), WM_LEAVE, 0, 0);
 	}
 }

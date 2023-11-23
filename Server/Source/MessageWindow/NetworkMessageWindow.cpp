@@ -21,7 +21,6 @@ LRESULT ServerNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 
 	case WM_SOCKET:
 	{
-		mThread->EnterMutex();
 		ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
 
 		switch (LOWORD(lParam))
@@ -43,8 +42,6 @@ LRESULT ServerNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 			default:
 				break;
 		}
-
-		mThread->EnterMutex();
 	}
 	break;
 	default:
