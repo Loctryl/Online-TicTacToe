@@ -7,5 +7,8 @@
 #include <iostream>
 
 #define WM_SOCKET WM_USER+1
+#define WM_JOIN WM_USER+2
+#define WM_PLAY WM_USER+3
+#define WM_LEAVE WM_USER+4
 
 using namespace std;

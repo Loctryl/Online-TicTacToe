@@ -10,7 +10,13 @@ ThreadObj::~ThreadObj()
 
 DWORD ThreadObj::Start()
 {
-	return ResumeThread(mThread);
+	if (ResumeThread(mThread) == -1)
+	{
+		printf("Erreur thread\n");
+		return false;
+	}
+
+	return true;
 }
 
 void ThreadObj::EnterMutex()

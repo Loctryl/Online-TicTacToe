@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "Window/SFMLWindow.h"
 
-class RequestManager;
 class StateMachine;
 class Grid;
 class SFMLWindow;

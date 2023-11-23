@@ -5,6 +5,11 @@
 class GameManager;
 class ThreadObj;
 
+struct Choice
+{
+    int x, y;
+};
+
 class ClientRequestManager : public RequestManager
 {
 public:
