@@ -1,5 +1,5 @@
 ﻿#include "Headers/NetManager.h"
-#include <Resources/utilities.h>
+#include "Utility/Resources/utilities.h"
 #include "Grid/Grid.h"
 #include "Grid/Player.h"
 

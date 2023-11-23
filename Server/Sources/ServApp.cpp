@@ -1,49 +1,58 @@
 #include "Headers/ServApp.h"
 #include "Headers/ServerRequestManager.h"
-#include "Headers/MessageWindow.h"
+#include "Headers/ServerWebRequestManager.h"
+#include "Headers/ServerNetWorkThread.h"
+#include "Headers/ServerWebThread.h"
 #include "Headers/NetManager.h"
 
 ServApp::ServApp()
 {
-	mMessageWindow = new MessageWindow();
-	mMessageWindow->InitWindow();
+	mNetWorkThread = new ServerNetWorkThread(this);
+	mWebThread = new ServerWebThread(this);
+
 	mRequestManager = ServerRequestManager::GetInstance();
+	mWebRequestManager = ServerWebRequestManager::GetInstance();
 	mNetManager = new NetManager();
 }
 
 ServApp::~ServApp() {
-	delete mMessageWindow;
 	delete mNetManager;
 	//delete mRequestManager;
 }
 
 bool ServApp::Init()
 {
-	return mRequestManager->Init();
+	if (!mNetWorkThread->InitThread())
+		return false;
+
+	if (!mWebThread->InitThread())
+		return false;
+
+	return true;
 }
 
 int ServApp::Run()
 {
-
-	MSG msg = { 0 };
-
-	bool running = true;
-
-	// Boucle de messages principale :
-	while (running)
+	if (mNetWorkThread->Start() == -1)
 	{
-		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (msg.message == WM_QUIT)
-				running = false;
-		}
-
-		Update();
+		printf("Erreur thread socket\n");
+		return 1;
 	}
 
-	return (int)msg.wParam;
+	if (mWebThread->Start() == -1)
+	{
+		printf("Erreur thread web\n");
+		return 1;
+	}
+
+	// Boucle de messages principale :
+	do
+	{
+		Update();
+	} while (WaitForSingleObject(mNetWorkThread, 0) != WAIT_OBJECT_0 && WaitForSingleObject(mWebThread, 0) != WAIT_OBJECT_0);
+
+	mNetWorkThread->CloseThread();
+	mWebThread->CloseThread();
 
 	// FERMETURE DU SERVER
 	if (!mRequestManager->Close())

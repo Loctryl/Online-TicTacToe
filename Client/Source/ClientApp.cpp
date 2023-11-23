@@ -1,25 +1,22 @@
-#include "Headers/ClientApp.h"
-
-#include <Grid/Grid.h>
-
 #include "GameManager.h"
-#include "Headers/ClientRequestManager.h"
-#include "Headers/MessageWindow.h"
-
+#include "ClientApp.h"
+#include "Resources/framework.h"
+#include "NetWork\RequestManager.h"
+#include "Thread\NetWorkThread.h"
 
 ClientApp::ClientApp() 
 {
-	mMessageWindow = new MessageWindow();
-	mMessageWindow->InitWindow();
+	mThread = new ClientNetWorkThread(this);
+	mRequestManager = ClientRequestManager::GetInstance();
 }
 
 ClientApp::~ClientApp() {
-	delete mMessageWindow;
 	//delete mRequestManager;
 }
 
 bool ClientApp::Init() 
 {
+	mThread->InitThread();
 	mRequestManager = ClientRequestManager::GetInstance();
 	mGame = new GameManager();
 	mGame->InitWindow();
@@ -29,25 +26,29 @@ bool ClientApp::Init()
 
 int ClientApp::Run() 
 {
-	MSG msg = { 0 };
-
-	bool running = true;
+	if (mThread->Start() == -1)
+	{
+		printf("Erreur thread socket\n");
+		return 1;
+	}
 
 	// Boucle de messages principale :
-	while (running && !mRequestManager->GameIsEnded())
+	bool endGame = false;
+	do
 	{
-		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (msg.message == WM_QUIT)
-				running = false;
-		}
-		
 		Update();
+
+		mThread->EnterMutex();
+		endGame = mRequestManager->GameIsEnded();
+		mThread->LeaveMutex();
+
 		mGame->Render();
-	}
+
+	} while (!endGame);
+
 	
+	mThread->CloseThread();
+
 	// FERMETURE DU CLIENT
 	if (!mRequestManager->Close())
 		return 1;
@@ -55,7 +56,8 @@ int ClientApp::Run()
 	return 0; 
 }
 
-void ClientApp::Update() const
+
+void ClientApp::Update()
 {
 	switch (mGame->mState)
 	{
@@ -71,7 +73,7 @@ void ClientApp::Update() const
 	}
 }
 
-void ClientApp::UpdateInLobby() const
+void ClientApp::UpdateInLobby()
 {
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
@@ -94,7 +96,9 @@ void ClientApp::UpdateInLobby() const
 					mRequestManager->Init();
 					break;
 				case 3:
+					mThread->EnterMutex();
 					mRequestManager->JoinGame();
+					mThread->LeaveMutex();
 					break;
 				default: break;
 			}
@@ -111,7 +115,7 @@ void ClientApp::UpdateInLobby() const
 	}
 }
 
-void ClientApp::UpdateInGame() const
+void ClientApp::UpdateInGame()
 {
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
@@ -120,22 +124,32 @@ void ClientApp::UpdateInGame() const
 		
 		int x, y = -1;
 
-		if (mRequestManager->IsMyTurn() && mGame->IsMouseClick(event) && mGame->IsMove(&x, &y)) {
-			int coord[2] = {x, y};
-			mRequestManager->Play(coord);
+		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y))
+		{
+			mThread->EnterMutex();
+
+			if (mRequestManager->IsMyTurn())
+				mRequestManager->Play(x, y);
+
+			mThread->LeaveMutex();
 		}
 	}
 }
 
-void ClientApp::UpdateGameOver() const
+void ClientApp::UpdateGameOver()
 {
 	auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
 
-		if (mGame->IsMouseClick(event)) {
+		if (mGame->IsMouseClick(event))
+		{
+			mThread->EnterMutex();
+
 			mRequestManager->LeaveGame();
+
+			mThread->LeaveMutex();
 		}
 	}
 }

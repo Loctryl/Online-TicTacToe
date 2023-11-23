@@ -1,14 +1,19 @@
 #pragma once
+#include "framework.h"
 
 class ServerRequestManager;
-class MessageWindow;
+class ServerWebRequestManager;
 class NetManager;
+class ServerNetWorkThread;
+class ServerWebThread;
 //class GameManager;
 
 class ServApp
 {
 	ServerRequestManager* mRequestManager;
-	MessageWindow* mMessageWindow;
+	ServerWebRequestManager* mWebRequestManager;
+	ServerNetWorkThread* mNetWorkThread;
+	ServerWebThread* mWebThread;
 	NetManager* mNetManager;
 
 public:
@@ -19,4 +24,9 @@ public:
 
 	int Run();
 	int Update();
+
+	void EnterMutex();
+	void LeaveMutex();
+
+private:
 };

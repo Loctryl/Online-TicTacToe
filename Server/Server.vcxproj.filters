@@ -27,7 +27,7 @@
     <ClCompile Include="Sources\ServerRequestManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\MessageWindow.cpp">
+    <ClCompile Include="Sources\WebMessageWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\NetManager.cpp">
@@ -36,7 +36,22 @@
     <ClCompile Include="Sources\WebManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\ServerNetworkMessageWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\WebNetWork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ServerNetWorkThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Headers\ServerWebRequestManager.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ServerWebRequestManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ServerWebThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,7 +71,7 @@
     <ClInclude Include="Headers\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\MessageWindow.h">
+    <ClInclude Include="Headers\WebMessageWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\NetManager.h">
@@ -65,7 +80,16 @@
     <ClInclude Include="Headers\WebManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\ServerNetworkMessageWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Headers\WebNetWork.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\ServerNetWorkThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\ServerWebThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

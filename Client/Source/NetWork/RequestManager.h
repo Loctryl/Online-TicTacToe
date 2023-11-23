@@ -1,8 +1,9 @@
 #pragma once
 #include "Utility/RequestManager/RequestManager.h"
-#include "ClientNetWork.h"
+#include "NetWork.h"
 
 class GameManager;
+class ThreadObj;
 
 class ClientRequestManager : public RequestManager
 {
@@ -10,11 +11,11 @@ public:
     ~ClientRequestManager() override;
 
     static ClientRequestManager* GetInstance();
-    bool Init() override;
+    bool Init(ThreadObj* thread) override;
 
     bool IsMyTurn() const;
 
-    void Play(int coord[2]);
+    void Play(int x, int y);
 
     void JoinGame() const;
 

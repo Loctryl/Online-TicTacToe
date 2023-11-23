@@ -10,14 +10,11 @@ public:
 
     static ServerRequestManager* GetInstance();
 
-    bool Init();
+    bool Init(ThreadObj* thread);
 
     bool ManageMessage(std::string Message, SOCKET* socket);
 
-    bool SendToWeb(std::string request, SOCKET* socket) const;
-
     inline ServerNetWork* GetNetWork() { return (ServerNetWork*)mNetWork; };
-    inline WebNetWork* GetWebNetWork() { return (WebNetWork*)mWebNetWork; };
 
 private:
     static ServerRequestManager* mInstance;

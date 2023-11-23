@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <string>
-#include "Resources/framework.h"
+#include "Utility/Resources/framework.h"
+
+class ThreadObj;
 
 class Network
 {
@@ -10,7 +12,7 @@ public:
 
     virtual bool Close() = 0;
     
-    virtual bool Init() = 0;
+    virtual bool Init(ThreadObj* thread) = 0;
 
     virtual bool SendRequest(std::string data, SOCKET* socket) = 0;
     virtual std::string Recieve(SOCKET* socket) = 0;

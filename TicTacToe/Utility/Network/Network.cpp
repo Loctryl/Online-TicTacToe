@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Network.h"
+#include "Utility/Thread/Thread.h"
 
 #define PORT 6666
 #define ADRESSE "127.0.0.1"

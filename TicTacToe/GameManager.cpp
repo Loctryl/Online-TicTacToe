@@ -1,5 +1,4 @@
-﻿#include <Resources/utilities.h>
-#include <Window/SFMLWindow.h>
+﻿#include "Utility/Resources/utilities.h"
 #include "Grid/Grid.h"
 #include "GameManager.h"
 

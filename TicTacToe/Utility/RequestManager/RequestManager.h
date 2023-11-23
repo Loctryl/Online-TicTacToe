@@ -1,13 +1,14 @@
 #pragma once
 #include <string>
 
-#include "Resources/framework.h"
+#include "Utility/Resources/framework.h"
 #include "Utility/json.hpp"
 
 
 using json = nlohmann::json;
 
 class Network;
+class ThreadObj;
 
 enum EventMessage
 {
@@ -21,7 +22,7 @@ public:
 
     inline bool GameIsEnded() const { return mEndGame; }
 
-    virtual bool Init() = 0;
+    virtual bool Init(ThreadObj* thread) = 0;
 
     bool SendRequestPlay(int coord[2], SOCKET* socket) const;
 
@@ -34,7 +35,6 @@ public:
 
 protected:
     Network* mNetWork;
-    Network* mWebNetWork;
     bool mEndGame = false;
 
     int EventToInt(std::string event);

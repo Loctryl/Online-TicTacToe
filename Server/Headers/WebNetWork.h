@@ -2,13 +2,15 @@
 #include "framework.h"
 #include "Utility/Network/Network.h"
 
+class ThreadObj;
+
 class WebNetWork : public Network
 {
 public:
     WebNetWork();
     ~WebNetWork() = default;
 
-    bool Init();
+    bool Init(ThreadObj* thread);
 
     bool SendRequest(std::string data, SOCKET* socket);
     bool AcceptWebClient(SOCKET* socket);

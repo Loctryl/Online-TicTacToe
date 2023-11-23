@@ -121,7 +121,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)SFML-2.6.0\lib\;$(SolutionDir)x64\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)SFML-2.6.0\lib\;$(SolutionDir)TicTacToe\;$(SolutionDir)x64\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -147,7 +147,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\MessageWindow.cpp" />
+    <ClCompile Include="Sources\ServerWebThread.cpp" />
+    <ClCompile Include="Sources\ServerWebRequestManager.cpp" />
+    <ClCompile Include="Headers\ServerWebRequestManager.h" />
+    <ClCompile Include="Sources\ServerNetWorkThread.cpp" />
+    <ClCompile Include="Sources\WebMessageWindow.cpp" />
+    <ClCompile Include="Sources\ServerNetworkMessageWindow.cpp" />
     <ClCompile Include="Sources\NetManager.cpp" />
     <ClCompile Include="Sources\ServApp.cpp" />
     <ClCompile Include="Sources\ServerNetWork.cpp" />
@@ -159,10 +164,13 @@
   <ItemGroup>
     <ClInclude Include="Headers\framework.h" />
     <ClInclude Include="Headers\json.hpp" />
+    <ClInclude Include="Headers\ServerNetworkMessageWindow.h" />
     <ClInclude Include="Headers\ServApp.h" />
     <ClInclude Include="Headers\ServerNetWork.h" />
+    <ClInclude Include="Headers\ServerNetWorkThread.h" />
     <ClInclude Include="Headers\ServerRequestManager.h" />
-    <ClInclude Include="Headers\MessageWindow.h" />
+    <ClInclude Include="Headers\ServerWebThread.h" />
+    <ClInclude Include="Headers\WebMessageWindow.h" />
     <ClInclude Include="Headers\NetManager.h" />
     <ClInclude Include="Headers\WebManager.h" />
     <ClInclude Include="Headers\WebNetWork.h" />

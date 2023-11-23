@@ -1,8 +1,9 @@
 #include "GameManager.h"
-#include "Headers/ClientRequestManager.h"
-#include "Headers/ClientNetWork.h"
+#include "RequestManager.h"
+#include "NetWork.h"
+#include "Utility/Resources/utilities.h"
+#include "Utility/Thread/Thread.h"
 #include "Grid/Grid.h"
-#include "Resources/utilities.h"
 
 ClientRequestManager* ClientRequestManager::mInstance = nullptr;
 
@@ -35,10 +36,10 @@ void ClientRequestManager::JoinGame() const
     SendRequestJoin(((ClientNetWork*)mNetWork)->GetClientSocket());
 }
 
-void ClientRequestManager::Play(int coord[2])
+void ClientRequestManager::Play(int x, int y)
 {
-    mMyChoice[0] = coord[0];
-    mMyChoice[1] = coord[1];
+    mMyChoice[0] = x;
+    mMyChoice[1] = y;
 
     SendRequestPlay(mMyChoice, ((ClientNetWork*)mNetWork)->GetClientSocket());
 }
@@ -49,9 +50,9 @@ void ClientRequestManager::LeaveGame() const
 }
 
 
-bool ClientRequestManager::Init()
+bool ClientRequestManager::Init(ThreadObj* thread)
 {
-    return ((ClientNetWork*)mNetWork)->Init();
+    return ((ClientNetWork*)mNetWork)->Init(thread);
 }
 
 bool ClientRequestManager::ManageMessage(std::string Message)

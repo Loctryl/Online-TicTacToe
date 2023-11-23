@@ -1,9 +1,12 @@
 #include "Headers/WebNetWork.h"
-#include "Headers/MessageWindow.h"
+#include <Headers/WebMessageWindow.h>
+#include "Utility/MessageWindow/MessageWindow.h"
+#include "Utility/Thread/Thread.h"
+#include "Headers/ServerWebThread.h"
 
 WebNetWork::WebNetWork() { }
 
-bool WebNetWork::Init()
+bool WebNetWork::Init(ThreadObj* thread)
 {
     Network::Init(mWebSocket);
 
@@ -15,7 +18,7 @@ bool WebNetWork::Init()
     if (!WaitWebClients())
         return false;
 
-    WSAAsyncSelect(mWebSocket, MessageWindow::GetHWND(), WM_WEBSOCKET, FD_ACCEPT);
+    WSAAsyncSelect(mWebSocket, ((ServerWebThread*)thread)->GetWindow()->GetHWND(), WM_WEBSOCKET, FD_ACCEPT);
 
     return true;
 }

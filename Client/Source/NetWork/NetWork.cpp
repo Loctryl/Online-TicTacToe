@@ -1,20 +1,22 @@
-#include "Headers/ClientNetWork.h"
-#include "Ressources/framework.h"
-#include "Headers/MessageWindow.h"
+#include "NetWork.h"
+#include "Resources/framework.h"
+#include "..\MessageWindow\NetworkMessageWindow.h"
+#include "..\Thread\NetWorkThread.h"
+#include "Utility/Thread/Thread.h"
 
 
 ClientNetWork::ClientNetWork() : Network() { }
 
 ClientNetWork::~ClientNetWork() { }
 
-bool ClientNetWork::Init()
+bool ClientNetWork::Init(ThreadObj* thread)
 {
     Network::Init(mConnectSocket);
 
     if (!ConnectServer())
         return false;
 
-    WSAAsyncSelect(mConnectSocket, MessageWindow::GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
+    WSAAsyncSelect(mConnectSocket, ((ClientNetWorkThread*)thread)->GetWindow()->GetHWND(), WM_SOCKET, FD_READ | FD_CLOSE);
 
     return true;
 }
