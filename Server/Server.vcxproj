@@ -73,10 +73,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
     <LibraryPath>$(SolutionDir)SFML-2.6.0\lib\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)TicTacToe\;$(SolutionDir)SFML-2.6.0\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)TicTacToe\;$(SolutionDir)SFML-2.6.0\include\;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)TicTacToe\;$(SolutionDir)SFML-2.6.0\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)TicTacToe\;$(SolutionDir)SFML-2.6.0\include\;$(ProjectDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)SFML-2.6.0\lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

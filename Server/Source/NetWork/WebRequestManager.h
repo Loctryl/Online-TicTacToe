@@ -1,6 +1,6 @@
 #pragma once
 #include "Utility/RequestManager/RequestManager.h"
-#include "Source/NetWork/WebNetWork.h"
+#include "WebNetWork.h"
 
 class ThreadObj;
 
