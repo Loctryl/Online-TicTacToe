@@ -1,7 +1,5 @@
 #include "MessageWindow.h"
 
-HWND MessageWindow::hWnd = NULL;
-
 MessageWindow::MessageWindow()
 {
 	hInst = GetModuleHandle(0);
@@ -32,6 +30,7 @@ BOOL MessageWindow::InitInstance()
 		nullptr, nullptr, hInst, this);
 	if (!hWnd)
 	{
+		cout << "false" << endl;
 		return FALSE;
 	}
 

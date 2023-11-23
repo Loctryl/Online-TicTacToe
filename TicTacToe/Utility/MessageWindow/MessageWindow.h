@@ -4,7 +4,7 @@
 // Handles the Windows window
 class MessageWindow
 {
-	static HWND hWnd;
+	HWND hWnd;
 	HINSTANCE hInst; // current instance
 	LPCWSTR szWindowClass;
 
@@ -22,7 +22,7 @@ public:
 
 	bool InitWindow(LPCWSTR windowName);
 
-	static HWND& GetHWND();
+	HWND& GetHWND();
 
 	HINSTANCE& GetHInstance();
 

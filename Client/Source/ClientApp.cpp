@@ -9,7 +9,7 @@ ClientApp::ClientApp()
 	InitializeCriticalSection(&mMutex);// pour creer la critical section
 
 	mMessageWindow = new ClientNetworkMessageWindow(this);
-	mMessageWindow->InitWindow(L"MyWin32Wnd");
+	mMessageWindow->InitWindow(L"ClientNetworkMessageWindow");
 	mRequestManager = ClientRequestManager::GetInstance();
 }
 
