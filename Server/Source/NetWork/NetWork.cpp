@@ -1,7 +1,7 @@
-#include "Headers/ServerNetWork.h"
-#include "Headers/ServerNetworkMessageWindow.h"
-#include "Headers/ServerNetWorkThread.h"
-#include "Headers/WebMessageWindow.h"
+#include "NetWork.h"
+#include "Source/MessageWindow/NetworkMessageWindow.h"
+#include "Source/Thread/NetWorkThread.h"
+#include "Source/MessageWindow/WebMessageWindow.h"
 
 ServerNetWork::ServerNetWork() { mThread = nullptr; }
 

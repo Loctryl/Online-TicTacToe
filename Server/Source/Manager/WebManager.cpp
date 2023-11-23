@@ -1,8 +1,7 @@
-#include "Headers/WebManager.h"
-#include "Headers/NetManager.h"
+#include "WebManager.h"
+#include "NetManager.h"
 #include "Grid/Grid.h"
 #include "Grid/Player.h"
-#include <iostream>
 #include <sstream>
 #include <fstream>
 #include <vector>
@@ -19,8 +18,8 @@ WebManager* WebManager::GetInstance()
 
 std::string WebManager::BuildWebsite()
 {
-	std::ifstream webserverheader("./Sources/webserverheader.txt", std::ios::binary | std::ios::ate);
-	std::ifstream webserverfooter("./Sources/webserverfooter.txt", std::ios::binary | std::ios::ate);
+	std::ifstream webserverheader("Resources/webserverheader.txt", std::ios::binary | std::ios::ate);
+	std::ifstream webserverfooter("Resources/webserverfooter.txt", std::ios::binary | std::ios::ate);
 
 	std::string webserverheaderstring = ReadFile(&webserverheader);
 	std::string webserverbodystring = BuildBody();

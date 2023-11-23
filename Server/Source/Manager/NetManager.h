@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <vector>
-#include "framework.h"
+#include "Resources/framework.h"
 
 class Grid;
 class Player;

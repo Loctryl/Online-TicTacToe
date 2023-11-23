@@ -1,8 +1,8 @@
-#include "Headers/WebNetWork.h"
-#include <Headers/WebMessageWindow.h>
+#include "Source/NetWork/WebNetWork.h"
+#include "Source/MessageWindow/WebMessageWindow.h"
 #include "Utility/MessageWindow/MessageWindow.h"
 #include "Utility/Thread/Thread.h"
-#include "Headers/ServerWebThread.h"
+#include "Source/Thread/WebThread.h"
 
 WebNetWork::WebNetWork() { }
 
