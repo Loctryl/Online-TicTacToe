@@ -1,6 +1,8 @@
 #pragma once
 #include "Resources/framework.h"
 
+class ThreadObj;
+
 // Handles the Windows window
 class MessageWindow
 {
@@ -16,8 +18,12 @@ class MessageWindow
 
 	ATOM MyRegisterClass();
 
+protected:
+
+	ThreadObj* mThread;
+
 public:
-	MessageWindow();
+	MessageWindow(ThreadObj* mThread);
 	virtual ~MessageWindow() = default;
 
 	bool InitWindow(LPCWSTR windowName);

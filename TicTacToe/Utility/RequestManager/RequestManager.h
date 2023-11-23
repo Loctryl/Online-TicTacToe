@@ -8,6 +8,7 @@
 using json = nlohmann::json;
 
 class Network;
+class ThreadObj;
 
 enum EventMessage
 {
@@ -21,7 +22,7 @@ public:
 
     inline bool GameIsEnded() const { return mEndGame; }
 
-    virtual bool Init() = 0;
+    virtual bool Init(ThreadObj* thread) = 0;
 
     bool SendRequestPlay(int coord[2], SOCKET* socket) const;
 

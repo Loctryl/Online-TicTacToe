@@ -3,6 +3,7 @@
 #include "Headers/ClientNetWork.h"
 #include "Grid/Grid.h"
 #include "Resources/utilities.h"
+#include "Utility/Thread/Thread.h"
 
 ClientRequestManager* ClientRequestManager::mInstance = nullptr;
 
@@ -49,9 +50,9 @@ void ClientRequestManager::LeaveGame() const
 }
 
 
-bool ClientRequestManager::Init()
+bool ClientRequestManager::Init(ThreadObj* thread)
 {
-    return ((ClientNetWork*)mNetWork)->Init();
+    return ((ClientNetWork*)mNetWork)->Init(thread);
 }
 
 bool ClientRequestManager::ManageMessage(std::string Message)

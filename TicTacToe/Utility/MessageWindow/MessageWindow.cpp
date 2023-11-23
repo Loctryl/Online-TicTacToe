@@ -1,11 +1,13 @@
 #include "MessageWindow.h"
+#include "Utility/Thread/Thread.h"
 
-MessageWindow::MessageWindow()
+MessageWindow::MessageWindow(ThreadObj* thread)
 {
 	hInst = GetModuleHandle(0);
 	hPrevInstance = 0;
 	lpCmdLine = 0;
 	nCmdShow = SW_SHOW;
+	mThread = thread;
 }
 
 bool MessageWindow::InitWindow(LPCWSTR windowName)

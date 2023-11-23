@@ -1,15 +1,12 @@
-#include "Grid/Grid.h"
 #include "GameManager.h"
-#include "Headers/ClientRequestManager.h"
-#include "Headers/ClientNetworkMessageWindow.h"
 #include "Headers/ClientApp.h"
+#include "Grid/Grid.h"
+#include "Headers/ClientRequestManager.h"
+#include "Headers/ClientNetWorkThread.h"
 
 ClientApp::ClientApp() 
 {
-	InitializeCriticalSection(&mMutex);// pour creer la critical section
-
-	mMessageWindow = new ClientNetworkMessageWindow(this);
-	mMessageWindow->InitWindow(L"ClientNetworkMessageWindow");
+	mThread = new ClientNetWorkThread(this);
 	mRequestManager = ClientRequestManager::GetInstance();
 }
 
@@ -20,23 +17,18 @@ ClientApp::~ClientApp() {
 
 bool ClientApp::Init() 
 {
+	mThread->InitThread();
 	mRequestManager = ClientRequestManager::GetInstance();
 	mGame = new GameManager();
 	mGame->InitWindow();
 	mRequestManager->mGame = mGame;
-
-	if (!mRequestManager->Init())
-		return false;
-
-	if (!CreateSocketThread())
-		return false;
 	
 	return true;
 }
 
 int ClientApp::Run() 
 {
-	if (ResumeThread(mSocketThread) == -1)
+	if (mThread->Start() == -1)
 	{
 		printf("Erreur thread socket\n");
 		return 1;
@@ -48,19 +40,16 @@ int ClientApp::Run()
 	{
 		Update();
 
-		EnterMutex();
+		mThread->EnterMutex();
 		endGame = mRequestManager->GameIsEnded();
-		LeaveMutex();
+		mThread->LeaveMutex();
 
 		mGame->Render();
 
-		bool test2 = true;
-	} while (WaitForSingleObject(mSocketThread, 0) != WAIT_OBJECT_0 && !endGame);
+	} while (!endGame);
 
 	
-	DeleteCriticalSection(&mMutex);// quand c'est fini
-
-	CloseHandle(mSocketThread);
+	mThread->CloseThread();
 
 	// FERMETURE DU CLIENT
 	if (!mRequestManager->Close())
@@ -69,15 +58,6 @@ int ClientApp::Run()
 	return 0; 
 }
 
-void ClientApp::EnterMutex()
-{
-	EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions
-}
-
-void ClientApp::LeaveMutex()
-{
-	LeaveCriticalSection(&mMutex);// pour lib�rer le bloc
-}
 
 void ClientApp::Update()
 {
@@ -103,9 +83,9 @@ void ClientApp::UpdateInLobby()
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
 		if (mGame->IsMouseClick(event))
 		{
-			EnterMutex();
+			mThread->EnterMutex();
 			mRequestManager->JoinGame();
-			LeaveMutex();
+			mThread->LeaveMutex();
 		}
 	}
 }
@@ -121,12 +101,12 @@ void ClientApp::UpdateInGame()
 
 		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y))
 		{
-			EnterMutex();
+			mThread->EnterMutex();
 
 			if (mRequestManager->IsMyTurn())
 				mRequestManager->Play(x, y);
 
-			LeaveMutex();
+			mThread->LeaveMutex();
 		}
 	}
 }
@@ -140,42 +120,11 @@ void ClientApp::UpdateGameOver()
 
 		if (mGame->IsMouseClick(event))
 		{
-			EnterMutex();
+			mThread->EnterMutex();
 
 			mRequestManager->LeaveGame();
 
-			LeaveMutex();
+			mThread->LeaveMutex();
 		}
 	}
 }
-
-bool ClientApp::CreateSocketThread()
-{
-	mSocketThread = CreateThread(
-		NULL,                   // default security attributes
-		0,                      // use default stack size  
-		SocketThreadFunction,	// thread function name
-		this,					// argument to thread function 
-		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour ex�cuter le thread
-		NULL);					// returns the thread identifier 
-
-	return true;
-}
-
-DWORD WINAPI ClientApp::SocketThreadFunction(LPVOID lpParam)
-{
-	ClientApp* pApp = (ClientApp*)lpParam;
-
-	MSG msg = { 0 };
-
-	while (GetMessage(&msg, nullptr, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-		if (msg.message == WM_QUIT)
-			break;
-	}
-
-	return 0;
-}
-

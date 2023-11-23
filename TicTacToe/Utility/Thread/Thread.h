@@ -1,22 +1,23 @@
 #pragma once
-#include <Windows.h>
+#include "Resources/framework.h"
 
-class Thread 
+class ThreadObj 
 {
-	HANDLE* mThread;
-	CRITICAL_SECTION* mMutex;
+protected:
+	HANDLE mThread;
+	CRITICAL_SECTION mMutex;
 
 public:
-	Thread();
-	virtual ~Thread();
+	ThreadObj();
+	virtual ~ThreadObj();
 
 	void EnterMutex();
 	void LeaveMutex();
 
-	bool Init();
+	bool InitThread();
 	void CloseThread();
 
-	inline HANDLE* GetHandle() { return mThread; };
+	inline HANDLE* GetHandle() { return &mThread; };
 
 	virtual void ThreadFunction() = 0;
 	static DWORD WINAPI ThreadFunction(LPVOID lpParam);

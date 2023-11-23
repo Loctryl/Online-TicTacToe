@@ -1,10 +1,10 @@
 #include "Headers/ClientNetworkMessageWindow.h"
 #include "Headers/ClientRequestManager.h"
 #include "Headers/ClientApp.h"
+#include "Headers/ClientNetWorkThread.h"
 
-ClientNetworkMessageWindow::ClientNetworkMessageWindow(ClientApp* clientApp) : MessageWindow()
+ClientNetworkMessageWindow::ClientNetworkMessageWindow(ClientNetWorkThread* thread) : MessageWindow((ThreadObj*)thread)
 {
-	mClientApp = clientApp;
 }
 
 LRESULT ClientNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -20,7 +20,7 @@ LRESULT ClientNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 		SOCKET socket = wParam;
 		string message = "";
 
-		mClientApp->EnterMutex();
+		mThread->EnterMutex();
 
 		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
 
@@ -39,7 +39,7 @@ LRESULT ClientNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 			break;
 		}
 
-		mClientApp->LeaveMutex();
+		mThread->LeaveMutex();
 	}
 	break;
 

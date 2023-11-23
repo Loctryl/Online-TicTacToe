@@ -4,13 +4,16 @@
 class ClientRequestManager;
 class ClientNetworkMessageWindow;
 class GameManager;
+class ClientNetWorkThread;
 
 class ClientApp
 {
 	ClientRequestManager* mRequestManager;
 	ClientNetworkMessageWindow* mMessageWindow;
+	ClientNetWorkThread* mThread;
 
 	GameManager* mGame;
+
 public:
 	ClientApp();
 	~ClientApp();
@@ -19,18 +22,10 @@ public:
 
 	int Run();
 
-	void EnterMutex();
-	void LeaveMutex();
+	inline GameManager* GetGameManager() { return mGame; };
 
 private:
 	void Update();
-
-	// Thread
-	HANDLE mSocketThread;
-	CRITICAL_SECTION mMutex;
-
-	bool CreateSocketThread();
-	static DWORD WINAPI SocketThreadFunction(LPVOID lpParam);
 
 	void UpdateInLobby();
 	void UpdateInGame();

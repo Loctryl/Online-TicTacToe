@@ -27,7 +27,10 @@
     <ClCompile Include="Source\ClientRequestManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\NetWorkMessageWindow.cpp">
+    <ClCompile Include="Source\ClientNetworkMessageWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ClientNetWorkThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,7 +59,10 @@
     <ClInclude Include="Headers\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\NetWorkMessageWindow.h">
+    <ClInclude Include="Headers\ClientNetworkMessageWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\ClientNetWorkThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

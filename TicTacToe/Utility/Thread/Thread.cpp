@@ -1,49 +1,52 @@
 ﻿#include "Thread.h"
 
-Thread::Thread()
+ThreadObj::ThreadObj()
 {
 }
 
-Thread::~Thread()
+ThreadObj::~ThreadObj()
 {
 }
 
-void Thread::EnterMutex()
+void ThreadObj::EnterMutex()
 {
-	EnterCriticalSection(mMutex);// pour bloquer un bloc d'instructions
+	EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions
 }
 
-void Thread::LeaveMutex()
+void ThreadObj::LeaveMutex()
 {
-	LeaveCriticalSection(mMutex);// pour lib�rer le bloc
+	LeaveCriticalSection(&mMutex);// pour lib�rer le bloc
 }
 
-bool Thread::Init()
+bool ThreadObj::InitThread()
 {
-	InitializeCriticalSection(mMutex);// pour creer la critical section
+	InitializeCriticalSection(&mMutex);// pour creer la critical section
 
-	if (*mThread = CreateThread(
+	mThread = CreateThread(
 		NULL,                   // default security attributes
 		0,                      // use default stack size  
 		ThreadFunction,	// thread function name
 		this,					// argument to thread function 
 		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour ex�cuter le thread
-		NULL))					// returns the thread identifier
-		return true;
+		NULL);					// returns the thread identifier
 
-	return false;
+	cout << "here";
+
+	return true;
 }
 
-void Thread::CloseThread()
+void ThreadObj::CloseThread()
 {
-	DeleteCriticalSection(mMutex);// quand c'est fini
+	DeleteCriticalSection(&mMutex);// quand c'est fini
 	CloseHandle(mThread);
 }
 
 
-DWORD __stdcall Thread::ThreadFunction(LPVOID lpParam)
+DWORD __stdcall ThreadObj::ThreadFunction(LPVOID lpParam)
 {
-	Thread* currentThread = (Thread*)lpParam;
-	currentThread->ThreadFunction();
+
+	ThreadObj* currentThread = (ThreadObj*)lpParam;
+	if(currentThread != nullptr)
+		currentThread->ThreadFunction();
 	return 0;
 }

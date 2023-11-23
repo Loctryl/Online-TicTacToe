@@ -3,6 +3,7 @@
 #include "ClientNetWork.h"
 
 class GameManager;
+class ThreadObj;
 
 class ClientRequestManager : public RequestManager
 {
@@ -10,7 +11,7 @@ public:
     ~ClientRequestManager() override;
 
     static ClientRequestManager* GetInstance();
-    bool Init() override;
+    bool Init(ThreadObj* thread) override;
 
     bool IsMyTurn() const;
 
