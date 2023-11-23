@@ -1,6 +1,6 @@
 #pragma once
 #include "Utility/RequestManager/RequestManager.h"
-#include "ClientNetWork.h"
+#include "NetWork.h"
 
 class GameManager;
 class ThreadObj;

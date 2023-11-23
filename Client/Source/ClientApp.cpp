@@ -1,8 +1,8 @@
 #include "GameManager.h"
-#include "Headers/ClientApp.h"
-#include "Grid/Grid.h"
-#include "Headers/ClientRequestManager.h"
-#include "Headers/ClientNetWorkThread.h"
+#include "ClientApp.h"
+#include "Resources/framework.h"
+#include "NetWork\RequestManager.h"
+#include "Thread\NetWorkThread.h"
 
 ClientApp::ClientApp() 
 {

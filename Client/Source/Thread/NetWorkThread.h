@@ -1,6 +1,6 @@
 #pragma once
 #include "Utility/Thread/Thread.h"
-#include "Headers/ClientNetworkMessageWindow.h"
+#include "..\MessageWindow\NetworkMessageWindow.h"
 
 class ClientApp;
 

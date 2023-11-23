@@ -32,7 +32,6 @@ BOOL MessageWindow::InitInstance()
 		nullptr, nullptr, hInst, this);
 	if (!hWnd)
 	{
-		cout << "false" << endl;
 		return FALSE;
 	}
 
@@ -72,7 +71,6 @@ LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	{
 	case WM_CREATE:
 	{
-		std::cout << "aled2" << endl;
 
 		// Sauvegarde du l'instance de MessageWindow dans la window
 		LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
@@ -83,7 +81,6 @@ LRESULT CALLBACK MessageWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 	default:
 	{
 		messageWindow = reinterpret_cast<MessageWindow*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-		std::cout << messageWindow << endl;
 		if(messageWindow)
 		{
 			return messageWindow->WndInstanceProc(hWnd, message, wParam, lParam);

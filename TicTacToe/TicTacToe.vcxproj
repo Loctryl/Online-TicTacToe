@@ -222,13 +222,13 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid\Grid.h" />
     <ClInclude Include="Grid\Player.h" />
-    <ClInclude Include="Resources\framework.h" />
-    <ClInclude Include="Resources\utilities.h" />
-    <ClInclude Include="Resources\SfmlIncluder.h" />
     <ClInclude Include="Utility\json.hpp" />
     <ClInclude Include="Utility\MessageWindow\MessageWindow.h" />
     <ClInclude Include="Utility\Network\Network.h" />
     <ClInclude Include="Utility\RequestManager\RequestManager.h" />
+    <ClInclude Include="Utility\Resources\framework.h" />
+    <ClInclude Include="Utility\Resources\SfmlIncluder.h" />
+    <ClInclude Include="Utility\Resources\utilities.h" />
     <ClInclude Include="Utility\Thread\Thread.h" />
     <ClInclude Include="Window\SFMLWindow.h" />
   </ItemGroup>

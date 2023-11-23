@@ -1,7 +1,7 @@
 #include "GameManager.h"
-#include "Headers/ClientNetWorkThread.h"
-#include "Headers/ClientApp.h"
-#include "Headers/ClientRequestManager.h"
+#include "NetWorkThread.h"
+#include "Source/ClientApp.h"
+#include "..\NetWork\RequestManager.h"
 
 ClientNetWorkThread::ClientNetWorkThread(ClientApp* clientApp) : ThreadObj()
 {
@@ -54,15 +54,12 @@ void ClientNetWorkThread::InitWindow()
 
 void ClientNetWorkThread::UpdateInLobby()
 {
-	cout << "inLobby" << endl;
 }
 
 void ClientNetWorkThread::UpdateInGame()
 {
-	cout << "inGame" << endl;
 }
 
 void ClientNetWorkThread::UpdateGameOver()
 {
-	cout << "inGameOver" << endl;
 }

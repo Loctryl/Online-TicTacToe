@@ -33,9 +33,7 @@ bool ThreadObj::InitThread()
 		ThreadFunction,	// thread function name
 		this,					// argument to thread function 
 		CREATE_SUSPENDED,		// Attend l'appel de ResumeThread pour ex�cuter le thread
-		NULL);					// returns the thread identifier
-
-	cout << "here";
+		NULL);			// returns the thread identifier
 
 	return true;
 }

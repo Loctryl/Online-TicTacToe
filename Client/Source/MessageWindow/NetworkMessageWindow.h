@@ -1,5 +1,5 @@
 #pragma once
-#include "../Ressources/framework.h"
+#include "Resources/framework.h"
 #include "Utility/MessageWindow/MessageWindow.h"
 
 class ClientNetWorkThread;

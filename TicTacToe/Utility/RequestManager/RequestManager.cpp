@@ -1,6 +1,6 @@
 #include "RequestManager.h"
 #include "Utility/Network/Network.h"
-#include "Resources/utilities.h"
+#include "Utility/Resources/utilities.h"
 #include "Utility/Thread/Thread.h"
 
 RequestManager::~RequestManager() { REL_PTR(mNetWork) }

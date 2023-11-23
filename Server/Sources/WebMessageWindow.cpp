@@ -10,7 +10,6 @@ WebMessageWindow::WebMessageWindow(ServerWebThread* mThread) : MessageWindow((Th
 }
 
 LRESULT WebMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-	std::cout << "WebMessageWindow\n";
 	SOCKET socket = wParam;
 	SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
 	WebManager* webManager = WebManager::GetInstance();

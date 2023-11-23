@@ -43,8 +43,7 @@ bool ServerNetWork::WaitClients()
         Network::CloseSocket(mListenSocket);
         return false;
     }
-
-    printf("Attente de la connexion de 2 clients...\n");
+    
     return true;
 }
 

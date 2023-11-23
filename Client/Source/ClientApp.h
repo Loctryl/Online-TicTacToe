@@ -1,5 +1,4 @@
 #pragma once
-#include "Ressources/framework.h"
 
 class ClientRequestManager;
 class ClientNetWorkThread;

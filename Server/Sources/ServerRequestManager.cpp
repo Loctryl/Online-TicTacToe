@@ -4,7 +4,7 @@
 #include "Headers/NetManager.h"
 #include "Grid/Player.h"
 #include "Grid/Grid.h"
-#include "Resources/utilities.h"
+#include "Utility/Resources/utilities.h"
 
 ServerRequestManager* ServerRequestManager::mInstance = nullptr;
 

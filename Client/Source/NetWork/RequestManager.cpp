@@ -1,9 +1,9 @@
 #include "GameManager.h"
-#include "Headers/ClientRequestManager.h"
-#include "Headers/ClientNetWork.h"
-#include "Grid/Grid.h"
-#include "Resources/utilities.h"
+#include "RequestManager.h"
+#include "NetWork.h"
+#include "Utility/Resources/utilities.h"
 #include "Utility/Thread/Thread.h"
+#include "Grid/Grid.h"
 
 ClientRequestManager* ClientRequestManager::mInstance = nullptr;
 
