@@ -1,7 +1,6 @@
 #include "WebMessageWindow.h"
 #include "Source/NetWork/WebRequestManager.h"
 #include "Source/Thread/WebThread.h"
-#include "Source/Manager/NetManager.h"
 #include "Source/Manager/WebManager.h"
 
 WebMessageWindow::WebMessageWindow(ServerWebThread* mThread) : MessageWindow((ThreadObj*)mThread)
@@ -25,21 +24,12 @@ LRESULT WebMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam
 		{
 		case FD_ACCEPT:
 		{
-			mThread->EnterMutex();
-
 			ServerWebRequestManager* requestManager = ServerWebRequestManager::GetInstance();
 			requestManager->GetNetWork()->AcceptWebClient(newSocket);
 			response = webManager->BuildWebsite();
 			if (!requestManager->SendToWeb(response, newSocket))
-			{
-				mThread->LeaveMutex();
 				return 1;
-			}
-			mThread->LeaveMutex();
 		}
-			
-
-			//requestManager->GetNetWork()->CloseSocket(newSocket);
 			break;
 		default:
 			break;

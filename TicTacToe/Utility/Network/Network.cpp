@@ -65,7 +65,7 @@ sockaddr_in Network::SettingClientProtocol()
     sockaddr_in service;
     service.sin_family = AF_INET;
     service.sin_port = htons(PORT);
-    char IPBuffer[100] = "10.1.170.16";
+    char IPBuffer[100] = "192.168.1.51";
     //std::cout << "Saisir l'adresse IP de connexion :";
     //std::cin >> IPBuffer;
     
@@ -87,7 +87,7 @@ sockaddr_in Network::SettingWebProtocol()
 // Sends data from a socket
 bool Network::SendRequest(SOCKET &sock, std::string data)
 {
-    int datasize = data.size();
+    int datasize = (int)data.size();
     int total = datasize + SIGNATURE_SIZE + LENGTH_MESSAGE_SIZE;
     char* dataBuffer = new char[total];
 
@@ -112,7 +112,7 @@ bool Network::SendRequest(SOCKET &sock, std::string data)
 
 bool Network::SendToWeb(SOCKET& sock, std::string data)
 {
-    int datasize = data.size();
+    int datasize = (int)data.size();
     char* dataBuffer = new char[datasize];
 
     std::memcpy(dataBuffer, data.c_str(), datasize);

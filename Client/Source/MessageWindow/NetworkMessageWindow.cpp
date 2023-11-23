@@ -43,6 +43,35 @@ LRESULT ClientNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 	}
 	break;
 
+	case WM_JOIN:
+	{
+		mThread->EnterMutex();
+		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
+		requestManager->JoinGame();
+		mThread->LeaveMutex();
+	}
+		break;
+
+	case WM_PLAY:
+	{
+		Choice* choice = (Choice*)wParam;
+
+		mThread->EnterMutex();
+		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
+		requestManager->Play(choice->x, choice->y);
+		mThread->LeaveMutex();
+	}
+	break;
+
+	case WM_LEAVE:
+	{
+		mThread->EnterMutex();
+		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
+		requestManager->LeaveGame();
+		mThread->LeaveMutex();
+	}
+	break;
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

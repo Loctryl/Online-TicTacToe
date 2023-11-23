@@ -17,11 +17,7 @@ int RequestManager::EventToInt(std::string event)
         return join;
     if(event == "leave")
         return leave;
-   /* else if (event == "notif")
-        return notif;
-    else if (event == "player")
-        return player;*/
-    else// if (event == "connect")
+    else
         return -1;
 }
 

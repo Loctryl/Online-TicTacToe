@@ -26,11 +26,8 @@ bool ClientApp::Init()
 
 int ClientApp::Run() 
 {
-	if (mThread->Start() == -1)
-	{
-		printf("Erreur thread socket\n");
+	if (!mThread->Start())
 		return 1;
-	}
 
 	// Boucle de messages principale :
 	bool endGame = false;
@@ -40,9 +37,9 @@ int ClientApp::Run()
 
 		mThread->EnterMutex();
 		endGame = mRequestManager->GameIsEnded();
-		mGame->Render();
 		mThread->LeaveMutex();
 
+		mGame->Render();
 
 	} while (!endGame);
 
@@ -93,12 +90,9 @@ void ClientApp::UpdateInLobby() const
 					break;
 				case 2:
 					cout << "connect" <<endl;
-					//mRequestManager->Init(mThread);
 					break;
 				case 3:
-					mThread->EnterMutex();
-					mRequestManager->JoinGame(mGame->mInfo[0]);
-					mThread->LeaveMutex();
+					PostMessage(mThread->GetWindow()->GetHWND(), WM_JOIN, 0, 0);
 					break;
 				default: break;
 			}
@@ -122,16 +116,19 @@ void ClientApp::UpdateInGame() const
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
 		
-		int x, y = -1;
+		Choice* choice = new Choice();
+		choice->x = -1;
+		choice->y = -1;
 
-		if (mGame->IsMouseClick(event) && mGame->IsMove(&x, &y))
+		if (mGame->IsMouseClick(event) && mGame->IsMove(&choice->x, &choice->y))
 		{
 			mThread->EnterMutex();
-
-			if (mRequestManager->IsMyTurn())
-				mRequestManager->Play(x, y);
-
+			bool isMyTurn = mRequestManager->IsMyTurn();
 			mThread->LeaveMutex();
+
+			if (isMyTurn)
+				PostMessage(mThread->GetWindow()->GetHWND(), WM_PLAY, (WPARAM)choice, 0);
+
 		}
 	}
 }
@@ -144,10 +141,6 @@ void ClientApp::UpdateGameOver() const
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
 
 		if (mGame->IsMouseClick(event))
-		{
-			mThread->EnterMutex();
-			mRequestManager->LeaveGame();
-			mThread->LeaveMutex();
-		}
+			PostMessage(mThread->GetWindow()->GetHWND(), WM_LEAVE, 0, 0);
 	}
 }

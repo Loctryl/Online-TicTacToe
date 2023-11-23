@@ -3,8 +3,6 @@
 #include "GameManager.h"
 
 #include <iostream>
-#include <Grid/Player.h>
-#include <Utility/RequestManager/RequestManager.h>
 
 #include "Windows.h"
 
@@ -119,8 +117,8 @@ bool GameManager::IsMove(int* x, int* y) const
         && pos.y<=mTileSize*(mGrid->GetGridSize()+1)
     )
     {
-        *x = (int)(((float)pos.x - mMarginLeft) / (float)mTileSize);
-        *y = (pos.y - mTileSize)/mTileSize;
+        *x = (pos.x-mMarginLeft)/mTileSize;
+        *y = (pos.y-mTileSize)/mTileSize;
         if (mGrid->mMainGrid[*x][*y]==-1)
             return true;
     }
