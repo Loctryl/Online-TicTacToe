@@ -94,8 +94,16 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
         }
         case join:
         {
+            player->mNickName = parsedMessage["nickname"];
             NetManager::GetInstance()->AddPlayerToGame(player);
-            SendRequestJoin(socket);
+            if(player->mCurrentGame->mPlayers[1])
+            {
+                SendRequestJoin(NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket, player->mNickName, 1);
+                SendRequestJoin(socket,NetManager::GetInstance()->GetEnemyPlayer(socket)->mNickName, 0);
+                SendRequestJoin(socket,player->mNickName, 1);
+
+            } else
+                SendRequestJoin(socket,player->mNickName, 0);
             break;
         }
         case leave:

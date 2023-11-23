@@ -57,7 +57,7 @@ int ClientApp::Run()
 }
 
 
-void ClientApp::Update()
+void ClientApp::Update() const
 {
 	switch (mGame->mState)
 	{
@@ -73,9 +73,9 @@ void ClientApp::Update()
 	}
 }
 
-void ClientApp::UpdateInLobby()
+void ClientApp::UpdateInLobby() const
 {
-	auto event = mGame->GetEvent();
+	const auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
@@ -97,7 +97,7 @@ void ClientApp::UpdateInLobby()
 					break;
 				case 3:
 					mThread->EnterMutex();
-					mRequestManager->JoinGame();
+					mRequestManager->JoinGame(mGame->mInfo[0]);
 					mThread->LeaveMutex();
 					break;
 				default: break;
@@ -106,7 +106,7 @@ void ClientApp::UpdateInLobby()
 		
 		if (event->type == Event::TextEntered)
 		{
-			if(event->text.unicode == 8 && mGame->mInfo[mGame->mSelectedField].size() > 0)
+			if(event->text.unicode == 8 && !mGame->mInfo[mGame->mSelectedField].empty())
 				mGame->mInfo[mGame->mSelectedField].pop_back();
 			else if(event->text.unicode < 128 && mGame->mInfo[mGame->mSelectedField].size() < 12)
 				mGame->mInfo[mGame->mSelectedField] += event->text.unicode;
@@ -115,9 +115,9 @@ void ClientApp::UpdateInLobby()
 	}
 }
 
-void ClientApp::UpdateInGame()
+void ClientApp::UpdateInGame() const
 {
-	auto event = mGame->GetEvent();
+	const auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
@@ -136,9 +136,9 @@ void ClientApp::UpdateInGame()
 	}
 }
 
-void ClientApp::UpdateGameOver()
+void ClientApp::UpdateGameOver() const
 {
-	auto event = mGame->GetEvent();
+	const auto event = mGame->GetEvent();
 	while (mGame->mWindow->GetWindow()->pollEvent(*event))
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();

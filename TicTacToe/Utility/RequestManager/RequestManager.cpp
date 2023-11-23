@@ -36,10 +36,12 @@ bool RequestManager::SendRequestPlay(int coord[2], SOCKET* socket) const
     return mNetWork->SendRequest(data.dump(), socket);
 }
 
-bool RequestManager::SendRequestJoin(SOCKET* socket) const
+bool RequestManager::SendRequestJoin(SOCKET* socket, string nickname, int playerNum) const
 {
     json data = {
         {"type", "join"},
+        {"nickname", nickname},
+        {"player", playerNum}
     };
 
     return mNetWork->SendRequest(data.dump(), socket);

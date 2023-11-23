@@ -17,7 +17,7 @@ public:
 
     void Play(int x, int y);
 
-    void JoinGame() const;
+    void JoinGame(string nickname) const;
 
     void LeaveGame() const;
     
