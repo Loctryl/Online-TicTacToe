@@ -11,6 +11,8 @@ public:
 	ThreadObj();
 	virtual ~ThreadObj();
 
+	DWORD Start();
+
 	void EnterMutex();
 	void LeaveMutex();
 

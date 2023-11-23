@@ -1,12 +1,12 @@
 #include "Headers/WebMessageWindow.h"
-#include "Headers/ServerRequestManager.h"
+#include "Headers/ServerWebRequestManager.h"
+#include "Headers/ServerWebThread.h"
 #include "Headers/NetManager.h"
 #include "Headers/WebManager.h"
 #include "Headers/ServApp.h"
 
-WebMessageWindow::WebMessageWindow(ServApp* serverApp) : MessageWindow()
+WebMessageWindow::WebMessageWindow(ServerWebThread* mThread) : MessageWindow((ThreadObj*)mThread)
 {
-	mServerApp = serverApp;
 }
 
 LRESULT WebMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -27,17 +27,17 @@ LRESULT WebMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam
 		{
 		case FD_ACCEPT:
 		{
-			mServerApp->EnterMutex();
+			mThread->EnterMutex();
 
-			ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
-			requestManager->GetWebNetWork()->AcceptWebClient(newSocket);
+			ServerWebRequestManager* requestManager = ServerWebRequestManager::GetInstance();
+			requestManager->GetNetWork()->AcceptWebClient(newSocket);
 			response = webManager->BuildWebsite();
 			if (!requestManager->SendToWeb(response, newSocket))
 			{
-				mServerApp->LeaveMutex();
+				mThread->LeaveMutex();
 				return 1;
 			}
-			mServerApp->LeaveMutex();
+			mThread->LeaveMutex();
 		}
 			
 

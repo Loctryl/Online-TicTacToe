@@ -8,6 +8,11 @@ ThreadObj::~ThreadObj()
 {
 }
 
+DWORD ThreadObj::Start()
+{
+	return ResumeThread(mThread);
+}
+
 void ThreadObj::EnterMutex()
 {
 	EnterCriticalSection(&mMutex);// pour bloquer un bloc d'instructions

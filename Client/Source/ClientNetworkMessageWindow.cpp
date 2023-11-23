@@ -1,6 +1,5 @@
 #include "Headers/ClientNetworkMessageWindow.h"
 #include "Headers/ClientRequestManager.h"
-#include "Headers/ClientApp.h"
 #include "Headers/ClientNetWorkThread.h"
 
 ClientNetworkMessageWindow::ClientNetworkMessageWindow(ClientNetWorkThread* thread) : MessageWindow((ThreadObj*)thread)

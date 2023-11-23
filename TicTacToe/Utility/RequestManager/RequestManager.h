@@ -35,7 +35,6 @@ public:
 
 protected:
     Network* mNetWork;
-    Network* mWebNetWork;
     bool mEndGame = false;
 
     int EventToInt(std::string event);

@@ -2,16 +2,18 @@
 #include "framework.h"
 
 class ServerRequestManager;
-class ServerNetworkMessageWindow;
-class WebMessageWindow;
+class ServerWebRequestManager;
 class NetManager;
+class ServerNetWorkThread;
+class ServerWebThread;
 //class GameManager;
 
 class ServApp
 {
 	ServerRequestManager* mRequestManager;
-	ServerNetworkMessageWindow* mMessageWindow;
-	WebMessageWindow* mMessageWebWindow;
+	ServerWebRequestManager* mWebRequestManager;
+	ServerNetWorkThread* mNetWorkThread;
+	ServerWebThread* mWebThread;
 	NetManager* mNetManager;
 
 public:
@@ -27,14 +29,4 @@ public:
 	void LeaveMutex();
 
 private:
-	// Thread
-	HANDLE mSocketThread;
-	HANDLE mWebThread;
-	CRITICAL_SECTION mMutex;
-
-	bool CreateSocketThread();
-	static DWORD WINAPI SocketThreadFunction(LPVOID lpParam);
-
-	bool CreateWebThread();
-	static DWORD WINAPI WebThreadFunction(LPVOID lpParam);
 };

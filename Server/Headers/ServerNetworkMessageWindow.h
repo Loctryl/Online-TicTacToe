@@ -2,15 +2,13 @@
 #include "Headers/framework.h"
 #include "Utility/MessageWindow/MessageWindow.h"
 
-class ServApp;
+class ServerNetWorkThread;
 
 // Handles the Windows window
 class ServerNetworkMessageWindow : public MessageWindow
 {
-	ServApp* mServerApp;
 public:
-
-	ServerNetworkMessageWindow(ServApp* serverApp);
+	ServerNetworkMessageWindow(ServerNetWorkThread* thread);
 	~ServerNetworkMessageWindow() = default;
 
 	LRESULT WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

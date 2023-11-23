@@ -1,19 +1,16 @@
 #include "Headers/ServerNetworkMessageWindow.h"
 #include "Headers/ServerRequestManager.h"
+#include "Headers/ServerNetWorkThread.h"
 #include "Headers/NetManager.h"
-#include "Headers/WebManager.h"
-#include "Headers/ServApp.h"
 
-ServerNetworkMessageWindow::ServerNetworkMessageWindow(ServApp* serverApp) : MessageWindow()
+ServerNetworkMessageWindow::ServerNetworkMessageWindow(ServerNetWorkThread* thread) : MessageWindow((ThreadObj*)thread)
 {
-	mServerApp = serverApp;
 }
 
-LRESULT ServerNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-	std::cout << "NetworkMessageWindow\n";
+LRESULT ServerNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
 	SOCKET socket = wParam;
 	SOCKET* newSocket = new SOCKET(INVALID_SOCKET);
-	WebManager* webManager = WebManager::GetInstance();
 	string response = "";
 
 	switch (message)
@@ -24,7 +21,7 @@ LRESULT ServerNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 
 	case WM_SOCKET:
 	{
-		mServerApp->EnterMutex();
+		mThread->EnterMutex();
 		ServerRequestManager* requestManager = ServerRequestManager::GetInstance();
 
 		switch (LOWORD(lParam))
@@ -47,7 +44,7 @@ LRESULT ServerNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 				break;
 		}
 
-		mServerApp->EnterMutex();
+		mThread->EnterMutex();
 	}
 	break;
 	default:

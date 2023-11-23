@@ -2,7 +2,6 @@
 #include "../Ressources/framework.h"
 #include "Utility/MessageWindow/MessageWindow.h"
 
-class ClientApp;
 class ClientNetWorkThread;
 
 // Handles the Windows window

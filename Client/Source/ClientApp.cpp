@@ -11,7 +11,6 @@ ClientApp::ClientApp()
 }
 
 ClientApp::~ClientApp() {
-	delete mMessageWindow;
 	//delete mRequestManager;
 }
 
