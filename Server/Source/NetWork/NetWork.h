@@ -1,5 +1,4 @@
 #pragma once
-#include "framework.h"
 #include "Utility/Network/Network.h"
 
 class ThreadObj;
@@ -26,6 +25,6 @@ private:
 
     ServerNetWorkThread* mThread;
     
-    bool Bind(sockaddr_in& serviceServer, SOCKET* socket);// Associe une adresse IP et un numero de port à un socket
+    bool Bind(sockaddr_in& serviceServer, SOCKET* socket);// Associe une adresse IP et un numero de port ï¿½ un socket
     bool WaitClients();
 };

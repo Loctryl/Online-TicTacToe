@@ -1,7 +1,7 @@
-#include "Headers/ServerNetworkMessageWindow.h"
-#include "Headers/ServerRequestManager.h"
-#include "Headers/ServerNetWorkThread.h"
-#include "Headers/NetManager.h"
+#include "NetworkMessageWindow.h"
+#include "Source/NetWork/RequestManager.h"
+#include "Source/Thread/NetWorkThread.h"
+#include "Source/Manager/NetManager.h"
 
 ServerNetworkMessageWindow::ServerNetworkMessageWindow(ServerNetWorkThread* thread) : MessageWindow((ThreadObj*)thread)
 {

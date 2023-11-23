@@ -1,5 +1,5 @@
 #pragma once
-#include "framework.h"
+#include "Resources/framework.h"
 
 class ServerRequestManager;
 class ServerWebRequestManager;

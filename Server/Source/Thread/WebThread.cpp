@@ -1,5 +1,5 @@
-#include "Headers/ServerWebThread.h"
-#include "Headers/ServerWebRequestManager.h"
+#include "WebThread.h"
+#include "Source/NetWork/WebRequestManager.h"
 
 ServerWebThread::ServerWebThread(ServApp* serverApp)
 {

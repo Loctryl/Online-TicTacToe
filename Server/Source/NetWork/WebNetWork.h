@@ -1,5 +1,4 @@
 #pragma once
-#include "framework.h"
 #include "Utility/Network/Network.h"
 
 class ThreadObj;

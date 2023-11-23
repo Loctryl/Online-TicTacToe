@@ -1,5 +1,5 @@
-#include "Headers/ServerWebRequestManager.h"
-#include "Headers/WebNetWork.h"
+#include "WebRequestManager.h"
+#include "Source/NetWork/WebNetWork.h"
 
 ServerWebRequestManager* ServerWebRequestManager::mInstance = nullptr;
 

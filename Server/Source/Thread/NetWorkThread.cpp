@@ -1,6 +1,6 @@
-#include "Headers/ServApp.h"
-#include "Headers/ServerNetWorkThread.h"
-#include "Headers/ServerRequestManager.h"
+#include "Source/ServApp.h"
+#include "NetWorkThread.h"
+#include "Source/NetWork/RequestManager.h"
 
 ServerNetWorkThread::ServerNetWorkThread(ServApp* serverApp) : ThreadObj()
 {

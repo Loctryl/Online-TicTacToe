@@ -1,9 +1,8 @@
-#include "Headers/WebMessageWindow.h"
-#include "Headers/ServerWebRequestManager.h"
-#include "Headers/ServerWebThread.h"
-#include "Headers/NetManager.h"
-#include "Headers/WebManager.h"
-#include "Headers/ServApp.h"
+#include "WebMessageWindow.h"
+#include "Source/NetWork/WebRequestManager.h"
+#include "Source/Thread/WebThread.h"
+#include "Source/Manager/NetManager.h"
+#include "Source/Manager/WebManager.h"
 
 WebMessageWindow::WebMessageWindow(ServerWebThread* mThread) : MessageWindow((ThreadObj*)mThread)
 {
