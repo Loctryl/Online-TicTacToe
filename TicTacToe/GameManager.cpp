@@ -205,10 +205,14 @@ void GameManager::RenderGame() const
     const int gridSize = mGrid->GetGridSize();
 
     if(mGrid->mPlayers[0])
-        DrawTextW(mGrid->mPlayers[0]->mNickName, 40, Color::Red, {150.f, 5.f }, {0,0});
+        DrawTextW(mGrid->mPlayers[0]->mNickName, 34, Color::Red,
+            {5.f, (float)mWindow->GetVideoMode()->height/2 - 17.f },
+            {0,0});
     
     if(mGrid->mPlayers[1])
-        DrawTextW(mGrid->mPlayers[1]->mNickName, 40, Color::Red, {(float)mWindow->GetVideoMode()->width - 150.f, 5.f }, {0,0});
+        DrawTextW(mGrid->mPlayers[1]->mNickName, 34, Color::Red,
+            {(float)mWindow->GetVideoMode()->width - mMarginLeft + 5.f, (float)mWindow->GetVideoMode()->height/2 - 17.f },
+            {0,0});
 
     for (int x = 0; x<gridSize; x++)
     {
@@ -249,17 +253,17 @@ void GameManager::RenderGame() const
     
     if(mGrid->mWinner != -1 && mGrid->mWinner != -2)
     {
-        DrawTextW("Game Over !", 70, Color::Red, {(float)mWindow->GetVideoMode()->width / 2.f - 150.f, 5.f }, {0,0});
+        DrawTextW("Game Over !", 70, Color::Red, {(float)mWindow->GetVideoMode()->width / 2.f - 180.f, 5.f }, {0,0});
         circ->setRadius((float)mTileSize/2.5f);
     
         if (mGrid->mWinner==0)
         {
-            circ->setPosition({50.f, 50.f});
+            circ->setPosition({mMarginLeft/3.f, 50.f});
             circ->setFillColor(Color(173, 58, 35, 255));
         }
         else if (mGrid->mWinner==1)
         {
-            circ->setPosition({(float)mWindow->GetVideoMode()->width - 100.f, 50.f});
+            circ->setPosition({(float)mWindow->GetVideoMode()->width - mMarginLeft/1.5f, 50.f});
             circ->setFillColor(Color(35, 173, 139, 255));
         }
 
