@@ -28,6 +28,8 @@ public:
 
     int mTileSize;
     float mMarginLeft;
+
+    bool mConnected;
     
     GameManager();
     ~GameManager();

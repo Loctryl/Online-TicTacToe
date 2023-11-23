@@ -87,11 +87,11 @@ void ClientApp::UpdateInLobby() const
 					mGame->mSelectedField = 1;
 					break;
 				case 2:
-					//connection here
-					//ClientRequestManager::GetInstance()->Init(this);
+					// Message to connect to server
 					PostMessage(mThread->GetWindow()->GetHWND(), WM_USER, 0, 0);
 					break;
 				case 3:
+					// Message to join a party
 					PostMessage(mThread->GetWindow()->GetHWND(), WM_JOIN, 0, 0);
 					break;
 				default: break;

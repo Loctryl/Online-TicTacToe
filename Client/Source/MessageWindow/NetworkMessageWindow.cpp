@@ -78,7 +78,8 @@ LRESULT ClientNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 	{
 		mThread->EnterMutex();
 		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
-		requestManager->Init(mThread);
+		if(requestManager->Init(mThread))
+			requestManager->mGame->mConnected = true;
 		mThread->LeaveMutex();
 	}
 	break;

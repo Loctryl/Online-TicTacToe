@@ -170,6 +170,9 @@ void GameManager::RenderLobby() const
 
     mLobbyFields[mSelectedField]->setOutlineColor(Color::Cyan);
     mLobbyFields[!mSelectedField]->setOutlineColor(Color(130, 128, 126, 255));
+
+    if(mConnected)
+        mLobbyFields[2]->setFillColor(Color::Green);
     
     for(int i = 0; i < (int)mLobbyFields.size(); i++)
     {
