@@ -30,7 +30,7 @@ void ClientNetWorkThread::ThreadFunction()
 		if (msg.message == WM_QUIT)
 			break;
 
-		switch (mClientApp->GetGameManager()->mState)
+		/*switch (mClientApp->GetGameManager()->mState)
 		{
 		case LOBBY:
 			UpdateInLobby();
@@ -41,7 +41,7 @@ void ClientNetWorkThread::ThreadFunction()
 		case GAME_OVER:
 			UpdateGameOver();
 			break;
-		}
+		}*/
 	}
 }
 

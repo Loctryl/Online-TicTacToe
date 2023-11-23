@@ -15,22 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ClientApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ClientNetWork.cpp">
+    <ClCompile Include="client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ClientRequestManager.cpp">
+    <ClCompile Include="Source\MessageWindow\NetworkMessageWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ClientNetworkMessageWindow.cpp">
+    <ClCompile Include="Source\NetWork\NetWork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ClientNetWorkThread.cpp">
+    <ClCompile Include="Source\NetWork\RequestManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Thread\NetWorkThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,25 +44,22 @@
     <ClInclude Include="Headers\ClientRequestManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\ClientApp.h">
+    <ClInclude Include="Resources\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\ClientNetWork.h">
+    <ClInclude Include="Source\ClientApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\ClientRequestManager.h">
+    <ClInclude Include="Source\MessageWindow\NetworkMessageWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ressources\framework.h">
+    <ClInclude Include="Source\NetWork\NetWork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\json.hpp">
+    <ClInclude Include="Source\NetWork\RequestManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\ClientNetworkMessageWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\ClientNetWorkThread.h">
+    <ClInclude Include="Source\Thread\NetWorkThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

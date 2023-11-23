@@ -40,9 +40,9 @@ int ClientApp::Run()
 
 		mThread->EnterMutex();
 		endGame = mRequestManager->GameIsEnded();
+		mGame->Render();
 		mThread->LeaveMutex();
 
-		mGame->Render();
 
 	} while (!endGame);
 
@@ -93,7 +93,7 @@ void ClientApp::UpdateInLobby()
 					break;
 				case 2:
 					cout << "connect" <<endl;
-					mRequestManager->Init();
+					//mRequestManager->Init(mThread);
 					break;
 				case 3:
 					mThread->EnterMutex();
@@ -146,9 +146,7 @@ void ClientApp::UpdateGameOver()
 		if (mGame->IsMouseClick(event))
 		{
 			mThread->EnterMutex();
-
 			mRequestManager->LeaveGame();
-
 			mThread->LeaveMutex();
 		}
 	}

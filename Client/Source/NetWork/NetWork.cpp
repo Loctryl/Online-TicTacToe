@@ -1,7 +1,6 @@
 #include "NetWork.h"
-#include "Resources/framework.h"
 #include "..\MessageWindow\NetworkMessageWindow.h"
-#include "..\Thread\NetWorkThread.h"
+#include "../Thread/NetWorkThread.h"
 #include "Utility/Thread/Thread.h"
 
 

@@ -159,8 +159,9 @@ void GameManager::Render()
             RenderLobby();
             break;
         case IN_GAME:
-        case GAME_OVER:    
-            RenderGame();
+        case GAME_OVER:
+            if(mGrid != nullptr)
+                RenderGame();
             break;
     }
 }
@@ -190,7 +191,6 @@ void GameManager::RenderLobby()
             default: break;
         }
     }
-
     mWindow->GetWindow()->display();
 }
 
@@ -200,9 +200,9 @@ void GameManager::RenderGame()
     
     auto* rect = new RectangleShape();
     auto* circ = new CircleShape();
-
+    
     const int gridSize = mGrid->GetGridSize();
-
+    
     for (int x = 0; x<gridSize; x++)
     {
         for (int y = 0; y<gridSize; y++)
@@ -239,7 +239,7 @@ void GameManager::RenderGame()
             }
         }
     }
-
+    
     if(mGrid->mWinner != -1 && mGrid->mWinner != -2)
     {
         DrawTextW("Game Over !", 15, Color::Red, {mWindow->GetVideoMode()->width / 2.f, 5.f }, {0,0});
