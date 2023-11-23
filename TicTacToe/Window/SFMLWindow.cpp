@@ -1,5 +1,7 @@
 ﻿#include "SFMLWindow.h"
 
+#include <iostream>
+
 SFMLWindow::SFMLWindow() { mWindow = nullptr; }
 
 SFMLWindow::~SFMLWindow() { delete this->mWindow; }
@@ -7,8 +9,8 @@ SFMLWindow::~SFMLWindow() { delete this->mWindow; }
 void SFMLWindow::InitWindow()
 {
     mVMode = VideoMode::getDesktopMode();
-    mVMode.width = 640;
-    mVMode.height = 480;
+    mVMode.width = 800;
+    mVMode.height = 600;
     mWindow = new RenderWindow(
         mVMode,
         "Classic TICTACTOOOOOOOOOOOOEE",
@@ -17,7 +19,7 @@ void SFMLWindow::InitWindow()
     mWindow->setPosition(Vector2i(0, 0));
     mWindow->setFramerateLimit(60);
     // Issue on loading font
-    //if (!_font.loadFromFile(FONT_ASSET_PATH)) throw;
+    if (!mFont.loadFromFile("Roboto-Regular.ttf")) throw;
 }
 
 RenderWindow* SFMLWindow::GetWindow() const { return mWindow; }

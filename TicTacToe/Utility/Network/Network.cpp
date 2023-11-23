@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Network.h"
+#include "Utility/Thread/Thread.h"
 
 #define PORT 6666
 #define ADRESSE "127.0.0.1"
@@ -49,14 +50,37 @@ bool Network::CreateSocket(SOCKET &sock)
     return true;
 }
 
-sockaddr_in Network::SettingProtocol()
+sockaddr_in Network::SettingServerProtocol()
 {
     sockaddr_in service;
     service.sin_family = AF_INET;
     service.sin_port = htons(PORT);
-    inet_pton(AF_INET, ADRESSE, &service.sin_addr);
+    service.sin_addr.s_addr = htonl(INADDR_ANY);
     
-    // Convertit une adresse reseau IPv4 ou IPv6 en une forme binaire numerique
+    return service;
+}
+
+sockaddr_in Network::SettingClientProtocol()
+{
+    sockaddr_in service;
+    service.sin_family = AF_INET;
+    service.sin_port = htons(PORT);
+    char IPBuffer[100] = "10.1.170.16";
+    //std::cout << "Saisir l'adresse IP de connexion :";
+    //std::cin >> IPBuffer;
+    
+    inet_pton(AF_INET, IPBuffer, &service.sin_addr);
+
+    return service;
+}
+
+sockaddr_in Network::SettingWebProtocol()
+{
+    sockaddr_in service;
+    service.sin_family = AF_INET;
+    service.sin_port = htons(7474);
+    service.sin_addr.s_addr = htonl(INADDR_ANY);
+
     return service;
 }
 
@@ -83,6 +107,22 @@ bool Network::SendRequest(SOCKET &sock, std::string data)
     }
 
     printf("Requete envoyee\n");
+    return true;
+}
+
+bool Network::SendToWeb(SOCKET& sock, std::string data)
+{
+    int datasize = data.size();
+    char* dataBuffer = new char[datasize];
+
+    std::memcpy(dataBuffer, data.c_str(), datasize);
+
+    if (send(sock, dataBuffer, datasize, 0) == SOCKET_ERROR)
+    {
+        printf("Erreur send() %d\n", WSAGetLastError());
+        return false;
+    }
+
     return true;
 }
 

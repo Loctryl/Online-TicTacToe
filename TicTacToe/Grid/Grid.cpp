@@ -41,7 +41,7 @@ int Grid::IsWinner()
             countDown++;
         }
         if (countDown == mSize)
-            return mTurnPlayer;
+            mWinner = mTurnPlayer;   
     }
 
     for (int j = 0; j < mSize; j++) {
@@ -52,7 +52,7 @@ int Grid::IsWinner()
             countDown++;
         }
         if (countDown == mSize)
-            return mTurnPlayer;
+            mWinner = mTurnPlayer;   
     }
 
     countDown = 0;
@@ -62,16 +62,26 @@ int Grid::IsWinner()
         countDown++;
     }
     if (countDown == mSize)
-        return mTurnPlayer;
+        mWinner = mTurnPlayer;
 
     countDown = 0;
-    for (int i = mSize-1; i > 0 ; i--) {
-        if (mMainGrid[i][i] != mTurnPlayer)
+    for (int i = 0; i < mSize; i++) {
+        if (mMainGrid[i][mSize - 1 - i] != mTurnPlayer)
             break;
         countDown++;
     }
     if (countDown == mSize)
-        return mTurnPlayer;
+        mWinner = mTurnPlayer;
 
-    return -1;
+    countDown = 0;
+    for (int j = 0; j < mSize; j++) {
+        for (int i = 0; i < mSize; i++) {
+            if (mMainGrid[i][j] == -1)
+                countDown++;
+        }
+    }
+    if (countDown == 0)
+        mWinner = -2;   
+
+    return mWinner;
 }

@@ -15,46 +15,85 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\server.cpp">
+    <ClCompile Include="server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\ServApp.cpp">
+    <ClCompile Include="Source\Manager\NetManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\ServerNetWork.cpp">
+    <ClCompile Include="Source\Manager\WebManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\ServerRequestManager.cpp">
+    <ClCompile Include="Source\MessageWindow\NetworkMessageWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\MessageWindow.cpp">
+    <ClCompile Include="Source\MessageWindow\WebMessageWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\NetManager.cpp">
+    <ClCompile Include="Source\NetWork\NetWork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NetWork\RequestManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NetWork\WebRequestManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NetWork\WebRequestManager.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NetWork\WebNetWork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ServApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Thread\NetWorkThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Thread\WebThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\json.hpp">
+    <ClInclude Include="Resources\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\ServApp.h">
+    <ClInclude Include="Source\Manager\NetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\ServerNetWork.h">
+    <ClInclude Include="Source\Manager\WebManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\ServerRequestManager.h">
+    <ClInclude Include="Source\MessageWindow\NetworkMessageWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\framework.h">
+    <ClInclude Include="Source\MessageWindow\WebMessageWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\MessageWindow.h">
+    <ClInclude Include="Source\NetWork\NetWork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\NetManager.h">
+    <ClInclude Include="Source\NetWork\RequestManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\NetWork\WebNetWork.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ServApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Thread\NetWorkThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Thread\WebThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\webserverheader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\webserverfooter.txt" />
   </ItemGroup>
 </Project>

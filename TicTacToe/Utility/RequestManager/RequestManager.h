@@ -1,18 +1,18 @@
 #pragma once
 #include <string>
 
-#include "Resources/framework.h"
+#include "Utility/Resources/framework.h"
 #include "Utility/json.hpp"
-#include "Resources/utilities.h"
 
 
 using json = nlohmann::json;
 
 class Network;
+class ThreadObj;
 
 enum EventMessage
 {
-    choice, play, validation, notif, player, connection
+    play, validation, winner, join, leave
 };
 
 class RequestManager
@@ -22,10 +22,14 @@ public:
 
     inline bool GameIsEnded() const { return mEndGame; }
 
-    virtual bool Init() = 0;
+    virtual bool Init(ThreadObj* thread) = 0;
 
     bool SendRequestPlay(int coord[2], SOCKET* socket) const;
 
+    bool SendRequestJoin(SOCKET* socket) const;
+
+    bool SendRequestLeave(SOCKET* socket) const;
+    
     std::string Recieve(SOCKET* socket);
     bool Close() const;
 
