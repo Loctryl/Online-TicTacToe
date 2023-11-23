@@ -215,6 +215,7 @@
     <ClCompile Include="Utility\MessageWindow\MessageWindow.cpp" />
     <ClCompile Include="Utility\Network\Network.cpp" />
     <ClCompile Include="Utility\RequestManager\RequestManager.cpp" />
+    <ClCompile Include="Utility\Thread\Thread.cpp" />
     <ClCompile Include="Window\SFMLWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +229,7 @@
     <ClInclude Include="Utility\MessageWindow\MessageWindow.h" />
     <ClInclude Include="Utility\Network\Network.h" />
     <ClInclude Include="Utility\RequestManager\RequestManager.h" />
+    <ClInclude Include="Utility\Thread\Thread.h" />
     <ClInclude Include="Window\SFMLWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
