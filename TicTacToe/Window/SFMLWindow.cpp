@@ -19,7 +19,7 @@ void SFMLWindow::InitWindow()
     mWindow->setPosition(Vector2i(0, 0));
     mWindow->setFramerateLimit(60);
     // Issue on loading font
-    //if (!mFont.loadFromFile("Resources\\Roboto-Regular.ttf")) std::cout << "not loaded" <<std::endl;
+    if (!mFont.loadFromFile("Roboto-Regular.ttf")) throw;
 }
 
 RenderWindow* SFMLWindow::GetWindow() const { return mWindow; }

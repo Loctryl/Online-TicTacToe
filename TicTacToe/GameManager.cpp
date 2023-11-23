@@ -15,6 +15,7 @@ GameManager::GameManager()
     mGrid = nullptr;
     mTileSize = 0;
     mMarginLeft = 0;
+    mState = LOBBY;
 }
 
 GameManager::~GameManager()
@@ -137,7 +138,7 @@ RectangleShape* GameManager::CreateRect(Vector2f size, Vector2f pos, Color fillC
     return rect;
 }
 
-void GameManager::DrawTextW(std::string str, int size, Color color, Vector2f position) const
+void GameManager::DrawTextW(std::string str, int size, Color color, Vector2f position, Vector2f offset)
 {
     Text text;
     text.setFont(*mWindow->GetFont());
@@ -145,13 +146,13 @@ void GameManager::DrawTextW(std::string str, int size, Color color, Vector2f pos
     text.setCharacterSize(size); // in pixels, not points!
     text.setFillColor(color);
 
-    text.setPosition(position);
+    text.setPosition({position.x + offset.x, position.y + offset.y});
     
     mWindow->GetWindow()->draw(text);
 }
 
 
-void GameManager::Render() const
+void GameManager::Render()
 {
     switch (mState)
     {
@@ -165,18 +166,36 @@ void GameManager::Render() const
     }
 }
 
-
-void GameManager::RenderLobby() const
+void GameManager::RenderLobby()
 {
     mWindow->GetWindow()->clear(Color(249, 193, 130, 255));
     
-    for(auto rect : mLobbyFields)
-        mWindow->GetWindow()->draw(*rect);
+    DrawTextW("TicTacToe", 70, Color::Red, {mWindow->GetVideoMode()->width / 2.f - 150.f, 20.f}, {0,0});
+
+    mLobbyFields[mSelectedField]->setOutlineColor(Color::Cyan);
+    mLobbyFields[!mSelectedField]->setOutlineColor(Color(130, 128, 126, 255));
+    
+    for(int i = 0; i < mLobbyFields.size(); i++)
+    {
+        mWindow->GetWindow()->draw(*mLobbyFields[i]);
+        if(i < 2)
+            DrawTextW(mInfo[i], 45, Color::Black, mLobbyFields[i]->getPosition(), {20.f,10.f});
+        switch (i)
+        {
+            case 2:
+                DrawTextW("Try", 45, Color::Black, mLobbyFields[i]->getPosition(), {10.f,5.f});
+                break;
+            case 3:
+                DrawTextW("Play", 70, Color::Black, mLobbyFields[i]->getPosition(), {60.f,-10.f});
+                break;
+            default: break;
+        }
+    }
 
     mWindow->GetWindow()->display();
 }
 
-void GameManager::RenderGame() const
+void GameManager::RenderGame()
 {
     mWindow->GetWindow()->clear(Color(249, 193, 130, 255));
     
@@ -184,8 +203,6 @@ void GameManager::RenderGame() const
     auto* circ = new CircleShape();
 
     const int gridSize = mGrid->GetGridSize();
-
-    std::cout << mInfo[mSelectedField] << std::endl;
 
     for (int x = 0; x<gridSize; x++)
     {
@@ -226,7 +243,7 @@ void GameManager::RenderGame() const
 
     if(mGrid->mWinner != -1 && mGrid->mWinner != -2)
     {
-        //DrawTextW("Game Over !", 15, Color::Red, {mWindow->GetVideoMode()->width / 2.f, 5.f });
+        DrawTextW("Game Over !", 15, Color::Red, {mWindow->GetVideoMode()->width / 2.f, 5.f }, {0,0});
         circ->setRadius(mTileSize/2.5);
     
         if (mGrid->mWinner==0)
@@ -245,7 +262,7 @@ void GameManager::RenderGame() const
     
         mWindow->GetWindow()->draw(*circ);
     }
-
+    
     REL_PTR(rect)
     REL_PTR(circ)
 

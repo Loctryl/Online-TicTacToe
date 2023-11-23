@@ -24,7 +24,7 @@ bool ClientApp::Init()
 	mGame = new GameManager();
 	mGame->InitWindow();
 	mRequestManager->mGame = mGame;
-	return mRequestManager->Init();
+	return true;
 }
 
 int ClientApp::Run() 
@@ -43,7 +43,7 @@ int ClientApp::Run()
 			if (msg.message == WM_QUIT)
 				running = false;
 		}
-
+		
 		Update();
 		mGame->Render();
 	}
@@ -91,6 +91,7 @@ void ClientApp::UpdateInLobby() const
 					break;
 				case 2:
 					cout << "connect" <<endl;
+					mRequestManager->Init();
 					break;
 				case 3:
 					mRequestManager->JoinGame();
@@ -98,12 +99,15 @@ void ClientApp::UpdateInLobby() const
 				default: break;
 			}
 		}
+		
 		if (event->type == Event::TextEntered)
 		{
-			if(event->text.unicode < 128)
+			if(event->text.unicode == 8 && mGame->mInfo[mGame->mSelectedField].size() > 0)
+				mGame->mInfo[mGame->mSelectedField].pop_back();
+			else if(event->text.unicode < 128 && mGame->mInfo[mGame->mSelectedField].size() < 12)
 				mGame->mInfo[mGame->mSelectedField] += event->text.unicode;
-			
 		}
+		
 	}
 }
 

@@ -25,7 +25,7 @@ public:
     GAME_STATE mState;
 
     std::string mInfo[2];
-    int mSelectedField;
+    int mSelectedField = 0;
 
     int mTileSize;
     float mMarginLeft;
@@ -51,13 +51,13 @@ public:
 
     RectangleShape* CreateRect(Vector2f size, Vector2f pos, Color fillColor, Color outlineColor, float outlineThick);
 
-    void DrawTextW(std::string str, int size, Color color, Vector2f position) const;
+    void DrawTextW(std::string str, int size, Color color, Vector2f position, Vector2f offset);
 
-    void Render() const;
+    void Render();
 
-    void RenderLobby() const;
+    void RenderLobby();
     
-    void RenderGame() const;
+    void RenderGame();
     
     inline Event* GetEvent() const { return mEvent; }
 };
