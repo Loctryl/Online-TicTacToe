@@ -60,16 +60,16 @@ sockaddr_in Network::SettingServerProtocol()
     return service;
 }
 
-sockaddr_in Network::SettingClientProtocol()
+sockaddr_in Network::SettingClientProtocol(PCSTR address)
 {
     sockaddr_in service;
     service.sin_family = AF_INET;
     service.sin_port = htons(PORT);
-    char IPBuffer[100] = "192.168.1.51";
+    //char IPBuffer[100] = "192.168.0.26";
     //std::cout << "Saisir l'adresse IP de connexion :";
     //std::cin >> IPBuffer;
     
-    inet_pton(AF_INET, IPBuffer, &service.sin_addr);
+    inet_pton(AF_INET, address, &service.sin_addr);
 
     return service;
 }

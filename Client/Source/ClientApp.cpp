@@ -37,9 +37,9 @@ int ClientApp::Run()
 
 		mThread->EnterMutex();
 		endGame = mRequestManager->GameIsEnded();
+		mGame->Render();
 		mThread->LeaveMutex();
 
-		mGame->Render();
 
 	} while (!endGame);
 
@@ -81,15 +81,15 @@ void ClientApp::UpdateInLobby() const
 			switch (field)
 			{
 				case 0:
-					cout<< "name"<<endl;
 					mGame->mSelectedField = 0;
 					break;
 				case 1:
-					cout<< "adress IP"<<endl;
 					mGame->mSelectedField = 1;
 					break;
 				case 2:
-					cout << "connect" <<endl;
+					//connection here
+					//ClientRequestManager::GetInstance()->Init(this);
+					PostMessage(mThread->GetWindow()->GetHWND(), WM_USER, 0, 0);
 					break;
 				case 3:
 					PostMessage(mThread->GetWindow()->GetHWND(), WM_JOIN, 0, 0);

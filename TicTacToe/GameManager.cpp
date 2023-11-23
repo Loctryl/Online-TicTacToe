@@ -1,10 +1,7 @@
-﻿#include "Utility/Resources/utilities.h"
+﻿#include "GameManager.h"
 #include "Grid/Grid.h"
-#include "GameManager.h"
-
-#include <iostream>
-
-#include "Windows.h"
+#include "Grid/Player.h"
+#include "Utility/Resources/utilities.h"
 
 GameManager::GameManager()
 {

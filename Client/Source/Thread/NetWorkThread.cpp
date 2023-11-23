@@ -42,5 +42,4 @@ void ClientNetWorkThread::InitWindow()
 {
 	mMessageWindow = new ClientNetworkMessageWindow(this);
 	mMessageWindow->InitWindow(L"ClientNetworkMessageWindow");
-	ClientRequestManager::GetInstance()->Init(this);
 }

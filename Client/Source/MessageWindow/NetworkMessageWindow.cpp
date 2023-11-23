@@ -1,4 +1,7 @@
+#include "GameManager.h"
 #include "NetworkMessageWindow.h"
+
+
 #include "..\NetWork\RequestManager.h"
 #include "..\NetWork\NetWork.h"
 #include "..\Thread\NetWorkThread.h"
@@ -47,7 +50,7 @@ LRESULT ClientNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 	{
 		mThread->EnterMutex();
 		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
-		requestManager->JoinGame();
+		requestManager->JoinGame(requestManager->mGame->mInfo[0]);
 		mThread->LeaveMutex();
 	}
 		break;
@@ -68,6 +71,14 @@ LRESULT ClientNetworkMessageWindow::WndInstanceProc(HWND hWnd, UINT message, WPA
 		mThread->EnterMutex();
 		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
 		requestManager->LeaveGame();
+		mThread->LeaveMutex();
+	}
+	break;
+	case WM_USER:
+	{
+		mThread->EnterMutex();
+		ClientRequestManager* requestManager = ClientRequestManager::GetInstance();
+		requestManager->Init(mThread);
 		mThread->LeaveMutex();
 	}
 	break;

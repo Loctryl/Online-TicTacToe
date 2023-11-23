@@ -55,7 +55,7 @@ void ClientRequestManager::LeaveGame() const
 
 bool ClientRequestManager::Init(ThreadObj* thread)
 {
-    return ((ClientNetWork*)mNetWork)->Init(thread);
+    return ((ClientNetWork*)mNetWork)->Init(thread, mGame->mInfo[1].c_str());
 }
 
 bool ClientRequestManager::ManageMessage(std::string Message)
