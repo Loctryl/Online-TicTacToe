@@ -87,7 +87,7 @@ sockaddr_in Network::SettingWebProtocol()
 // Sends data from a socket
 bool Network::SendRequest(SOCKET &sock, std::string data)
 {
-    int datasize = data.size();
+    int datasize = (int)data.size();
     int total = datasize + SIGNATURE_SIZE + LENGTH_MESSAGE_SIZE;
     char* dataBuffer = new char[total];
 
@@ -112,7 +112,7 @@ bool Network::SendRequest(SOCKET &sock, std::string data)
 
 bool Network::SendToWeb(SOCKET& sock, std::string data)
 {
-    int datasize = data.size();
+    int datasize = (int)data.size();
     char* dataBuffer = new char[datasize];
 
     std::memcpy(dataBuffer, data.c_str(), datasize);

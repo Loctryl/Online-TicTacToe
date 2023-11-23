@@ -118,8 +118,8 @@ bool GameManager::IsMove(int* x, int* y) const
         &&pos.y<=mTileSize*(mGrid->GetGridSize()+1)
     )
     {
-        *x = (pos.x-mMarginLeft)/mTileSize;
-        *y = (pos.y-mTileSize)/mTileSize;
+        *x = (int)((pos.x-mMarginLeft)/mTileSize);
+        *y = (int)((pos.y-mTileSize)/mTileSize);
         if (mGrid->mMainGrid[*x][*y]==-1)
             return true;
     }
@@ -229,7 +229,7 @@ void GameManager::RenderGame()
                 else if (mGrid->mMainGrid[x][y]==1)
                     circ->setFillColor(Color(35, 173, 139, 255));
 
-                circ->setRadius(mTileSize/2.5);
+                circ->setRadius(mTileSize/2.5f);
                 circ->setPosition({
                         static_cast<float>(x*mTileSize+mMarginLeft+(mTileSize/10)),
                         static_cast<float>(y*mTileSize+mTileSize+(mTileSize/10))
@@ -243,7 +243,7 @@ void GameManager::RenderGame()
     if(mGrid->mWinner != -1 && mGrid->mWinner != -2)
     {
         DrawTextW("Game Over !", 15, Color::Red, {mWindow->GetVideoMode()->width / 2.f, 5.f }, {0,0});
-        circ->setRadius(mTileSize/2.5);
+        circ->setRadius(mTileSize/2.5f);
     
         if (mGrid->mWinner==0)
         {
