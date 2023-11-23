@@ -77,7 +77,7 @@ sockaddr_in Network::SettingWebProtocol()
     sockaddr_in service;
     service.sin_family = AF_INET;
     service.sin_port = htons(7474);
-    inet_pton(AF_INET, ADRESSE, &service.sin_addr);
+    service.sin_addr.s_addr = htonl(INADDR_ANY);
 
     return service;
 }
@@ -121,7 +121,6 @@ bool Network::SendToWeb(SOCKET& sock, std::string data)
         return false;
     }
 
-    printf("Requete Web envoyee\n");
     return true;
 }
 

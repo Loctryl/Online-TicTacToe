@@ -41,7 +41,6 @@ bool WebNetWork::WaitWebClients()
         return false;
     }
 
-    printf("Attente de la connexion du client Web\n");
     return true;
 }
 
@@ -54,7 +53,6 @@ bool WebNetWork::AcceptWebClient(SOCKET* socket)
         return false;
     }
 
-    printf("Client Web connecte\n");
     return true;
 }
 
