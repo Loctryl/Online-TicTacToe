@@ -73,5 +73,15 @@ int Grid::IsWinner()
     if (countDown == mSize)
         mWinner = mTurnPlayer;
 
+    countDown = 0;
+    for (int j = 0; j < mSize; j++) {
+        for (int i = 0; i < mSize; i++) {
+            if (mMainGrid[i][j] == -1)
+                countDown++;
+        }
+    }
+    if (countDown == 0)
+        mWinner = -2;   
+
     return mWinner;
 }

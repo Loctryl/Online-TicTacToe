@@ -17,10 +17,15 @@ class GameManager
 {
     Event* mEvent;
 
+    std::vector<RectangleShape* > mLobbyFields;
+
 public:
     SFMLWindow* mWindow;
     Grid* mGrid;
     GAME_STATE mState;
+
+    std::string mInfo[2];
+    int mSelectedField;
 
     int mTileSize;
     float mMarginLeft;
@@ -28,7 +33,9 @@ public:
     GameManager();
     ~GameManager();
 
-    void InitWindow() const;
+    void InitWindow();
+
+    void InitLobbyFields();
 
     void InitGrid(Grid* grid);
 
@@ -38,7 +45,13 @@ public:
 
     bool IsMouseClick(const Event* e) const;
 
+    int ClickOnField() const;
+
     bool IsMove(int* x, int* y) const;
+
+    RectangleShape* CreateRect(Vector2f size, Vector2f pos, Color fillColor, Color outlineColor, float outlineThick);
+
+    void DrawTextW(std::string str, int size, Color color, Vector2f position) const;
 
     void Render() const;
 

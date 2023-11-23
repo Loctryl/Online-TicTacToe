@@ -64,9 +64,10 @@ sockaddr_in Network::SettingClientProtocol()
     sockaddr_in service;
     service.sin_family = AF_INET;
     service.sin_port = htons(PORT);
-    char IPBuffer[100];
-    std::cout << "Saisir l'adresse IP de connexion :";
-    std::cin >> IPBuffer;
+    char IPBuffer[100] = "10.1.170.16";
+    //std::cout << "Saisir l'adresse IP de connexion :";
+    //std::cin >> IPBuffer;
+    
     inet_pton(AF_INET, IPBuffer, &service.sin_addr);
 
     return service;

@@ -88,7 +88,7 @@ bool ServerRequestManager::ManageMessage(std::string Message, SOCKET* socket)
             if (win != -1) {
                 SendRequestWinner(win,socket);
                 SendRequestWinner(win,NetManager::GetInstance()->GetEnemyPlayer(socket)->mSocket);
-                cout << "Game over ! The winner is player : " << grid->mTurnPlayer << endl;
+                cout << "Game over ! " << endl;
             } else
                 grid->mTurnPlayer = (grid->mTurnPlayer + 1) % 2;
             

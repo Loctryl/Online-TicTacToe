@@ -78,7 +78,31 @@ void ClientApp::UpdateInLobby() const
 	{
 		if (mGame->IsPressEsc(event)) mGame->mWindow->GetWindow()->close();
 		if (mGame->IsMouseClick(event)) {
-			mRequestManager->JoinGame();
+			int field = mGame->ClickOnField();
+			switch (field)
+			{
+				case 0:
+					cout<< "name"<<endl;
+					mGame->mSelectedField = 0;
+					break;
+				case 1:
+					cout<< "adress IP"<<endl;
+					mGame->mSelectedField = 1;
+					break;
+				case 2:
+					cout << "connect" <<endl;
+					break;
+				case 3:
+					mRequestManager->JoinGame();
+					break;
+				default: break;
+			}
+		}
+		if (event->type == Event::TextEntered)
+		{
+			if(event->text.unicode < 128)
+				mGame->mInfo[mGame->mSelectedField] += event->text.unicode;
+			
 		}
 	}
 }

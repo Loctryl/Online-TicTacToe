@@ -23,9 +23,50 @@ GameManager::~GameManager()
     REL_PTR(mGrid)
 }
 
-void GameManager::InitWindow() const
+void GameManager::InitWindow()
 {
     mWindow->InitWindow();
+    InitLobbyFields();
+    
+}
+
+void GameManager::InitLobbyFields()
+{
+    float fieldHeight = mWindow->GetVideoMode()->height / 8.f;
+    float fullWidthField = mWindow->GetVideoMode()->width / 1.5f;
+    float alignLeft = mWindow->GetVideoMode()->width / 2.f - fullWidthField / 2;
+    
+    auto* rect = CreateRect({fullWidthField, fieldHeight},
+                    {alignLeft, mWindow->GetVideoMode()->height / 4.f},
+                    Color(150,150,150,255),
+                    Color(130, 128, 126, 255),
+                    2.f
+        );
+    mLobbyFields.push_back(rect);
+
+    rect = CreateRect({fullWidthField - fullWidthField/5.f,fieldHeight},
+                    {alignLeft,mWindow->GetVideoMode()->height / 2.f},
+                    Color(150,150,150,255),
+                    Color(130, 128, 126, 255),
+                    2.f
+        );
+    mLobbyFields.push_back(rect);
+    
+    rect = CreateRect({fullWidthField/6.f, fieldHeight},
+                    {alignLeft + fullWidthField - fullWidthField/6.f, mWindow->GetVideoMode()->height / 2.f},
+                    Color(150,150,150,255),
+                    Color(130, 128, 126, 255),
+                    2.f
+                    );
+    mLobbyFields.push_back(rect);
+
+    rect = CreateRect({mWindow->GetVideoMode()->width / 3.f, fieldHeight},
+                        {mWindow->GetVideoMode()->width / 2.f - (mWindow->GetVideoMode()->width / 3.f) / 2, mWindow->GetVideoMode()->height / 1.2f},
+                        Color(100,100,100,255),
+                        Color(100,100,100,255),
+                        0.f
+    );
+    mLobbyFields.push_back(rect);
 }
 
 void GameManager::InitGrid(Grid* grid)
@@ -48,6 +89,23 @@ bool GameManager::IsMouseClick(const Event* e) const
     return (e->type==Event::MouseButtonPressed&&e->mouseButton.button==Mouse::Left);
 }
 
+int GameManager::ClickOnField() const
+{
+    const Vector2i mousePos = Mouse::getPosition();
+    POINT pos = {mousePos.x, mousePos.y};
+    ScreenToClient(mWindow->GetWindow()->getSystemHandle(), &pos);
+
+    for(int i = 0; i < mLobbyFields.size(); i++)
+        if(pos.x >= mLobbyFields[i]->getPosition().x
+        &&pos.x <= mLobbyFields[i]->getPosition().x + mLobbyFields[i]->getSize().x
+        &&pos.y >= mLobbyFields[i]->getPosition().y
+        &&pos.y <= mLobbyFields[i]->getPosition().y + mLobbyFields[i]->getSize().y
+        )
+            return i;
+    
+    return -1;
+}
+
 bool GameManager::IsMove(int* x, int* y) const
 {
     const Vector2i mousePos = Mouse::getPosition();
@@ -68,6 +126,31 @@ bool GameManager::IsMove(int* x, int* y) const
     return false;
 }
 
+RectangleShape* GameManager::CreateRect(Vector2f size, Vector2f pos, Color fillColor, Color outlineColor, float outlineThick)
+{
+    auto* rect = new RectangleShape();
+    rect->setSize(size);
+    rect->setPosition(pos);
+    rect->setFillColor(fillColor);
+    rect->setOutlineColor(outlineColor);
+    rect->setOutlineThickness(outlineThick);
+    return rect;
+}
+
+void GameManager::DrawTextW(std::string str, int size, Color color, Vector2f position) const
+{
+    Text text;
+    text.setFont(*mWindow->GetFont());
+    text.setString(str);
+    text.setCharacterSize(size); // in pixels, not points!
+    text.setFillColor(color);
+
+    text.setPosition(position);
+    
+    mWindow->GetWindow()->draw(text);
+}
+
+
 void GameManager::Render() const
 {
     switch (mState)
@@ -75,11 +158,7 @@ void GameManager::Render() const
         case LOBBY:
             RenderLobby();
             break;
-        
         case IN_GAME:
-            if(mGrid)
-                RenderGame();
-            break;
         case GAME_OVER:    
             RenderGame();
             break;
@@ -91,12 +170,8 @@ void GameManager::RenderLobby() const
 {
     mWindow->GetWindow()->clear(Color(249, 193, 130, 255));
     
-    auto* rect = new RectangleShape();
-
-    rect->setPosition(mWindow->GetVideoMode()->width / 2, mWindow->GetVideoMode()->height / 2);
-    rect->setSize({100,100});
-    rect->setFillColor(Color(200,200,200,255));
-    mWindow->GetWindow()->draw(*rect);
+    for(auto rect : mLobbyFields)
+        mWindow->GetWindow()->draw(*rect);
 
     mWindow->GetWindow()->display();
 }
@@ -109,6 +184,8 @@ void GameManager::RenderGame() const
     auto* circ = new CircleShape();
 
     const int gridSize = mGrid->GetGridSize();
+
+    std::cout << mInfo[mSelectedField] << std::endl;
 
     for (int x = 0; x<gridSize; x++)
     {
@@ -147,15 +224,21 @@ void GameManager::RenderGame() const
         }
     }
 
-    if(mGrid->mWinner != -1)
+    if(mGrid->mWinner != -1 && mGrid->mWinner != -2)
     {
+        //DrawTextW("Game Over !", 15, Color::Red, {mWindow->GetVideoMode()->width / 2.f, 5.f });
         circ->setRadius(mTileSize/2.5);
-        circ->setPosition({50.f, 50.f});
     
         if (mGrid->mWinner==0)
+        {
+            circ->setPosition({50.f, 50.f});
             circ->setFillColor(Color(173, 58, 35, 255));
+        }
         else if (mGrid->mWinner==1)
+        {
+            circ->setPosition({mWindow->GetVideoMode()->width - 100.f, 50.f});
             circ->setFillColor(Color(35, 173, 139, 255));
+        }
 
         circ->setOutlineColor(Color(255, 20, 20, 255));
         circ->setOutlineThickness(2.f);
