@@ -12,3 +12,5 @@ Each one support network communication on a different thread.
 The server manages all the current games, keeping the datas. It also sends all these data on a web server displaying played games, also in a thread.
 
 Client provides possibility to custom your nickname, and the local address to connect. Of course, it gets the inputs of the player.
+
+We use SFML 2.6 for rendering.
